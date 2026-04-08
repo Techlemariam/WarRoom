@@ -1,0 +1,10 @@
+services:
+  war-room:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - NODE_ENV=production
