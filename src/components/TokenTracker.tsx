@@ -21,11 +21,6 @@ export default function TokenTracker() {
 
   return (
     <div className="glass p-4 space-y-4 relative overflow-hidden group">
-      {/* Warning Overlay for missing keys */}
-      <div className="absolute top-2 right-2 flex items-center gap-1 text-[8px] font-bold text-warning uppercase bg-warning/10 px-1.5 py-0.5 rounded-full border border-warning/20">
-        <AlertTriangle size={8} />
-        Keys Missing
-      </div>
 
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
