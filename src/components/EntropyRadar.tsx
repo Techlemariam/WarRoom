@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { AlertCircle, Zap, ShieldAlert, Info, Activity } from "lucide-react";
-
+import { Zap, Activity } from "lucide-react";
 
 export default function EntropyRadar() {
   const [data, setData] = useState<any>(null);
@@ -24,10 +23,7 @@ export default function EntropyRadar() {
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 60000); // 1min refresh
-
-    // Add handle to window for global pulse
     (window as any).triggerPulse = fetchData;
-
     return () => clearInterval(interval);
   }, []);
 
@@ -36,94 +32,90 @@ export default function EntropyRadar() {
     fetchData();
   };
 
-
-  if (loading) return <div className="h-48 glass flex items-center justify-center font-mono animate-pulse uppercase">Auditing System Entropy...</div>;
+  if (loading) return (
+    <div className="h-64 glass rounded-[2rem] flex flex-col items-center justify-center gap-4">
+      <div className="flex gap-1.5">
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+      </div>
+      <div className="font-display text-[10px] font-bold tracking-[0.3em] uppercase text-on-surface/30 animate-pulse">Syncing Oracle Sensors</div>
+    </div>
+  );
 
   const totalScore = data?.totalScore || 0;
   const vectors = data?.vectors || [];
   const target = 1.5;
-  const status = totalScore <= target ? "Equilibrium" : "Entropy Warning";
+  const status = totalScore <= target ? "Stable" : "Drift Alert";
 
   return (
-    <div className="glass p-4 space-y-6 relative overflow-hidden">
+    <div className="glass p-6 rounded-[2rem] space-y-8 relative overflow-hidden">
       {/* Decorative background pulse */}
-      <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl transition-colors duration-1000 ${
-        totalScore <= target ? "bg-success/5" : "bg-error/10 animate-pulse"
+      <div className={`absolute -right-16 -top-16 w-48 h-48 rounded-full blur-[100px] transition-colors duration-1000 ${
+        totalScore <= target ? "bg-primary/10" : "bg-error/20 animate-pulse"
       }`} />
 
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start relative z-10">
         <div>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest">CI/CD Entropy Index</h3>
+          <h3 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-[0.2em] mb-2">Confidence Index</h3>
           <div className="flex items-baseline gap-2">
-            <span className={`text-3xl font-bold tracking-tighter transition-colors ${
-              totalScore <= target ? "text-white" : "text-error"
+            <span className={`text-4xl font-display font-bold tracking-tighter transition-colors ${
+              totalScore <= target ? "text-on-surface" : "text-error"
             }`}>{totalScore.toFixed(1)}</span>
-            <span className="text-[10px] text-text-secondary uppercase font-mono">/ 10.0</span>
+            <span className="text-[10px] text-on-surface-variant/30 uppercase font-bold tracking-widest">/ 10</span>
           </div>
         </div>
-        <div className={`px-2 py-1 text-[9px] font-bold uppercase rounded-sm border ${
-          totalScore <= target ? "border-success/30 text-success bg-success/5" : "border-error/30 text-error bg-error/5"
+        <div className={`px-3 py-1 text-[9px] font-bold uppercase tracking-widest rounded-full shadow-sm ${
+          totalScore <= target ? "bg-primary/10 text-primary shadow-primary/5" : "bg-error/10 text-error shadow-error/5"
         }`}>
           {status}
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5 relative z-10">
         {vectors.map((v: any) => (
           <div key={v.name} className="group relative">
-            <div className="flex justify-between text-[9px] font-mono font-bold mb-1">
-              <span className={v.highlight ? "text-accent flex items-center gap-1" : "text-text-secondary flex items-center gap-1"}>
-                {v.highlight && <Zap size={10} />}
+            <div className="flex justify-between text-[10px] font-bold tracking-tight mb-2">
+              <span className={v.highlight ? "text-primary flex items-center gap-2" : "text-on-surface-variant/60 flex items-center gap-2"}>
+                {v.highlight && <Zap size={12} fill="currentColor" className="text-secondary" />}
                 {v.name.toUpperCase()}
-                {v.findings?.length > 0 && <Info size={10} className="text-warning cursor-help" />}
               </span>
-              <span className={v.score > 1.0 ? "text-error" : ""}>{v.score.toFixed(1)}</span>
+              <span className={`font-mono ${v.score > 1.0 ? "text-error" : "text-on-surface-variant/40"}`}>{v.score.toFixed(1)}</span>
             </div>
             
-            <div className="h-1 bg-surface/50 w-full rounded-full overflow-hidden">
+            <div className="h-2 bg-surface-container-low/40 w-full rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
-                animate={{ width: `${(v.score / 2) * 100}%` }}
-                className={`h-full transition-colors ${
-                  v.score > 1.2 ? "bg-error" : v.highlight ? "bg-accent" : "bg-text-secondary/40"
+                animate={{ width: `${Math.min((v.score / 2) * 100, 100)}%` }}
+                className={`h-full transition-colors duration-700 ${
+                  v.score > 1.2 ? "bg-error" : v.highlight ? "bg-primary shadow-[0_0_12px_rgba(48,100,129,0.3)]" : "bg-on-surface-variant/20"
                 }`}
               />
             </div>
-
-            {/* Tooltip for findings */}
-            {v.findings?.length > 0 && (
-              <div className="absolute left-0 -top-8 bg-surface border border-border p-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10 rounded-sm shadow-xl">
-                {v.findings.map((f: string, i: number) => (
-                  <div key={i} className="text-[8px] text-warning whitespace-nowrap uppercase font-mono">• {f}</div>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </div>
 
-      <div className="pt-2 border-t border-border flex justify-between items-center bg-surface/20 -mx-4 -mb-4 p-4 mt-2">
-        <div className="flex gap-4">
-          <div className="text-center">
-            <div className="text-[8px] text-text-secondary uppercase">Target</div>
-            <div className="text-xs font-mono font-bold">{target}</div>
+      <div className="pt-6 border-t border-outline/10 flex justify-between items-center relative z-10">
+        <div className="flex gap-6">
+          <div className="space-y-0.5">
+            <div className="text-[9px] font-bold text-on-surface-variant/20 uppercase tracking-widest">Target</div>
+            <div className="text-xs font-mono font-bold text-on-surface-variant/40">{target}</div>
           </div>
-          <div className="text-center">
-            <div className="text-[8px] text-text-secondary uppercase">Variance</div>
-            <div className={`text-xs font-mono font-bold ${totalScore <= target ? "text-success" : "text-error"}`}>
+          <div className="space-y-0.5">
+            <div className="text-[9px] font-bold text-on-surface-variant/20 uppercase tracking-widest">Variance</div>
+            <div className={`text-xs font-mono font-bold ${totalScore <= target ? "text-primary" : "text-error"}`}>
               {totalScore <= target ? `-${(target - totalScore).toFixed(1)}` : `+${(totalScore - target).toFixed(1)}`}
             </div>
           </div>
         </div>
         <button 
           onClick={handlePulse}
-          className="text-[10px] font-bold text-accent uppercase hover:underline decoration-2 underline-offset-4 flex items-center gap-1 group/btn"
+          className="p-3 bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant rounded-full transition-all hover:scale-110 active:scale-90 group/btn"
         >
-          <Activity size={10} className="group-hover/btn:animate-spin" />
-          Pulse Scan
+          <Activity size={14} className="group-hover/btn:scale-125 transition-transform" />
         </button>
       </div>
     </div>
   );
 }
-
