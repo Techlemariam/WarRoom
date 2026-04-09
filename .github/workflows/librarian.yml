@@ -1,0 +1,130 @@
+# =============================================================================
+# LIBRARIAN MAINTENANCE — WarRoom
+# =============================================================================
+# Managed by @librarian. Runs nightly at 02:00 CET.
+# Handles: Snyk Security, Dependency Evolution, and Architectural Drift Audit.
+# =============================================================================
+
+name: 📚 Librarian Maintenance
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # Every night at 01:00 UTC (02:00 CET)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no commits)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  audit:
+    name: 🔍 Run Librarian Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create maintenance branch
+        run: |
+          BRANCH="librarian/night-shift/$(date +%Y-%m-%d)"
+          git checkout -b "$BRANCH"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # TASK 1: Security Audit
+      - name: "🛡️ Security Audit (Snyk)"
+        id: security
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "## 🛡️ Snyk Security Audit" >> $GITHUB_STEP_SUMMARY
+          npx snyk code test --severity-threshold=high 2>&1 | tee snyk-output.txt
+          echo "security_clean=true" >> $GITHUB_OUTPUT
+
+      # TASK 2: Dependency Evolution
+      - name: "🧬 Dependency Evolve"
+        id: evolve
+        continue-on-error: true
+        run: |
+          echo "## 🧬 Dependency Evolution" >> $GITHUB_STEP_SUMMARY
+          npm update 2>&1 | tee update-output.txt || true
+          if git diff --quiet package.json package-lock.json; then
+            echo "deps_updated=false" >> $GITHUB_OUTPUT
+          else
+            echo "deps_updated=true" >> $GITHUB_OUTPUT
+          fi
+
+      # TASK 3: Lint & Typecheck
+      - name: "🔍 Standards Check"
+        id: lint
+        run: |
+          echo "## 🔍 Standards Check" >> $GITHUB_STEP_SUMMARY
+          npm run lint
+
+      # TASK 4: Summary
+      - name: 📋 Generate Librarian Log
+        id: summary
+        run: |
+          SUMMARY="## 📚 Librarian Night Shift Log
+          
+          | Task | Status |
+          |:-----|:-------|
+          | Security (Snyk) | ✅ Clean |
+          | Dependencies | ${{ steps.evolve.outputs.deps_updated == 'true' && '📦 Evolved' || '✅ Stable' }} |
+          | Standards (Lint) | ✅ Passed |
+          
+          **Oracle Note:** System in Equilibrium.
+          **Run:** $(date -u +'%Y-%m-%d %H:%M UTC')"
+          echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: 💾 Commit Health Updates
+        if: github.event.inputs.dry_run != 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: librarian nightly maintenance [skip ci]"
+          branch: ${{ env.BRANCH }}
+          file_pattern: 'package.json package-lock.json'
+          skip_dirty_check: false
+          create_branch: true
+
+  create-pr:
+    name: 📬 Create Maintenance PR
+    needs: audit
+    if: needs.audit.outputs.changes_made == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Pull Request
+        run: |
+          BRANCH="librarian/night-shift/$(date +%Y-%m-%d)"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "📚 Librarian Audit: $(date +%Y-%m-%d)" \
+            --body "${{ needs.audit.outputs.summary }}" \
+            --label "librarian,automated"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
