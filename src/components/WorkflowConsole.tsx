@@ -1,27 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Play, Search, Filter, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Play, Search, Filter, Loader2, CheckCircle, XCircle, Zap, ShieldAlert } from "lucide-react";
 
 export default function WorkflowConsole() {
   const [workflows, setWorkflows] = useState<any[]>([]);
+  const [auditData, setAuditData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState<Record<string, boolean>>({});
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function fetchWorkflows() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/workflows");
-        const data = await res.json();
-        setWorkflows(data);
+        const [wfRes, auditRes] = await Promise.all([
+          fetch("/api/workflows"),
+          fetch("/api/audit")
+        ]);
+        const wfData = await wfRes.json();
+        const aData = await auditRes.json();
+        
+        setWorkflows(wfData);
+        setAuditData(aData);
       } catch (e) {
         console.error("Failed to fetch workflows", e);
       } finally {
         setLoading(false);
       }
     }
-    fetchWorkflows();
+    fetchData();
   }, []);
 
   async function handleRun(workflow: any) {
@@ -29,7 +36,7 @@ export default function WorkflowConsole() {
     setRunning(prev => ({ ...prev, [id]: true }));
     
     try {
-      const owner = workflow.repo === 'IronForge' ? 'Techlemariam' : 'Techlemariam'; // Ideally parse from repo string
+      const owner = workflow.repo === 'IronForge' ? 'Techlemariam' : 'Techlemariam';
       const res = await fetch("/api/dispatch", {
         method: "POST",
         body: JSON.stringify({
@@ -40,7 +47,6 @@ export default function WorkflowConsole() {
       });
       
       if (res.ok) {
-        // Show success briefly
         setTimeout(() => setRunning(prev => ({ ...prev, [id]: false })), 2000);
       } else {
         setRunning(prev => ({ ...prev, [id]: false }));
@@ -50,12 +56,19 @@ export default function WorkflowConsole() {
     }
   }
 
-  const filtered = workflows.filter(w => 
+  // Pre-process recommendations
+  const enrichedWorkflows = workflows.map(w => {
+    const hasDrift = auditData?.vectors?.find((v: any) => v.name === 'IaC/Drift')?.findings?.some((f: string) => f.includes(w.repo));
+    const isRecommended = hasDrift && (w.command.toLowerCase().includes('infra') || w.command.toLowerCase().includes('docker') || w.command.toLowerCase().includes('tokens'));
+    return { ...w, isRecommended };
+  }).sort((a, b) => (b.isRecommended ? 1 : 0) - (a.isRecommended ? 1 : 0));
+
+  const filtered = enrichedWorkflows.filter(w => 
     w.command.toLowerCase().includes(search.toLowerCase()) || 
     w.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) return <div className="h-48 glass flex items-center justify-center font-mono animate-pulse uppercase">Initializing Console...</div>;
+  if (loading) return <div className="h-48 glass flex items-center justify-center font-mono animate-pulse uppercase">Initializing Oracle Console...</div>;
 
   return (
     <div className="glass overflow-hidden flex flex-col h-[500px]">
@@ -81,16 +94,19 @@ export default function WorkflowConsole() {
           const isRunning = running[id];
 
           return (
-            <div key={id} className="p-4 hover:bg-surface/30 transition-colors flex items-center justify-between group">
+            <div key={id} className={`p-4 hover:bg-surface/30 transition-colors flex items-center justify-between group ${w.isRecommended ? 'bg-accent/5' : ''}`}>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm font-bold text-accent">{w.command}</span>
+                  <span className={`font-mono text-sm font-bold ${w.isRecommended ? 'text-warning' : 'text-accent'}`}>{w.command}</span>
                   <span className="text-[10px] uppercase px-1.5 py-0.5 bg-border text-text-secondary font-bold">
                     {w.repo}
                   </span>
-                  <span className="text-[10px] uppercase text-text-secondary font-mono">
-                    {w.category || 'general'}
-                  </span>
+                  {w.isRecommended && (
+                    <span className="flex items-center gap-1 text-[9px] uppercase text-warning font-bold bg-warning/10 px-1.5 py-0.5 border border-warning/20">
+                      <ShieldAlert size={10} />
+                      Prescribed
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-text-secondary max-w-xl">{w.description}</p>
               </div>
@@ -101,7 +117,9 @@ export default function WorkflowConsole() {
                 className={`flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase transition-all ${
                   isRunning 
                     ? 'bg-warning/20 text-warning cursor-wait' 
-                    : 'bg-surface border border-border hover:bg-accent hover:text-background'
+                    : w.isRecommended 
+                      ? 'bg-warning text-background hover:bg-white'
+                      : 'bg-surface border border-border hover:bg-accent hover:text-background'
                 }`}
               >
                 {isRunning ? (
@@ -112,7 +130,7 @@ export default function WorkflowConsole() {
                 ) : (
                   <>
                     <Play size={12} fill="currentColor" />
-                    Execute
+                    {w.isRecommended ? 'Fix Issues' : 'Execute'}
                   </>
                 )}
               </button>
@@ -122,9 +140,10 @@ export default function WorkflowConsole() {
       </div>
 
       <div className="p-2 bg-accent/5 border-t border-border flex justify-between items-center text-[10px] font-mono text-text-secondary">
-        <div>DISCOVERED: {workflows.length} WORKFLOWS</div>
+        <div>ORACLE: {auditData?.totalScore <= 1.5 ? 'STABLE' : 'DRIFT DETECTED'}</div>
         <div>SESSION: ACTIVE</div>
       </div>
     </div>
   );
 }
+

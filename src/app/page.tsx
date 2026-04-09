@@ -7,6 +7,7 @@ import RevenueRadar from "@/components/RevenueRadar";
 import TokenTracker from "@/components/TokenTracker";
 import FocusPanel from "@/components/FocusPanel";
 import DecisionLog from "@/components/DecisionLog";
+import EntropyRadar from "@/components/EntropyRadar";
 
 export default async function Dashboard() {
   const session = await getSession();
@@ -66,9 +67,10 @@ export default async function Dashboard() {
           <section>
             <h2 className="text-xl font-bold uppercase mb-4 flex items-center gap-2">
               <span className="w-2 h-2 bg-accent inline-block"></span>
-              Capital & Usage
+              Project Entropy
             </h2>
             <div className="space-y-4">
+              <EntropyRadar />
               <RevenueRadar />
               <TokenTracker />
             </div>

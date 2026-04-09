@@ -1,11 +1,30 @@
 const HETZNER_API_TOKEN = process.env.HETZNER_API_TOKEN;
 const HETZNER_SERVER_ID = process.env.HETZNER_SERVER_ID;
 
-export async function getHetznerServer() {
-  if (!HETZNER_API_TOKEN || !HETZNER_SERVER_ID) return null;
+export async function getHetznerServers() {
+  if (!HETZNER_API_TOKEN) return [];
 
   try {
-    const res = await fetch(`https://api.hetzner.cloud/v1/servers/${HETZNER_SERVER_ID}`, {
+    const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
+      headers: {
+        Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+      },
+    });
+    if (!res.ok) return [];
+    const { servers } = await res.json();
+    return servers || [];
+  } catch (error) {
+    console.error("Failed to fetch Hetzner servers:", error);
+    return [];
+  }
+}
+
+export async function getHetznerServer(id?: string) {
+  const targetId = id || HETZNER_SERVER_ID;
+  if (!HETZNER_API_TOKEN || !targetId) return null;
+
+  try {
+    const res = await fetch(`https://api.hetzner.cloud/v1/servers/${targetId}`, {
       headers: {
         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
       },
@@ -19,17 +38,16 @@ export async function getHetznerServer() {
   }
 }
 
-export async function getHetznerMetrics() {
-  if (!HETZNER_API_TOKEN || !HETZNER_SERVER_ID) return null;
+export async function getHetznerMetrics(id?: string) {
+  const targetId = id || HETZNER_SERVER_ID;
+  if (!HETZNER_API_TOKEN || !targetId) return null;
 
   try {
-    // Note: Hetzner Cloud API provides metrics through the /metrics endpoint
-    // Requires specialized parsing or using the 'type' parameter
     const now = new Date().toISOString();
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     
     const res = await fetch(
-      `https://api.hetzner.cloud/v1/servers/${HETZNER_SERVER_ID}/metrics?type=cpu,mem,network&start=${oneHourAgo}&end=${now}`,
+      `https://api.hetzner.cloud/v1/servers/${targetId}/metrics?type=cpu,mem,network&start=${oneHourAgo}&end=${now}`,
       {
         headers: {
           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
@@ -44,3 +62,4 @@ export async function getHetznerMetrics() {
     return null;
   }
 }
+

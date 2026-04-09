@@ -1,0 +1,113 @@
+/* ── Typography Imports ────────────────────────────────────────────────── */
+/* ── Nordic Frost / Architectural Serenity ───────────────────────────── */
+/* Stitch ID: bca3d4b51d7e416c8091a41d92f18ab6 */
+@theme {
+  /* Typography */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-label: 'Space Grotesk', sans-serif;
+
+  /* Surface Hierarchy */
+  --sys-color-background: #f6fafe;
+  --sys-color-surface: #f6fafe;
+  --sys-color-surface-bright: #f6fafe;
+  --sys-color-surface-dim: #d6dade;
+  
+  --sys-color-surface-container-lowest: #ffffff;
+  --sys-color-surface-container-low: #f0f4f8;
+  --sys-color-surface-container: #eaeef2;
+  --sys-color-surface-container-high: #e4e9ed;
+  --sys-color-surface-container-highest: #dfe3e7;
+
+  /* On-Surface (Text & Icons) */
+  --sys-color-on-background: #171c1f;
+  --sys-color-on-surface: #171c1f;
+  --sys-color-on-surface-variant: #40484d;
+  
+  /* Primary Action Colors (The Icy Steel) */
+  --sys-color-primary: #306481;
+  --sys-color-primary-container: #81b2d3;
+  --sys-color-on-primary: #ffffff;
+  --sys-color-on-primary-container: #034561;
+  --sys-color-primary-fixed: #c6e7ff;
+  --sys-color-primary-fixed-dim: #9bcdef;
+
+  /* Secondary Utilitarian Colors */
+  --sys-color-secondary: #286482;
+  --sys-color-secondary-container: #a3dcfe;
+  --sys-color-on-secondary: #ffffff;
+  --sys-color-on-secondary-container: #24617f;
+
+  /* Tertiary Metadata/Architectural Elements */
+  --sys-color-tertiary: #565f70;
+  --sys-color-tertiary-container: #a3acc0;
+  --sys-color-on-tertiary: #ffffff;
+  --sys-color-on-tertiary-container: #374050;
+
+  /* Errors & Danger */
+  --sys-color-error: #ba1a1a;
+  --sys-color-error-container: #ffdad6;
+  --sys-color-on-error: #ffffff;
+  --sys-color-on-error-container: #93000a;
+
+  /* Outlines (Ghost Borders) */
+  --sys-color-outline: #71787e;
+  --sys-color-outline-variant: #c0c7ce;
+  
+  /* ── Temp Bridge for Old Nordic Colors ── */
+  --color-nordic-bg-light: var(--sys-color-background);
+  --color-nordic-bg-dark: var(--sys-color-background);
+  --color-nordic-text: var(--sys-color-on-surface);
+  --color-nordic-accent-icy: var(--sys-color-primary-container);
+  --color-nordic-accent-steel: var(--sys-color-primary);
+  --color-nordic-border: var(--sys-color-outline-variant);
+  --color-nordic-surface: var(--sys-color-surface-container-lowest);
+
+  /* ── Dynamics Semantic Palette (Musical intensity pp→fff) ── */
+  --dynamics-pp:  #1e3a5f;
+  --dynamics-p:   #1e3a5f;
+  --dynamics-mp:  #134e4a;
+  --dynamics-mf:  #166534;
+  --dynamics-f:   #d97706;
+  --dynamics-ff:  #ea580c;
+  --dynamics-fff: #b91c1c;
+
+  /* Radii configuration to match "rounded-four" / 0.25rem from system */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+}
+
+/* ── Dark Mode Overrides (Nordic Night) ────────────────────────────────── */
+.dark {
+  --sys-color-background: #0b1013;
+  --sys-color-surface: #0b1013;
+  --sys-color-surface-bright: #1b2024;
+  --sys-color-surface-dim: #0b1013;
+  
+  --sys-color-surface-container-lowest: #070a0c;
+  --sys-color-surface-container-low: #111a1e;
+  --sys-color-surface-container: #1b2328;
+  --sys-color-surface-container-high: #242c31;
+  --sys-color-surface-container-highest: #2e373d;
+
+  /* On-Surface (Text & Icons) */
+  --sys-color-on-background: #e1e7eb;
+  --sys-color-on-surface: #e1e7eb;
+  --sys-color-on-surface-variant: #a0a8ad;
+  
+  /* Primary Action Colors (Iron & Steel) */
+  --sys-color-primary: #81b2d3;
+  --sys-color-primary-container: #034561;
+  --sys-color-on-primary: #00344b;
+  --sys-color-on-primary-container: #c6e7ff;
+
+  /* Outlines (Ghost Borders) */
+  --sys-color-outline: #8b9297;
+  --sys-color-outline-variant: #40484d;
+
+  /* Errors */
+  --sys-color-error: #ffb4ab;
+  --sys-color-on-error: #690005;
+}

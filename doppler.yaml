@@ -1,0 +1,10 @@
+setup:
+  project: war-room
+  config: dev
+
+# This is a template for Doppler. 
+# Usage:
+# 1. Install Doppler CLI
+# 2. Run 'doppler login'
+# 3. Run 'doppler setup'
+# 4. Use 'doppler run -- npm run dev' to Inject secrets at runtime.
