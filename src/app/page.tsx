@@ -4,11 +4,11 @@ import WorkflowConsole from "@/components/WorkflowConsole";
 import MissionBoard from "@/components/MissionBoard";
 import InfraMonitor from "@/components/InfraMonitor";
 import RevenueRadar from "@/components/RevenueRadar";
-import TokenTracker from "@/components/TokenTracker";
+import AccountUsageGrid from "@/components/AccountUsageGrid";
 import FocusPanel from "@/components/FocusPanel";
 import DecisionLog from "@/components/DecisionLog";
 import EntropyRadar from "@/components/EntropyRadar";
-import { LayoutDashboard, ShieldCheck, Zap, Activity, Briefcase } from "lucide-react";
+import { LayoutDashboard, ShieldCheck, Zap, Activity, Briefcase, Mail, Database } from "lucide-react";
 
 export default async function Dashboard() {
   const session = await getSession();
@@ -18,9 +18,9 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="bg-background min-h-screen text-on-surface">
+    <div className="bg-background min-h-screen text-on-surface font-sans">
       {/* Top Navbar */}
-      <nav className="border-b border-outline-variant bg-surface px-6 py-3 flex items-center justify-between sticky top-0 z-50">
+      <nav className="border-b border-outline-variant bg-surface px-6 py-3 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <LayoutDashboard className="text-primary" size={20} />
@@ -67,6 +67,14 @@ export default async function Dashboard() {
               </h2>
               <WorkflowConsole />
             </section>
+
+            <section className="space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 flex items-center gap-2">
+                <Mail size={14} />
+                Strategic Quotas & Model Allocation
+              </h2>
+              <AccountUsageGrid />
+            </section>
           </div>
 
           {/* Side Panel */}
@@ -78,13 +86,8 @@ export default async function Dashboard() {
               </h2>
               <div className="space-y-4">
                 <EntropyRadar />
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="card-professional p-2">
-                     <RevenueRadar />
-                  </div>
-                  <div className="card-professional">
-                     <TokenTracker />
-                  </div>
+                <div className="card-professional p-2">
+                  <RevenueRadar />
                 </div>
               </div>
             </section>
@@ -103,7 +106,7 @@ export default async function Dashboard() {
 
             <section className="space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 flex items-center gap-2">
-                <Database className="text-secondary" size={14} />
+                <Database size={14} className="text-secondary" />
                 System Audit Log
               </h2>
               <DecisionLog />
@@ -114,6 +117,3 @@ export default async function Dashboard() {
     </div>
   );
 }
-
-// Fixed import for Database icon which was missing in header but used in side panel
-import { Database } from "lucide-react";
