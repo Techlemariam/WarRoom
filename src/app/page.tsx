@@ -4,11 +4,10 @@ import WorkflowConsole from "@/components/WorkflowConsole";
 import MissionBoard from "@/components/MissionBoard";
 import InfraMonitor from "@/components/InfraMonitor";
 import RevenueRadar from "@/components/RevenueRadar";
-import AccountUsageGrid from "@/components/AccountUsageGrid";
 import FocusPanel from "@/components/FocusPanel";
 import DecisionLog from "@/components/DecisionLog";
 import EntropyRadar from "@/components/EntropyRadar";
-import { LayoutDashboard, ShieldCheck, Zap, Activity, Briefcase, Mail, Database } from "lucide-react";
+import { LayoutDashboard, ShieldCheck, Zap, Activity, Briefcase, Database } from "lucide-react";
 
 export default async function Dashboard() {
   const session = await getSession();
@@ -67,14 +66,6 @@ export default async function Dashboard() {
               </h2>
               <WorkflowConsole />
             </section>
-
-            <section className="space-y-4">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 flex items-center gap-2">
-                <Mail size={14} />
-                Strategic Quotas & Model Allocation
-              </h2>
-              <AccountUsageGrid />
-            </section>
           </div>
 
           {/* Side Panel */}
@@ -105,8 +96,8 @@ export default async function Dashboard() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 flex items-center gap-2">
-                <Database size={14} className="text-secondary" />
+              <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 flex items-center gap-1.5">
+                <Database size={13} className="text-secondary" />
                 System Audit Log
               </h2>
               <DecisionLog />
