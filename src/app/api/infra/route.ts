@@ -1,5 +1,7 @@
 import { getCoolifyHealth, getCoolifyApplications } from "@/lib/coolify";
 import { getHetznerServer, getHetznerMetrics, getHetznerServers } from "@/lib/hetzner";
+import { getSnykMetrics } from "@/lib/snyk";
+import { remediateDrift } from "@/lib/autonom";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -14,12 +16,19 @@ export async function GET() {
       }
     }
 
-    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics] = await Promise.all([
+    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics, snykMetrics] = await Promise.all([
       getCoolifyHealth(),
       getCoolifyApplications(),
       hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
       hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
+      getSnykMetrics()
     ]);
+
+    // Calculate Entropy Index including Security Vector
+    const entropyIndex = 1.2 + (snykMetrics.critical * 0.5); // Baseline + Security Weight
+    
+    // Trigger Autonomy Engine (Dry Run)
+    await remediateDrift(entropyIndex);
 
     return NextResponse.json({
       coolify: {
@@ -30,6 +39,11 @@ export async function GET() {
         server: hetznerServer,
         metrics: hetznerMetrics,
       },
+      entropy: {
+        index: entropyIndex,
+        securityScore: snykMetrics.score,
+        vulnerabilities: snykMetrics
+      }
     });
   } catch (error: any) {
     console.error("Audit sensor error:", error);

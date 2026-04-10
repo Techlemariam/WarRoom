@@ -43,11 +43,14 @@ export async function getHetznerMetrics(id?: string) {
   if (!HETZNER_API_TOKEN || !targetId) return null;
 
   try {
-    const now = new Date().toISOString();
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    // Implementing a 5-minute buffer to account for Hetzner metrics lag.
+    // If we poll "now", the pipeline often returns 0 because aggregation hasn't finished.
+    const now = Date.now();
+    const end = new Date(now - 5 * 60 * 1000).toISOString();
+    const start = new Date(now - 35 * 60 * 1000).toISOString();
     
     const res = await fetch(
-      `https://api.hetzner.cloud/v1/servers/${targetId}/metrics?type=cpu,mem,network&start=${oneHourAgo}&end=${now}`,
+      `https://api.hetzner.cloud/v1/servers/${targetId}/metrics?type=cpu,mem,network&start=${start}&end=${end}`,
       {
         headers: {
           Authorization: `Bearer ${HETZNER_API_TOKEN}`,

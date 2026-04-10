@@ -7,21 +7,40 @@ export default function EntropyRadar() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      const res = await fetch("/api/audit");
-      const json = await res.json();
-      setData(json);
-    } catch (e) {
-      console.error("Failed to fetch audit data", e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const defaultLogs = [
+    { label: "Infrastructure", value: 85, full: 100 },
+    { label: "CI/CD Entropy", value: 65, full: 100 },
+    { label: "Sec-Vector", value: 45, full: 100 },
+    { label: "Financial Drift", value: 30, full: 100 },
+    { label: "Latent Tech Debt", value: 55, full: 100 },
+  ];
+
+  const [auditData, setAuditData] = useState(defaultLogs);
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 60000);
+    const updateMetrics = async () => {
+      try {
+        const res = await fetch('/api/infra');
+        const data = await res.json();
+        
+        if (data.entropy) {
+           setAuditData([
+             { label: "Infrastructure", value: data.infraScore || 85, full: 100 },
+             { label: "CI/CD Entropy", value: data.entropy.index * 10 || 65, full: 100 },
+             { label: "Sec-Vector", value: data.entropy.securityScore || 45, full: 100 },
+             { label: "Financial Drift", value: 30, full: 100 },
+             { label: "Latent Tech Debt", value: 55, full: 100 },
+           ]);
+        }
+        setLoading(false);
+      } catch (e) {
+        console.error("Entropy sync failure", e);
+        setLoading(false);
+      }
+    };
+    
+    updateMetrics();
+    const interval = setInterval(updateMetrics, 30000);
     return () => clearInterval(interval);
   }, []);
 
