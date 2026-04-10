@@ -1,113 +1,90 @@
 /* ── Typography Imports ────────────────────────────────────────────────── */
-/* ── Nordic Frost / Architectural Serenity ───────────────────────────── */
-/* Stitch ID: bca3d4b51d7e416c8091a41d92f18ab6 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ── Corporate Stealth / Professional Minimalist ────────────────────── */
 @theme {
   /* Typography */
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --font-label: 'Space Grotesk', sans-serif;
+  --font-label: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  /* Surface Hierarchy */
-  --sys-color-background: #f6fafe;
-  --sys-color-surface: #f6fafe;
-  --sys-color-surface-bright: #f6fafe;
-  --sys-color-surface-dim: #d6dade;
+  /* Surface Hierarchy (Slate/Zinc) */
+  --sys-color-background: #ffffff;
+  --sys-color-surface: #ffffff;
+  --sys-color-surface-bright: #ffffff;
+  --sys-color-surface-dim: #f1f5f9;
   
   --sys-color-surface-container-lowest: #ffffff;
-  --sys-color-surface-container-low: #f0f4f8;
-  --sys-color-surface-container: #eaeef2;
-  --sys-color-surface-container-high: #e4e9ed;
-  --sys-color-surface-container-highest: #dfe3e7;
+  --sys-color-surface-container-low: #f8fafc;
+  --sys-color-surface-container: #f1f5f9;
+  --sys-color-surface-container-high: #e2e8f0;
+  --sys-color-surface-container-highest: #cbd5e1;
 
   /* On-Surface (Text & Icons) */
-  --sys-color-on-background: #171c1f;
-  --sys-color-on-surface: #171c1f;
-  --sys-color-on-surface-variant: #40484d;
+  --sys-color-on-background: #0f172a;
+  --sys-color-on-surface: #0f172a;
+  --sys-color-on-surface-variant: #475569;
   
-  /* Primary Action Colors (The Icy Steel) */
-  --sys-color-primary: #306481;
-  --sys-color-primary-container: #81b2d3;
+  /* Primary Action Colors (Corporate Indigo/Blue) */
+  --sys-color-primary: #2563eb;
+  --sys-color-primary-container: #dbeafe;
   --sys-color-on-primary: #ffffff;
-  --sys-color-on-primary-container: #034561;
-  --sys-color-primary-fixed: #c6e7ff;
-  --sys-color-primary-fixed-dim: #9bcdef;
+  --sys-color-on-primary-container: #1e40af;
 
-  /* Secondary Utilitarian Colors */
-  --sys-color-secondary: #286482;
-  --sys-color-secondary-container: #a3dcfe;
+  /* Secondary Utilitarian Colors (Slate) */
+  --sys-color-secondary: #475569;
+  --sys-color-secondary-container: #f1f5f9;
   --sys-color-on-secondary: #ffffff;
-  --sys-color-on-secondary-container: #24617f;
+  --sys-color-on-secondary-container: #1e293b;
 
-  /* Tertiary Metadata/Architectural Elements */
-  --sys-color-tertiary: #565f70;
-  --sys-color-tertiary-container: #a3acc0;
-  --sys-color-on-tertiary: #ffffff;
-  --sys-color-on-tertiary-container: #374050;
-
-  /* Errors & Danger */
-  --sys-color-error: #ba1a1a;
-  --sys-color-error-container: #ffdad6;
+  /* Errors & Alerts (Standard Professional) */
+  --sys-color-error: #dc2626;
+  --sys-color-error-container: #fef2f2;
   --sys-color-on-error: #ffffff;
-  --sys-color-on-error-container: #93000a;
+  --sys-color-on-error-container: #991b1b;
 
-  /* Outlines (Ghost Borders) */
-  --sys-color-outline: #71787e;
-  --sys-color-outline-variant: #c0c7ce;
+  /* Outlines (Standard Borders) */
+  --sys-color-outline: #94a3b8;
+  --sys-color-outline-variant: #e2e8f0;
   
-  /* ── Temp Bridge for Old Nordic Colors ── */
-  --color-nordic-bg-light: var(--sys-color-background);
-  --color-nordic-bg-dark: var(--sys-color-background);
-  --color-nordic-text: var(--sys-color-on-surface);
-  --color-nordic-accent-icy: var(--sys-color-primary-container);
-  --color-nordic-accent-steel: var(--sys-color-primary);
-  --color-nordic-border: var(--sys-color-outline-variant);
-  --color-nordic-surface: var(--sys-color-surface-container-lowest);
-
-  /* ── Dynamics Semantic Palette (Musical intensity pp→fff) ── */
-  --dynamics-pp:  #1e3a5f;
-  --dynamics-p:   #1e3a5f;
-  --dynamics-mp:  #134e4a;
-  --dynamics-mf:  #166534;
-  --dynamics-f:   #d97706;
-  --dynamics-ff:  #ea580c;
-  --dynamics-fff: #b91c1c;
-
-  /* Radii configuration to match "rounded-four" / 0.25rem from system */
-  --radius-sm: 0.125rem;
-  --radius-md: 0.25rem;
+  /* Radii (Standard Professional) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
   --radius-full: 9999px;
 }
 
-/* ── Dark Mode Overrides (Nordic Night) ────────────────────────────────── */
+/* ── Dark Mode (Zinc Stealth) ────────────────────────────────── */
 .dark {
-  --sys-color-background: #0b1013;
-  --sys-color-surface: #0b1013;
-  --sys-color-surface-bright: #1b2024;
-  --sys-color-surface-dim: #0b1013;
+  --sys-color-background: #09090b;
+  --sys-color-surface: #09090b;
+  --sys-color-surface-bright: #18181b;
+  --sys-color-surface-dim: #09090b;
   
-  --sys-color-surface-container-lowest: #070a0c;
-  --sys-color-surface-container-low: #111a1e;
-  --sys-color-surface-container: #1b2328;
-  --sys-color-surface-container-high: #242c31;
-  --sys-color-surface-container-highest: #2e373d;
+  --sys-color-surface-container-lowest: #000000;
+  --sys-color-surface-container-low: #18181b;
+  --sys-color-surface-container: #27272a;
+  --sys-color-surface-container-high: #3f3f46;
+  --sys-color-surface-container-highest: #52525b;
 
   /* On-Surface (Text & Icons) */
-  --sys-color-on-background: #e1e7eb;
-  --sys-color-on-surface: #e1e7eb;
-  --sys-color-on-surface-variant: #a0a8ad;
+  --sys-color-on-background: #fafafa;
+  --sys-color-on-surface: #fafafa;
+  --sys-color-on-surface-variant: #a1a1aa;
   
-  /* Primary Action Colors (Iron & Steel) */
-  --sys-color-primary: #81b2d3;
-  --sys-color-primary-container: #034561;
-  --sys-color-on-primary: #00344b;
-  --sys-color-on-primary-container: #c6e7ff;
+  /* Primary Action Colors (Muted Indigo) */
+  --sys-color-primary: #6366f1;
+  --sys-color-primary-container: #1e1b4b;
+  --sys-color-on-primary: #ffffff;
+  --sys-color-on-primary-container: #c7d2fe;
 
-  /* Outlines (Ghost Borders) */
-  --sys-color-outline: #8b9297;
-  --sys-color-outline-variant: #40484d;
+  /* Outlines */
+  --sys-color-outline: #52525b;
+  --sys-color-outline-variant: #27272a;
 
   /* Errors */
-  --sys-color-error: #ffb4ab;
-  --sys-color-on-error: #690005;
+  --sys-color-error: #ef4444;
+  --sys-color-on-error: #450a0a;
 }

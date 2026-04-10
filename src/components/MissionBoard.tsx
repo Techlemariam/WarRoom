@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, CheckCircle2, AlertCircle, Clock, ShieldAlert } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Briefcase, ChevronRight } from "lucide-react";
 
 export default function MissionBoard() {
   const [projects, setProjects] = useState<any[]>([]);
@@ -30,80 +30,79 @@ export default function MissionBoard() {
   }, []);
 
   if (loading) return (
-    <div className="h-64 glass rounded-3xl flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-      <div className="font-display text-sm font-bold tracking-widest uppercase text-on-surface/40 animate-pulse">Syncing Mission Intelligence</div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="h-48 card-professional border-dashed animate-pulse" />
+      ))}
     </div>
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {projects.map((project) => {
         const repoAudit = auditData?.vectors?.find((v: any) => v.findings?.some((f: string) => f.includes(project.name)));
         const isHealthy = !repoAudit || repoAudit.score < 1.0;
 
         return (
-          <div key={project.name} className="glass group p-6 rounded-[2rem] space-y-6 transition-all duration-500 hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/5">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-xl font-display font-bold tracking-tight text-on-surface group-hover:text-primary transition-colors">
+          <div key={project.name} className="card-professional flex flex-col hover:shadow-md transition-shadow">
+            <div className="p-4 border-b border-outline-variant flex justify-between items-start bg-surface-container-low">
+              <div className="overflow-hidden">
+                <h3 className="text-sm font-bold text-on-surface truncate">
                   {project.name}
                 </h3>
-                <p className="text-[10px] font-mono font-bold text-on-surface-variant/40 tracking-wider uppercase mt-1">
-                  {project.owner} // {project.name}
+                <p className="text-[10px] text-on-surface-variant/60 truncate uppercase font-medium mt-0.5">
+                  {project.owner}
                 </p>
               </div>
-              <span className={`px-3 py-1 text-[9px] font-bold tracking-widest uppercase rounded-full ${
+              <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-sm border ${
                 project.active?.status === 'ACTIVE' 
-                  ? 'bg-primary-container text-on-primary-container shadow-sm shadow-primary/20' 
-                  : 'bg-surface-container-high text-on-surface-variant/60'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                  : 'bg-zinc-100 text-zinc-500 border-zinc-200'
               }`}>
                 {project.active?.status || 'IDLE'}
               </span>
             </div>
 
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <div className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">Active Sprint</div>
-                <div className="text-xs font-medium bg-surface-container-low/50 px-4 py-3 rounded-2xl text-on-surface relative overflow-hidden group-hover:bg-surface-container/60 transition-colors">
-                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/40" />
-                   {project.active?.sprintId || project.current_state?.currentSprint || 'NO ACTIVE SPRINT'}
+            <div className="p-4 flex-1 space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-on-surface-variant/40 uppercase">Environment</label>
+                <div className="text-[11px] font-medium text-on-surface bg-background p-2 border border-outline-variant rounded-sm flex items-center justify-between">
+                   <span className="truncate">{project.active?.sprintId || 'Production'}</span>
+                   <ChevronRight size={12} className="text-on-surface-variant/30" />
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <div className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">Top Objectives</div>
-                <div className="space-y-2">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-on-surface-variant/40 uppercase">Key Milestones</label>
+                <div className="space-y-1.5">
                   {project.active?.tasks?.slice(0, 3).map((task: any) => (
-                    <div key={task.id} className="flex items-center gap-3 text-xs p-2 rounded-xl hover:bg-surface-container-low/30 transition-colors">
+                    <div key={task.id} className="flex items-center gap-2 text-[11px] text-on-surface-variant">
                       {task.status === 'COMPLETED' ? (
-                        <CheckCircle2 size={14} className="text-primary" />
+                        <CheckCircle2 size={12} className="text-green-600" />
                       ) : task.status === 'BLOCKED' ? (
-                        <ShieldAlert size={14} className="text-error animate-pulse" />
+                        <AlertCircle size={12} className="text-red-500" />
                       ) : (
-                        <Clock size={14} className="text-secondary/60" />
+                        <Clock size={12} className="text-zinc-400" />
                       )}
-                      <span className="truncate text-on-surface/80 group-hover:text-on-surface transition-colors font-medium">{task.title}</span>
+                      <span className="truncate">{task.title}</span>
                     </div>
                   ))}
                   {(!project.active?.tasks || project.active?.tasks.length === 0) && (
-                    <div className="text-[10px] text-on-surface-variant/40 italic px-2">Awaiting new mission directives...</div>
+                    <div className="text-[10px] text-on-surface-variant/30 italic">No scheduled tasks.</div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="pt-5 flex justify-between items-center text-[10px] font-mono border-t border-outline/5">
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
-                isHealthy ? "bg-primary/5 text-primary" : "bg-error/5 text-error"
-              }`}>
-                <Activity size={12} className={isHealthy ? "" : "animate-pulse"} />
-                <span className="font-bold tracking-tighter uppercase">
-                  CI: {isHealthy ? 'OPTIMAL' : 'DRIFT DETECTED'}
+            <div className="p-3 bg-surface-container-low border-t border-outline-variant flex justify-between items-center">
+              <div className="flex items-center gap-1.5">
+                <div className={`w-1.5 h-1.5 rounded-full ${isHealthy ? "bg-green-500" : "bg-red-500"}`} />
+                <span className="text-[10px] font-semibold text-on-surface-variant/60 uppercase">
+                  {isHealthy ? 'Sync OK' : 'Issues Detected'}
                 </span>
               </div>
-              <div className="text-on-surface font-bold font-display text-xs">
-                {project.revenue || '0'} <span className="text-[9px] opacity-40">SEK</span>
+              <div className="text-on-surface font-bold text-[11px]">
+                {project.revenue || '0'} <span className="text-[9px] font-medium opacity-40">SEK</span>
               </div>
             </div>
           </div>
@@ -112,4 +111,3 @@ export default function MissionBoard() {
     </div>
   );
 }
-

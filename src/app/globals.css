@@ -32,36 +32,55 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.glass {
-  background: color-mix(in srgb, var(--sys-color-surface-container-low), transparent 20%);
-  backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid color-mix(in srgb, var(--sys-color-outline-variant), transparent 80%);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+/* ── Professional Card System ─────────────────────────────────── */
+.card-professional {
+  background: var(--sys-color-surface);
+  border: 1px solid var(--sys-color-outline-variant);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
-.glass-bright {
-  background: color-mix(in srgb, var(--sys-color-surface-container-highest), transparent 40%);
-  backdrop-filter: blur(24px) saturate(200%);
-  border: 1px solid color-mix(in srgb, var(--sys-color-outline-variant), transparent 70%);
+.card-professional-hover:hover {
+  border-color: var(--sys-color-outline);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* No-Line Rule Overrides */
-input, select, textarea, button {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+/* ── Standard Inputs ─────────────────────────────────── */
+input, select, textarea {
+  border: 1px solid var(--sys-color-outline-variant);
+  background: var(--sys-color-surface);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
 }
 
-input:focus, select:focus, textarea:focus {
-  box-shadow: 0 0 0 2px var(--sys-color-primary-container) !important;
+input:focus {
+  border-color: var(--sys-color-primary);
+  outline: none;
+  ring: 2px solid var(--sys-color-primary-container);
+}
+
+button.btn-standard {
+  background: var(--sys-color-primary);
+  color: var(--sys-color-on-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+button.btn-standard:hover {
+  filter: brightness(1.1);
+}
+
+/* Removal of stylized Nordic utilities */
+.glass, .glass-bright {
+  background: var(--sys-color-surface-container-low);
+  border: 1px solid var(--sys-color-outline-variant);
+  backdrop-filter: none;
 }
 
 .pill {
   border-radius: var(--radius-full);
 }
-
-.card-soft {
-  border-radius: var(--radius-lg);
-  border: none !important;
-}
-
