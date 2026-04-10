@@ -28,7 +28,7 @@ export async function GET() {
     const entropyIndex = 1.2 + (snykMetrics.critical * 0.5); // Baseline + Security Weight
     
     // Trigger Autonomy Engine (Dry Run)
-    await remediateDrift(entropyIndex);
+    const remediations = await remediateDrift(entropyIndex);
 
     return NextResponse.json({
       coolify: {
@@ -43,7 +43,8 @@ export async function GET() {
         index: entropyIndex,
         securityScore: snykMetrics.score,
         vulnerabilities: snykMetrics
-      }
+      },
+      remediations
     });
   } catch (error: any) {
     console.error("Audit sensor error:", error);

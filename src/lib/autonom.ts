@@ -1,6 +1,4 @@
 import { getCoolifyApplications } from "./coolify";
-import { getHetznerServers } from "./hetzner";
-import { addAuditLog } from "./audit";
 
 /**
  * Autonomy & Self-Healing Engine (Phase 5 - Prescriptive)
@@ -18,10 +16,10 @@ export interface RemediationAction {
 export async function remediateDrift(driftScore: number): Promise<RemediationAction[]> {
   const actions: RemediationAction[] = [];
 
-  // Logic: If drift score is high, identify candidates for remediation
+  // Logic: If drift score is high (e.g. > 1.5), identify candidates for remediation
   if (driftScore > 1.5) {
      const apps = await getCoolifyApplications();
-     const unstable = apps.filter(a => a.status === 'exited' || a.status === 'restarting');
+     const unstable = apps.filter((a: any) => a.status === 'exited' || a.status === 'restarting' || a.status === 'error');
 
      for (const app of unstable) {
        actions.push({
@@ -32,17 +30,6 @@ export async function remediateDrift(driftScore: number): Promise<RemediationAct
          command: `curl -X POST /api/deploy/${app.uuid}`
        });
      }
-  }
-
-  // --- DRY RUN LOGGING ---
-  for (const action of actions) {
-    await addAuditLog({
-      title: `[DRY-RUN] Prescriptive Action Issued`,
-      description: `${action.description} Suggested command: \`${action.command}\``,
-      type: "COMPLIANCE",
-      status: "STRIKE",
-      metadata: { actionId: action.id, manual_override_required: true }
-    });
   }
 
   return actions;

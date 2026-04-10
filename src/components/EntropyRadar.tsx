@@ -17,28 +17,28 @@ export default function EntropyRadar() {
 
   const [auditData, setAuditData] = useState(defaultLogs);
 
-  useEffect(() => {
-    const updateMetrics = async () => {
-      try {
-        const res = await fetch('/api/infra');
-        const data = await res.json();
-        
-        if (data.entropy) {
-           setAuditData([
-             { label: "Infrastructure", value: data.infraScore || 85, full: 100 },
-             { label: "CI/CD Entropy", value: data.entropy.index * 10 || 65, full: 100 },
-             { label: "Sec-Vector", value: data.entropy.securityScore || 45, full: 100 },
-             { label: "Financial Drift", value: 30, full: 100 },
-             { label: "Latent Tech Debt", value: 55, full: 100 },
-           ]);
-        }
-        setLoading(false);
-      } catch (e) {
-        console.error("Entropy sync failure", e);
-        setLoading(false);
+  const updateMetrics = async () => {
+    try {
+      const res = await fetch('/api/infra');
+      const data = await res.json();
+      
+      if (data.entropy) {
+         setAuditData([
+           { label: "Infrastructure", value: data.infraScore || 85, full: 100 },
+           { label: "CI/CD Entropy", value: data.entropy.index * 10 || 65, full: 100 },
+           { label: "Sec-Vector", value: data.entropy.securityScore || 45, full: 100 },
+           { label: "Financial Drift", value: 30, full: 100 },
+           { label: "Latent Tech Debt", value: 55, full: 100 },
+         ]);
       }
-    };
-    
+      setLoading(false);
+    } catch (e) {
+      console.error("Entropy sync failure", e);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     updateMetrics();
     const interval = setInterval(updateMetrics, 30000);
     return () => clearInterval(interval);
@@ -61,8 +61,8 @@ export default function EntropyRadar() {
       <div className="p-4 bg-surface-container-low border-b border-outline-variant flex justify-between items-center">
         <h3 className="text-xs font-bold uppercase tracking-wide text-on-surface">Compliance Metrics</h3>
         <button 
-          onClick={fetchData}
-          className="p-1.5 hover:bg-surface-container rounded-sm transition-colors text-on-surface-variant/60"
+          onClick={updateMetrics}
+          className="p-1.5 hover:bg-surface-container rounded-sm transition-colors text-on-surface-variant/40 hover:text-primary"
         >
           <RefreshCcw size={14} />
         </button>
