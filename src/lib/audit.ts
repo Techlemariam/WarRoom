@@ -53,9 +53,9 @@ export async function runEntropyAudit(owner: string, repos: string[]): Promise<A
 
   for (const res of results) {
     for (let i = 0; i < res.vectors.length; i++) {
-        const v = res.vectors[i];
-        aggregatedVectors[i].score += v.score / repos.length;
-        aggregatedVectors[i].findings.push(...v.findings);
+      const v = res.vectors[i];
+      aggregatedVectors[i].score += v.score / repos.length;
+      aggregatedVectors[i].findings.push(...v.findings);
     }
   }
 
@@ -89,7 +89,10 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     const durations = workflowRuns
       .filter((r) => r.status === 'completed' && r.run_started_at)
       .map(
-        (r) => (new Date(r.updated_at).getTime() - new Date(r.run_started_at || r.created_at).getTime()) / 60000
+        (r) =>
+          (new Date(r.updated_at).getTime() -
+            new Date(r.run_started_at || r.created_at).getTime()) /
+          60000
       );
     const avgDuration = durations.length
       ? durations.reduce((a, b) => a + b, 0) / durations.length
@@ -105,7 +108,7 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     const manualScore = workflowRuns.length ? (manualRuns / workflowRuns.length) * 2 : 0;
 
     // 4. IaC / Drift (0-2)
-    const files = Array.isArray(content.data) ? content.data.map((f: any) => f.name) : [];
+    const files = Array.isArray(content.data) ? content.data.map((f: { name: string }) => f.name) : [];
     const driftFindings: string[] = [];
     let driftScore = 0;
 
@@ -134,12 +137,12 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     console.error(`Audit failed for ${repo}`, e);
     return {
       vectors: [
-          { name: 'Feedback', score: 2.0, findings: ['API Access Denied'] },
-          { name: 'Determinism', score: 2.0, findings: [] },
-          { name: 'Manual', score: 2.0, findings: [] },
-          { name: 'IaC/Drift', score: 2.0, findings: [] },
-          { name: 'MTTR', score: 2.0, findings: [] },
-      ]
+        { name: 'Feedback', score: 2.0, findings: ['API Access Denied'] },
+        { name: 'Determinism', score: 2.0, findings: [] },
+        { name: 'Manual', score: 2.0, findings: [] },
+        { name: 'IaC/Drift', score: 2.0, findings: [] },
+        { name: 'MTTR', score: 2.0, findings: [] },
+      ],
     };
   }
 }
