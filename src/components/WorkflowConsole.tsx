@@ -1,174 +1,156 @@
 'use client';
 
-import { AlertCircle, Database, Filter, Loader2, Play, Search } from 'lucide-react';
+import { ChevronRight, Filter, Play, RefreshCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+interface Workflow {
+  repo: string;
+  command: string;
+  category: string;
+}
+
+interface AuditData {
+  vectors?: Array<{
+    name: string;
+    findings?: string[];
+  }>;
+}
+
 export default function WorkflowConsole() {
-  const [workflows, setWorkflows] = useState<any[]>([]);
-  const [auditData, setAuditData] = useState<any>(null);
+  const [workflows, setWorkflows] = useState<Workflow[]>([]);
+  const [auditData, setAuditData] = useState<AuditData | null>(null);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState<Record<string, boolean>>({});
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    async function fetchData() {
+    async function init() {
       try {
-        const [wfRes, auditRes] = await Promise.all([fetch('/api/workflows'), fetch('/api/audit')]);
-        const wfData = await wfRes.json();
-        const aData = await auditRes.json();
-
-        setWorkflows(wfData);
-        setAuditData(aData);
+        const [wRes, aRes] = await Promise.all([fetch('/api/workflows'), fetch('/api/infra')]);
+        const [wJson, aJson] = await Promise.all([wRes.json(), aRes.json()]);
+        setWorkflows(wJson);
+        setAuditData(aJson);
       } catch (e) {
-        console.error('Failed to fetch workflows', e);
+        console.error(e);
       } finally {
         setLoading(false);
       }
     }
-    fetchData();
+    init();
   }, []);
 
-  async function handleRun(workflow: any) {
+  async function handleRun(workflow: Workflow) {
     const id = `${workflow.repo}-${workflow.command}`;
     setRunning((prev) => ({ ...prev, [id]: true }));
-
     try {
       const res = await fetch('/api/dispatch', {
         method: 'POST',
         body: JSON.stringify({
           owner: 'Techlemariam',
           repo: workflow.repo,
-          command: workflow.command,
+          workflowId: workflow.command,
+          ref: 'main',
         }),
       });
-
       if (res.ok) {
-        setTimeout(() => setRunning((prev) => ({ ...prev, [id]: false })), 2000);
-      } else {
+        // Success logic...
         setRunning((prev) => ({ ...prev, [id]: false }));
       }
-    } catch (e) {
+    } catch (_e) {
       setRunning((prev) => ({ ...prev, [id]: false }));
     }
   }
 
-  const enrichedWorkflows = workflows
+  const prioritizedWorkflows = workflows
     .map((w) => {
       const hasDrift = auditData?.vectors
-        ?.find((v: any) => v.name === 'IaC/Drift')
-        ?.findings?.some((f: string) => f.includes(w.repo));
+        ?.find((v) => v.name === 'IaC/Drift')
+        ?.findings?.some((f) => f.includes(w.repo));
       return {
         ...w,
-        isRecommended:
-          hasDrift &&
-          (w.command.toLowerCase().includes('infra') || w.command.toLowerCase().includes('docker')),
+        priority: hasDrift ? 'HIGH' : 'STABLE',
       };
     })
-    .sort((a, b) => (b.isRecommended ? 1 : 0) - (a.isRecommended ? 1 : 0));
-
-  const filtered = enrichedWorkflows.filter(
-    (w) =>
-      w.command.toLowerCase().includes(search.toLowerCase()) ||
-      w.description.toLowerCase().includes(search.toLowerCase())
-  );
+    .sort((a, b) => (a.priority === 'HIGH' ? -1 : 1));
 
   if (loading)
     return (
-      <div className="h-64 card-professional flex items-center justify-center">
-        <div className="text-xs font-medium text-on-surface-variant/50 flex items-center gap-2">
-          <Loader2 size={14} className="animate-spin" />
-          Loading Operations Console...
-        </div>
+      <div className="h-96 card-professional flex items-center justify-center">
+        <RefreshCcw size={20} className="animate-spin text-on-surface-variant/30" />
       </div>
     );
 
   return (
-    <div className="card-professional flex flex-col h-[520px] shadow-sm">
-      <div className="p-4 bg-surface-container-low border-b border-outline-variant flex gap-3">
-        <div className="relative flex-1">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40"
-            size={14}
-          />
+    <div className="card-professional flex flex-col h-full overflow-hidden">
+      <div className="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+        <div className="flex items-center gap-3">
           <input
             type="text"
-            placeholder="Search operations..."
-            className="w-full pl-9"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Filter routines..."
+            className="bg-surface border border-outline-variant text-[11px] px-3 py-1.5 rounded-sm w-48 focus:outline-none focus:border-primary transition-all"
           />
         </div>
-        <button className="px-4 py-2 border border-outline-variant text-[11px] font-bold uppercase rounded-sm bg-surface hover:bg-surface-container transition-colors flex items-center gap-2">
+        <button type="button" className="px-4 py-2 border border-outline-variant text-[11px] font-bold uppercase rounded-sm bg-surface hover:bg-surface-container transition-colors flex items-center gap-2">
           <Filter size={12} />
           Filters
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="divide-y divide-outline-variant">
-          {filtered.map((w) => {
-            const id = `${w.repo}-${w.command}`;
-            const isRunning = running[id];
+      <div className="flex-1 overflow-y-auto divide-y divide-outline-variant">
+        {prioritizedWorkflows.map((w) => {
+          const id = `${w.repo}-${w.command}`;
+          const isRunning = running[id];
 
-            return (
-              <div
-                key={id}
-                className={`p-4 transition-all flex items-center justify-between ${
-                  w.isRecommended
-                    ? 'bg-blue-50/50 dark:bg-blue-900/10'
-                    : 'hover:bg-surface-container-low'
-                }`}
-              >
-                <div className="space-y-1 pr-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-on-surface">{w.command}</span>
-                    <span className="text-[10px] uppercase px-1.5 py-0.5 border border-outline-variant text-on-surface-variant/60 font-medium rounded">
-                      {w.repo}
+          return (
+            <div
+              key={id}
+              className="group p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`w-10 h-10 rounded-sm flex items-center justify-center border ${
+                    w.priority === 'HIGH'
+                      ? 'bg-red-50 border-red-200 text-error'
+                      : 'bg-surface-container border-outline-variant text-on-surface-variant'
+                  }`}
+                >
+                  <ChevronRight size={18} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-[11px] font-bold text-on-surface uppercase tracking-tight">
+                      {w.repo.replace('ironforge-', '')}: {w.command}
                     </span>
-                    {w.isRecommended && (
-                      <span className="text-[10px] text-primary font-bold bg-primary-container/30 px-2 py-0.5 rounded">
-                        Recommended
+                    {w.priority === 'HIGH' && (
+                      <span className="bg-error/10 text-error text-[8px] font-black px-1.5 py-0.5 rounded-sm uppercase">
+                        Required
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-on-surface-variant/70 leading-relaxed">
-                    {w.description}
-                  </p>
+                  <div className="text-[10px] font-mono text-on-surface-variant/50 uppercase">
+                    Execution Vector: GitHub Actions / {w.category}
+                  </div>
                 </div>
-
-                <button
-                  onClick={() => handleRun(w)}
-                  disabled={isRunning}
-                  className={`btn-standard flex items-center gap-2 min-w-[120px] justify-center ${
-                    isRunning ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                >
-                  {isRunning ? (
-                    <>
-                      <Loader2 size={12} className="animate-spin" />
-                      Dispatching
-                    </>
-                  ) : (
-                    <>
-                      <Play size={10} fill="currentColor" />
-                      {w.isRecommended ? 'Execute Fix' : 'Execute'}
-                    </>
-                  )}
-                </button>
               </div>
-            );
-          })}
-        </div>
-      </div>
 
-      <div className="p-3 bg-surface-container border-t border-outline-variant flex justify-between items-center text-[10px] font-mono font-semibold text-on-surface-variant/40 uppercase">
-        <div className="flex items-center gap-2">
-          <div
-            className={`w-1.5 h-1.5 rounded-full ${auditData?.totalScore <= 1.5 ? 'bg-green-500' : 'bg-red-500'}`}
-          />
-          System Status: {auditData?.totalScore <= 1.5 ? 'Operational' : 'Attention Required'}
-        </div>
-        <div>Instance ID: #7742</div>
+              <button
+                type="button"
+                onClick={() => handleRun(w)}
+                disabled={isRunning}
+                className={`p-2.5 rounded-sm border transition-all ${
+                  isRunning
+                    ? 'bg-surface-container-high border-outline-variant text-on-surface-variant/40'
+                    : 'bg-surface border-outline-variant hover:border-primary text-primary hover:bg-primary/5 active:scale-95'
+                }`}
+              >
+                {isRunning ? (
+                  <RefreshCcw size={14} className="animate-spin" />
+                ) : (
+                  <Play size={14} fill="currentColor" />
+                )}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -116,7 +116,7 @@ export default function InfraMonitor() {
               <div
                 className="bg-primary h-full transition-all duration-1000 rounded-sm"
                 style={{ width: `${cpuUsage}%` }}
-              ></div>
+              />
             </div>
           </div>
           <div className="space-y-1.5">
@@ -130,7 +130,7 @@ export default function InfraMonitor() {
               <div
                 className="bg-secondary h-full transition-all duration-1000 rounded-sm"
                 style={{ width: `${memUsagePercent}%` }}
-              ></div>
+              />
             </div>
           </div>
         </div>
