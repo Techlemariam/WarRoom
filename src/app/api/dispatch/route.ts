@@ -3,17 +3,13 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { owner, repo, command } = body;
+  const { owner, repo, workflowId, ref, inputs } = body;
 
-  if (!owner || !repo || !command) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-  }
-
-  const result = await dispatchWorkflow(owner, repo, command);
+  const result = await dispatchWorkflow(owner, repo, workflowId, ref, inputs);
 
   if (result.success) {
     return NextResponse.json({ success: true });
-  } else {
-    return NextResponse.json({ success: false, error: result.error }, { status: 500 });
   }
+
+  return NextResponse.json({ success: false, error: result.error }, { status: 500 });
 }

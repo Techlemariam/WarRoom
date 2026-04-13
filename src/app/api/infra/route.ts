@@ -1,54 +1,49 @@
-import { remediateDrift } from '@/lib/autonom';
-import { getCoolifyApplications, getCoolifyHealth } from '@/lib/coolify';
-import { getHetznerMetrics, getHetznerServer, getHetznerServers } from '@/lib/hetzner';
-import { getSnykMetrics } from '@/lib/snyk';
+import { getSnykProjects } from '@/lib/snyk';
+import { runEntropyAudit } from '@/lib/audit';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    let hetznerId = process.env.HETZNER_SERVER_ID;
+    const reposRaw = process.env.GITHUB_REPOS || '';
+    const repos = reposRaw
+      .split(',')
+      .map((r) => r.trim().split('/').pop())
+      .filter(Boolean) as string[];
+    const owner = reposRaw.split(',')[0]?.split('/')[0] || 'Techlemariam';
 
-    // If no ID is provided, try to discover one
-    if (!hetznerId) {
-      const servers = await getHetznerServers();
-      if (servers && servers.length > 0) {
-        hetznerId = servers[0].id.toString();
-      }
-    }
+    // 1. Snyk Security Filter
+    const snykData = await getSnykProjects();
+    const vulnerabilities = snykData.map((p: any) => ({
+      name: p.attributes.name,
+      critical: p.attributes.issue_counts_by_severity.critical,
+      high: p.attributes.issue_counts_by_severity.high,
+    }));
 
-    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics, snykMetrics] =
-      await Promise.all([
-        getCoolifyHealth(),
-        getCoolifyApplications(),
-        hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
-        hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
-        getSnykMetrics(),
-      ]);
+    // 2. Entropy Sensor (Drift)
+    const auditData = await runEntropyAudit(owner, repos);
 
-    // Calculate Entropy Index including Security Vector
-    const entropyIndex = 1.2 + snykMetrics.critical * 0.5; // Baseline + Security Weight
-
-    // Trigger Autonomy Engine (Dry Run)
-    const remediations = await remediateDrift(entropyIndex);
+    // 3. Automated Prescriptions
+    const remediations = auditData.filter((a) => a.entropy > 0.3).map((a) => ({
+      target: a.project,
+      action: 'Run Standard Parity Sync',
+      priority: a.entropy > 0.7 ? 'CRITICAL' : 'HIGH',
+    }));
 
     return NextResponse.json({
-      coolify: {
-        healthy: coolifyHealth,
-        apps: coolifyApps,
+      timestamp: new Date().toISOString(),
+      security: {
+        totalVulnerabilities: vulnerabilities.length,
+        critical: vulnerabilities.reduce((acc: number, v: any) => acc + v.critical, 0),
       },
-      hetzner: {
-        server: hetznerServer,
-        metrics: hetznerMetrics,
-      },
-      entropy: {
-        index: entropyIndex,
-        securityScore: snykMetrics.score,
-        vulnerabilities: snykMetrics,
+      drift: {
+        avgEntropy: auditData.reduce((acc, a) => acc + a.entropy, 0) / auditData.length,
+        projectsAffected: auditData.filter((a) => a.entropy > 0.1).length,
       },
       remediations,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Audit sensor error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -1,46 +1,42 @@
+import { octokit } from '@/lib/github';
 import { NextResponse } from 'next/server';
-import { Octokit } from 'octokit';
-
-const octokit = new Octokit({
-  auth: process.env.GITHUB_PAT,
-});
 
 export async function GET() {
-  const repos = process.env.GITHUB_REPOS?.split(',') || [];
+  const reposRaw = process.env.GITHUB_REPOS || '';
+  const repos = reposRaw.split(',').map((r) => r.trim());
 
   try {
     const projectStates = await Promise.all(
-      repos.map(async (repoStr) => {
-        const [owner, repo] = repoStr.split('/');
-
+      repos.map(async (repoFull) => {
+        const [owner, repo] = repoFull.split('/');
         const stateFiles = ['active.json', 'current_state.json', 'queue.json', 'usage.json'];
-        const state: any = { name: repo, owner };
+        const state: Record<string, unknown> = { name: repo, owner };
 
         await Promise.all(
           stateFiles.map(async (file) => {
             try {
-              const { data: contentData } = await octokit.rest.repos.getContent({
+              const { data } = await octokit.rest.repos.getContent({
                 owner,
                 repo,
-                path: `.agent/${file}`,
+                path: file,
               });
 
-              if ('content' in contentData) {
-                const content = Buffer.from(contentData.content, 'base64').toString();
+              if ('content' in data && typeof data.content === 'string') {
+                const content = Buffer.from(data.content, 'base64').toString();
                 state[file.replace('.json', '')] = JSON.parse(content);
               }
-            } catch (e) {
+            } catch (_e) {
               // File might not exist, skip
             }
           })
         );
-
         return state;
       })
     );
 
     return NextResponse.json(projectStates);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
