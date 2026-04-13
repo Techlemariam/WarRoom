@@ -2,93 +2,66 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\app\api\dispatch\route.ts:16:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × This else clause can be omitted because previous branches break early.
-  
-    14 │   if (result.success) {
-    15 │     return NextResponse.json({ success: true });
-  > 16 │   } else {
-       │     ^^^^^^
-  > 17 │     return NextResponse.json({ success: false, error: result.error }, { status: 500 });
-  > 18 │   }
-       │   ^
-    19 │ }
-    20 │ 
-  
-  i Unsafe fix: Omit the else clause.
-  
-    14 14 │     if (result.success) {
-    15 15 │       return NextResponse.json({ success: true });
-    16    │ - ··}·else·{
-       16 │ + ··}
-    17 17 │       return NextResponse.json({ success: false, error: result.error }, { status: 500 });
-    18    │ - ··}
-    19 18 │   }
-    20 19 │   
-  
-
-.\src\app\api\infra\route.ts:50:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\api\infra\route.ts:16:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-    48 │       remediations,
-    49 │     });
-  > 50 │   } catch (error: any) {
-       │                   ^^^
-    51 │     console.error('Audit sensor error:', error);
-    52 │     return NextResponse.json({ error: error.message }, { status: 500 });
+    14 │     // 1. Snyk Security Filter
+    15 │     const snykData = await getSnykProjects();
+  > 16 │     const vulnerabilities = snykData.map((p: any) => ({
+       │                                              ^^^
+    17 │       name: p.attributes.name,
+    18 │       critical: p.attributes.issue_counts_by_severity.critical,
   
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\app\api\projects\route.ts:17:22 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\api\infra\route.ts:36:59 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-    16 │         const stateFiles = ['active.json', 'current_state.json', 'queue.json', 'usage.json'];
-  > 17 │         const state: any = { name: repo, owner };
-       │                      ^^^
-    18 │ 
-    19 │         await Promise.all(
+    34 │       security: {
+    35 │         totalVulnerabilities: vulnerabilities.length,
+  > 36 │         critical: vulnerabilities.reduce((acc: number, v: any) => acc + v.critical, 0),
+       │                                                           ^^^
+    37 │       },
+    38 │       drift: {
   
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\app\api\projects\route.ts:43:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\api\infra\route.ts organizeImports ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Unexpected any. Specify a different type.
+  × Import statements could be sorted:
   
-    42 │     return NextResponse.json(projectStates);
-  > 43 │   } catch (error: any) {
-       │                   ^^^
-    44 │     return NextResponse.json({ error: error.message }, { status: 500 });
-    45 │   }
-  
-  i any disables many type checking rules. Its use should be avoided.
+     1    │ - import·{·getSnykProjects·}·from·'@/lib/snyk';
+     2    │ - import·{·runEntropyAudit·}·from·'@/lib/audit';
+        1 │ + import·{·runEntropyAudit·}·from·'@/lib/audit';
+        2 │ + import·{·getSnykProjects·}·from·'@/lib/snyk';
+     3  3 │   import { NextResponse } from 'next/server';
+     4  4 │   
   
 
-.\src\app\api\projects\route.ts:32:22 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━
+.\src\app\api\infra\route.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ! This variable is unused.
+  × Formatter would have printed the following content:
   
-    30 │                 state[file.replace('.json', '')] = JSON.parse(content);
-    31 │               }
-  > 32 │             } catch (e) {
-       │                      ^
-    33 │               // File might not exist, skip
-    34 │             }
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend e with an underscore.
-  
-    30 30 │                   state[file.replace('.json', '')] = JSON.parse(content);
-    31 31 │                 }
-    32    │ - ············}·catch·(e)·{
-       32 │ + ············}·catch·(_e)·{
-    33 33 │                 // File might not exist, skip
-    34 34 │               }
+    24 24 │   
+    25 25 │       // 3. Automated Prescriptions
+    26    │ - ····const·remediations·=·auditData.filter((a)·=>·a.entropy·>·0.3).map((a)·=>·({
+    27    │ - ······target:·a.project,
+    28    │ - ······action:·'Run·Standard·Parity·Sync',
+    29    │ - ······priority:·a.entropy·>·0.7·?·'CRITICAL'·:·'HIGH',
+    30    │ - ····}));
+       26 │ + ····const·remediations·=·auditData
+       27 │ + ······.filter((a)·=>·a.entropy·>·0.3)
+       28 │ + ······.map((a)·=>·({
+       29 │ + ········target:·a.project,
+       30 │ + ········action:·'Run·Standard·Parity·Sync',
+       31 │ + ········priority:·a.entropy·>·0.7·?·'CRITICAL'·:·'HIGH',
+       32 │ + ······}));
+    31 33 │   
+    32 34 │       return NextResponse.json({
   
 
 .\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -282,39 +255,11 @@
   i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
   
 
-.\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\EntropyRadar.tsx:7:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-     6 │ const key = new TextEncoder().encode(process.env.AUTH_SECRET || secretKey);
-     7 │ 
-   > 8 │ export async function encrypt(payload: any) {
-       │                                        ^^^
-     9 │   return await new SignJWT(payload)
-    10 │     .setProtectedHeader({ alg: 'HS256' })
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\auth.ts:16:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    14 │ }
-    15 │ 
-  > 16 │ export async function decrypt(input: string): Promise<any> {
-       │                                                       ^^^
-    17 │   const { payload } = await jwtVerify(input, key, {
-    18 │     algorithms: ['HS256'],
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\components\InfraMonitor.tsx:7:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    6 │ export default function InfraMonitor() {
+    6 │ export default function EntropyRadar() {
   > 7 │   const [data, setData] = useState<any>(null);
       │                                    ^^^
     8 │   const [loading, setLoading] = useState(true);
@@ -323,25 +268,103 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\components\InfraMonitor.tsx:41:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\EntropyRadar.tsx:103:28 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-    39 │   const coolify = data?.coolify;
-    40 │ 
-  > 41 │   const getLatest = (metric: any) => {
-       │                              ^^^
-    42 │     if (!metric?.values) return 0;
-    43 │     const latest = metric.values[metric.values.length - 1];
+    102 │         <div className="space-y-4">
+  > 103 │           {vectors.map((v: any) => (
+        │                            ^^^
+    104 │             <div key={v.name} className="space-y-2">
+    105 │               <div className="flex justify-between items-center text-[11px]">
   
   i any disables many type checking rules. Its use should be avoided.
   
 
+.\src\components\EntropyRadar.tsx:7:16 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━
+
+  ! This variable is unused.
+  
+    6 │ export default function EntropyRadar() {
+  > 7 │   const [data, setData] = useState<any>(null);
+      │                ^^^^^^^
+    8 │   const [loading, setLoading] = useState(true);
+    9 │ 
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend setData with an underscore.
+  
+      5   5 │   
+      6   6 │   export default function EntropyRadar() {
+      7     │ - ··const·[data,·setData]·=·useState<any>(null);
+          7 │ + ··const·[data,·_setData]·=·useState<any>(null);
+      8   8 │     const [loading, setLoading] = useState(true);
+      9   9 │   
+  
+
+.\src\components\EntropyRadar.tsx:18:10 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━
+
+  ! This variable is unused.
+  
+    16 │   ];
+    17 │ 
+  > 18 │   const [auditData, setAuditData] = useState(defaultLogs);
+       │          ^^^^^^^^^
+    19 │ 
+    20 │   const updateMetrics = async () => {
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend auditData with an underscore.
+  
+     16  16 │     ];
+     17  17 │   
+     18     │ - ··const·[auditData,·setAuditData]·=·useState(defaultLogs);
+         18 │ + ··const·[_auditData,·setAuditData]·=·useState(defaultLogs);
+     19  19 │   
+     20  20 │     const updateMetrics = async () => {
+  
+
+.\src\components\EntropyRadar.tsx:41:3 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━━━━━
+
+  × This hook does not specify all of its dependencies: updateMetrics
+  
+    39 │   };
+    40 │ 
+  > 41 │   useEffect(() => {
+       │   ^^^^^^^^^
+    42 │     updateMetrics();
+    43 │     const interval = setInterval(updateMetrics, 30000);
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    41 │   useEffect(() => {
+    42 │     updateMetrics();
+  > 43 │     const interval = setInterval(updateMetrics, 30000);
+       │                                  ^^^^^^^^^^^^^
+    44 │     return () => clearInterval(interval);
+    45 │   }, []);
+  
+  i This dependency is not specified in the hook dependency list.
+  
+    41 │   useEffect(() => {
+  > 42 │     updateMetrics();
+       │     ^^^^^^^^^^^^^
+    43 │     const interval = setInterval(updateMetrics, 30000);
+    44 │     return () => clearInterval(interval);
+  
+  i Either include them or remove the dependency array
+  
+
+Skipped 1 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 32.
-Checked 33 files in 56ms. No fixes applied.
-Found 45 errors.
-Found 7 warnings.
+Diagnostics not shown: 30.
+Checked 33 files in 54ms. No fixes applied.
+Found 44 errors.
+Found 6 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.

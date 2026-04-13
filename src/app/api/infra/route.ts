@@ -1,5 +1,5 @@
-import { getSnykProjects } from '@/lib/snyk';
 import { runEntropyAudit } from '@/lib/audit';
+import { getSnykProjects } from '@/lib/snyk';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -23,11 +23,13 @@ export async function GET() {
     const auditData = await runEntropyAudit(owner, repos);
 
     // 3. Automated Prescriptions
-    const remediations = auditData.filter((a) => a.entropy > 0.3).map((a) => ({
-      target: a.project,
-      action: 'Run Standard Parity Sync',
-      priority: a.entropy > 0.7 ? 'CRITICAL' : 'HIGH',
-    }));
+    const remediations = auditData
+      .filter((a) => a.entropy > 0.3)
+      .map((a) => ({
+        target: a.project,
+        action: 'Run Standard Parity Sync',
+        priority: a.entropy > 0.7 ? 'CRITICAL' : 'HIGH',
+      }));
 
     return NextResponse.json({
       timestamp: new Date().toISOString(),
