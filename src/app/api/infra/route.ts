@@ -2,6 +2,16 @@ import { runEntropyAudit } from '@/lib/audit';
 import { getSnykProjects } from '@/lib/snyk';
 import { NextResponse } from 'next/server';
 
+interface SnykProject {
+  attributes: {
+    name: string;
+    issue_counts_by_severity: {
+      critical: number;
+      high: number;
+    };
+  };
+}
+
 export async function GET() {
   try {
     const reposRaw = process.env.GITHUB_REPOS || '';
@@ -12,8 +22,8 @@ export async function GET() {
     const owner = reposRaw.split(',')[0]?.split('/')[0] || 'Techlemariam';
 
     // 1. Snyk Security Filter
-    const snykData = await getSnykProjects();
-    const vulnerabilities = snykData.map((p: any) => ({
+    const snykData = (await getSnykProjects()) as SnykProject[];
+    const vulnerabilities = snykData.map((p) => ({
       name: p.attributes.name,
       critical: p.attributes.issue_counts_by_severity.critical,
       high: p.attributes.issue_counts_by_severity.high,
@@ -35,7 +45,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       security: {
         totalVulnerabilities: vulnerabilities.length,
-        critical: vulnerabilities.reduce((acc: number, v: any) => acc + v.critical, 0),
+        critical: vulnerabilities.reduce((acc, v) => acc + v.critical, 0),
       },
       drift: {
         avgEntropy: auditData.reduce((acc, a) => acc + a.entropy, 0) / auditData.length,

@@ -70,6 +70,190 @@
     33 33 │       } finally {
   
 
+.\src\components\DecisionLog.tsx:42:21 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    40 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
+    41 │         {decisions.map((d, i) => (
+  > 42 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
+       │                     ^
+    43 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
+    44 │               <Calendar size={10} />
+  
+  i This is the source of the key value.
+  
+    39 │     <div className="card-professional flex flex-col h-[300px]">
+    40 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
+  > 41 │         {decisions.map((d, i) => (
+       │                            ^
+    42 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
+    43 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+.\src\components\DecisionLog.tsx:58:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    57 │       <div className="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
+  > 58 │         <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    59 │           <ChevronRight size={12} />
+    60 │           Full Audit Log
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\components\DecisionLog.tsx:62:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    60 │           Full Audit Log
+    61 │         </button>
+  > 62 │         <button className="text-primary hover:underline flex items-center gap-1">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    63 │           <Plus size={12} />
+    64 │           New Entry
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\components\MissionBoard.tsx:7:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    6 │ export default function MissionBoard() {
+  > 7 │   const [projects, setProjects] = useState<any[]>([]);
+      │                                            ^^^
+    8 │   const [auditData, setAuditData] = useState<any>(null);
+    9 │   const [loading, setLoading] = useState(true);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\components\MissionBoard.tsx:8:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+     6 │ export default function MissionBoard() {
+     7 │   const [projects, setProjects] = useState<any[]>([]);
+   > 8 │   const [auditData, setAuditData] = useState<any>(null);
+       │                                              ^^^
+     9 │   const [loading, setLoading] = useState(true);
+    10 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\components\MissionBoard.tsx:44:56 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    42 │     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    43 │       {projects.map((project) => {
+  > 44 │         const repoAudit = auditData?.vectors?.find((v: any) =>
+       │                                                        ^^^
+    45 │           v.findings?.some((f: string) => f.includes(project.name))
+    46 │         );
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\components\MissionBoard.tsx:74:17 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    72 │             <div className="p-4 flex-1 space-y-4">
+    73 │               <div className="space-y-1">
+  > 74 │                 <label className="text-[10px] font-bold text-on-surface-variant/40 uppercase">
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 75 │                   Environment
+  > 76 │                 </label>
+       │                 ^^^^^^^^
+    77 │                 <div className="text-[11px] font-medium text-on-surface bg-background p-2 border border-outline-variant rounded-sm flex items-center justify-between">
+    78 │                   <span className="truncate">{project.active?.sprintId || 'Production'}</span>
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+.\src\components\MissionBoard.tsx:84:17 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    83 │               <div className="space-y-2">
+  > 84 │                 <label className="text-[10px] font-bold text-on-surface-variant/40 uppercase">
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 85 │                   Key Milestones
+  > 86 │                 </label>
+       │                 ^^^^^^^^
+    87 │                 <div className="space-y-1.5">
+    88 │                   {project.active?.tasks?.slice(0, 3).map((task: any) => (
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+.\src\components\MissionBoard.tsx:88:66 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    86 │                 </label>
+    87 │                 <div className="space-y-1.5">
+  > 88 │                   {project.active?.tasks?.slice(0, 3).map((task: any) => (
+       │                                                                  ^^^
+    89 │                     <div
+    90 │                       key={task.id}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\components\InfraMonitor.tsx:116:15 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    114 │             </div>
+    115 │             <div className="w-full bg-surface-container h-1.5 rounded-sm">
+  > 116 │               <div
+        │               ^^^^
+  > 117 │                 className="bg-primary h-full transition-all duration-1000 rounded-sm"
+  > 118 │                 style={{ width: `${cpuUsage}%` }}
+  > 119 │               ></div>
+        │               ^^^^^^^
+    120 │             </div>
+    121 │           </div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    119 │ ··············></div>
+        │               -- --- 
+
+.\src\components\InfraMonitor.tsx:130:15 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━
+
+  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
+  
+    128 │             </div>
+    129 │             <div className="w-full bg-surface-container h-1.5 rounded-sm">
+  > 130 │               <div
+        │               ^^^^
+  > 131 │                 className="bg-secondary h-full transition-all duration-1000 rounded-sm"
+  > 132 │                 style={{ width: `${memUsagePercent}%` }}
+  > 133 │               ></div>
+        │               ^^^^^^^
+    134 │             </div>
+    135 │           </div>
+  
+  i Unsafe fix: Use a SelfClosingElement instead
+  
+    133 │ ··············></div>
+        │               -- --- 
+
 .\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Do not use template literals if interpolation and special-character handling are not needed.
@@ -88,243 +272,6 @@
         8 │ + ····const·res·=·await·fetch('https://api.hetzner.cloud/v1/servers',·{
      9  9 │         headers: {
     10 10 │           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
-  
-
-.\src\components\DecisionLog.tsx:7:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    6 │ export default function DecisionLog() {
-  > 7 │   const [decisions, setDecisions] = useState<any[]>([]);
-      │                                              ^^^
-    8 │ 
-    9 │   useEffect(() => {
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\components\DecisionLog.tsx:36:21 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Avoid using the index of an array as key property in an element.
-  
-    34 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
-    35 │         {decisions.map((d, i) => (
-  > 36 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
-       │                     ^
-    37 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
-    38 │               <Calendar size={10} />
-  
-  i This is the source of the key value.
-  
-    33 │     <div className="card-professional flex flex-col h-[300px]">
-    34 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
-  > 35 │         {decisions.map((d, i) => (
-       │                            ^
-    36 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
-    37 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
-  
-  i The order of the items may change, and this also affects performances and component state.
-  
-  i Check the React documentation. 
-  
-
-.\src\components\DecisionLog.tsx:52:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Provide an explicit type prop for the button element.
-  
-    51 │       <div className="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
-  > 52 │         <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    53 │           <ChevronRight size={12} />
-    54 │           Full Audit Log
-  
-  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
-  
-  i Allowed button types are: submit, button or reset
-  
-
-.\src\components\DecisionLog.tsx:56:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Provide an explicit type prop for the button element.
-  
-    54 │           Full Audit Log
-    55 │         </button>
-  > 56 │         <button className="text-primary hover:underline flex items-center gap-1">
-       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    57 │           <Plus size={12} />
-    58 │           New Entry
-  
-  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
-  
-  i Allowed button types are: submit, button or reset
-  
-
-.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    58 │     });
-    59 │     return { success: true };
-  > 60 │   } catch (error: any) {
-       │                   ^^^
-    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
-    62 │     return { success: false, error: error.message };
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    70 │   const fm = match[1];
-  > 71 │   const result: any = {};
-       │                 ^^^
-    72 │   fm.split('\n').forEach((line) => {
-    73 │     const [key, ...value] = line.split(':');
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    70 │   const fm = match[1];
-    71 │   const result: any = {};
-  > 72 │   fm.split('\n').forEach((line) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 73 │     const [key, ...value] = line.split(':');
-        ...
-  > 79 │     }
-  > 80 │   });
-       │   ^^
-    81 │   return result;
-    82 │ }
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
-  
-
-.\src\components\EntropyRadar.tsx:7:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    6 │ export default function EntropyRadar() {
-  > 7 │   const [data, setData] = useState<any>(null);
-      │                                    ^^^
-    8 │   const [loading, setLoading] = useState(true);
-    9 │ 
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\components\EntropyRadar.tsx:103:28 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    102 │         <div className="space-y-4">
-  > 103 │           {vectors.map((v: any) => (
-        │                            ^^^
-    104 │             <div key={v.name} className="space-y-2">
-    105 │               <div className="flex justify-between items-center text-[11px]">
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\components\EntropyRadar.tsx:7:16 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━
-
-  ! This variable is unused.
-  
-    6 │ export default function EntropyRadar() {
-  > 7 │   const [data, setData] = useState<any>(null);
-      │                ^^^^^^^
-    8 │   const [loading, setLoading] = useState(true);
-    9 │ 
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend setData with an underscore.
-  
-      5   5 │   
-      6   6 │   export default function EntropyRadar() {
-      7     │ - ··const·[data,·setData]·=·useState<any>(null);
-          7 │ + ··const·[data,·_setData]·=·useState<any>(null);
-      8   8 │     const [loading, setLoading] = useState(true);
-      9   9 │   
-  
-
-.\src\components\EntropyRadar.tsx:18:10 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━
-
-  ! This variable is unused.
-  
-    16 │   ];
-    17 │ 
-  > 18 │   const [auditData, setAuditData] = useState(defaultLogs);
-       │          ^^^^^^^^^
-    19 │ 
-    20 │   const updateMetrics = async () => {
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend auditData with an underscore.
-  
-     16  16 │     ];
-     17  17 │   
-     18     │ - ··const·[auditData,·setAuditData]·=·useState(defaultLogs);
-         18 │ + ··const·[_auditData,·setAuditData]·=·useState(defaultLogs);
-     19  19 │   
-     20  20 │     const updateMetrics = async () => {
-  
-
-.\src\components\EntropyRadar.tsx:41:3 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━━━━━
-
-  × This hook does not specify all of its dependencies: updateMetrics
-  
-    39 │   };
-    40 │ 
-  > 41 │   useEffect(() => {
-       │   ^^^^^^^^^
-    42 │     updateMetrics();
-    43 │     const interval = setInterval(updateMetrics, 30000);
-  
-  i This dependency is not specified in the hook dependency list.
-  
-    41 │   useEffect(() => {
-    42 │     updateMetrics();
-  > 43 │     const interval = setInterval(updateMetrics, 30000);
-       │                                  ^^^^^^^^^^^^^
-    44 │     return () => clearInterval(interval);
-    45 │   }, []);
-  
-  i This dependency is not specified in the hook dependency list.
-  
-    41 │   useEffect(() => {
-  > 42 │     updateMetrics();
-       │     ^^^^^^^^^^^^^
-    43 │     const interval = setInterval(updateMetrics, 30000);
-    44 │     return () => clearInterval(interval);
-  
-  i Either include them or remove the dependency array
-  
-
-.\src\components\EntropyRadar.tsx:68:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Provide an explicit type prop for the button element.
-  
-    66 │           Compliance Metrics
-    67 │         </h3>
-  > 68 │         <button
-       │         ^^^^^^^
-  > 69 │           onClick={updateMetrics}
-  > 70 │           className="p-1.5 hover:bg-surface-container rounded-sm transition-colors text-on-surface-variant/40 hover:text-primary"
-  > 71 │         >
-       │         ^
-    72 │           <RefreshCcw size={14} />
-    73 │         </button>
-  
-  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
-  
-  i Allowed button types are: submit, button or reset
   
 
 .\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -355,11 +302,40 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
+.\src\lib\autonom.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    19 19 │     // Logic: If drift score is high (e.g. > 1.5), identify candidates for remediation
+    20 20 │     if (driftScore > 1.5) {
+    21    │ - ····const·apps·=·(await·getCoolifyApplications())·as·Array<{·status:·string;·uuid:·string;·name:·string·}>;
+       21 │ + ····const·apps·=·(await·getCoolifyApplications())·as·Array<{
+       22 │ + ······status:·string;
+       23 │ + ······uuid:·string;
+       24 │ + ······name:·string;
+       25 │ + ····}>;
+    22 26 │       const unstable = apps.filter(
+    23 27 │         (a) => a.status === 'exited' || a.status === 'restarting' || a.status === 'error'
+  
+
+.\src\lib\audit.ts:19:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    18 │ export async function runEntropyAudit(owner: string, repos: string[]): Promise<AuditResult> {
+  > 19 │   let results;
+       │       ^^^^^^^
+    20 │ 
+    21 │   try {
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 27.
-Checked 33 files in 62ms. No fixes applied.
-Found 41 errors.
-Found 6 warnings.
+Diagnostics not shown: 14.
+Checked 33 files in 56ms. No fixes applied.
+Found 30 errors.
+Found 4 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
