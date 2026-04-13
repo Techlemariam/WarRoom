@@ -121,14 +121,18 @@ if ($Force) {
         # Biome Fix
         if ($verifyOutput -match "biome") {
           Write-Info "Detected formatting/lint issues. Running biome check --write..."
+          $oldPref = $ErrorActionPreference; $ErrorActionPreference = "Continue"
           & pnpm biome check --write . 2>$null
+          $ErrorActionPreference = $oldPref
           $autoFixed = $true
         }
         
         # Security Audit Fix
         if ($verifyOutput -match "audit|security") {
           Write-Info "Detected security vulnerabilities. Running pnpm audit fix..."
+          $oldPref = $ErrorActionPreference; $ErrorActionPreference = "Continue"
           & pnpm audit fix --silent 2>$null
+          $ErrorActionPreference = $oldPref
           $autoFixed = $true
         }
         
