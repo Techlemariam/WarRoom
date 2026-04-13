@@ -2,84 +2,21 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\app\login\page.tsx:31:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
-
-  ! This variable is unused.
-  
-    29 │         setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
-    30 │       }
-  > 31 │     } catch (e) {
-       │              ^
-    32 │       setError('SYSTEM ERROR: UNABLE TO CONNECT');
-    33 │     } finally {
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend e with an underscore.
-  
-    29 29 │           setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
-    30 30 │         }
-    31    │ - ····}·catch·(e)·{
-       31 │ + ····}·catch·(_e)·{
-    32 32 │         setError('SYSTEM ERROR: UNABLE TO CONNECT');
-    33 33 │       } finally {
-  
-
-.\src\components\DecisionLog.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-    40 40 │         <div className="flex-1 overflow-y-auto p-4 space-y-5">
-    41 41 │           {decisions.map((d, i) => (
-    42    │ - ··········<div·key={`${d.date}-${d.title}`}·className="pb-4·border-b·border-outline-variant·last:border-0·last:pb-0">
-       42 │ + ··········<div
-       43 │ + ············key={`${d.date}-${d.title}`}
-       44 │ + ············className="pb-4·border-b·border-outline-variant·last:border-0·last:pb-0"
-       45 │ + ··········>
-    43 46 │               <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
-    44 47 │                 <Calendar size={10} />
-    ····· │ 
-    56 59 │   
-    57 60 │         <div className="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
-    58    │ - ········<button·type="button"·className="flex·items-center·gap-1.5·text-on-surface-variant·hover:text-primary·transition-colors">
-       61 │ + ········<button
-       62 │ + ··········type="button"
-       63 │ + ··········className="flex·items-center·gap-1.5·text-on-surface-variant·hover:text-primary·transition-colors"
-       64 │ + ········>
-    59 65 │             <ChevronRight size={12} />
-    60 66 │             Full Audit Log
-  
-
-.\src\components\MissionBoard.tsx:58:15 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\MissionBoard.tsx:61:15 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × A form label must be associated with an input.
   
-    56 │           <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-    57 │             <div className="space-y-3">
-  > 58 │               <label className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest block">
+    59 │           <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+    60 │             <div className="space-y-3">
+  > 61 │               <label className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest block">
        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 59 │                 Deployment Scope
-  > 60 │               </label>
+  > 62 │                 Deployment Scope
+  > 63 │               </label>
        │               ^^^^^^^^
-    61 │               <div className="space-y-1.5">
-    62 │                 {project.active?.tasks?.slice(0, 3).map((task) => (
+    64 │               <div className="space-y-1.5">
+    65 │                 {project.active?.tasks?.slice(0, 3).map((task) => (
   
   i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
-  
-
-.\src\components\MissionBoard.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-    41 41 │       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    42 42 │         {projects.map((project) => (
-    43    │ - ········<div·key={`${project.owner}/${project.name}`}·className="card-professional·flex·flex-col·h-[280px]">
-       43 │ + ········<div
-       44 │ + ··········key={`${project.owner}/${project.name}`}
-       45 │ + ··········className="card-professional·flex·flex-col·h-[280px]"
-       46 │ + ········>
-    44 47 │             <div className="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-    45 48 │               <div className="flex items-center gap-2">
   
 
 .\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -131,52 +68,6 @@
          73 │ + ····.sort((a,·_b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
      74  74 │   
      75  75 │     if (loading)
-  
-
-.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    58 │     });
-    59 │     return { success: true };
-  > 60 │   } catch (error: any) {
-       │                   ^^^
-    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
-    62 │     return { success: false, error: error.message };
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    70 │   const fm = match[1];
-  > 71 │   const result: any = {};
-       │                 ^^^
-    72 │   fm.split('\n').forEach((line) => {
-    73 │     const [key, ...value] = line.split(':');
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    70 │   const fm = match[1];
-    71 │   const result: any = {};
-  > 72 │   fm.split('\n').forEach((line) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 73 │     const [key, ...value] = line.split(':');
-        ...
-  > 79 │     }
-  > 80 │   });
-       │   ^^
-    81 │   return result;
-    82 │ }
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
   
 
 .\src\lib\audit.ts:19:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -266,24 +157,55 @@
      83  83 │       // ... rest of audit logic remains same as viewed ...
   
 
-.\src\components\WorkflowConsole.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Formatter would have printed the following content:
+  × Unexpected any. Specify a different type.
   
-     90  90 │             />
-     91  91 │           </div>
-     92     │ - ········<button·type="button"·className="px-4·py-2·border·border-outline-variant·text-[11px]·font-bold·uppercase·rounded-sm·bg-surface·hover:bg-surface-container·transition-colors·flex·items-center·gap-2">
-         92 │ + ········<button
-         93 │ + ··········type="button"
-         94 │ + ··········className="px-4·py-2·border·border-outline-variant·text-[11px]·font-bold·uppercase·rounded-sm·bg-surface·hover:bg-surface-container·transition-colors·flex·items-center·gap-2"
-         95 │ + ········>
-     93  96 │             <Filter size={12} />
-     94  97 │             Filters
+    58 │     });
+    59 │     return { success: true };
+  > 60 │   } catch (error: any) {
+       │                   ^^^
+    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
+    62 │     return { success: false, error: error.message };
+  
+  i any disables many type checking rules. Its use should be avoided.
   
 
-Checked 33 files in 81ms. No fixes applied.
-Found 12 errors.
-Found 4 warnings.
+.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    70 │   const fm = match[1];
+  > 71 │   const result: any = {};
+       │                 ^^^
+    72 │   fm.split('\n').forEach((line) => {
+    73 │     const [key, ...value] = line.split(':');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    70 │   const fm = match[1];
+    71 │   const result: any = {};
+  > 72 │   fm.split('\n').forEach((line) => {
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 73 │     const [key, ...value] = line.split(':');
+        ...
+  > 79 │     }
+  > 80 │   });
+       │   ^^
+    81 │   return result;
+    82 │ }
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+Checked 33 files in 69ms. No fixes applied.
+Found 9 errors.
+Found 3 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
