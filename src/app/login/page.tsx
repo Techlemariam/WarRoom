@@ -28,7 +28,7 @@ export default function LoginPage() {
       } else {
         setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
       }
-    } catch (e) {
+    } catch (_e) {
       setError('SYSTEM ERROR: UNABLE TO CONNECT');
     } finally {
       setLoading(false);
