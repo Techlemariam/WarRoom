@@ -1,7 +1,17 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "files": {
-    "ignore": ["scratch/**", "temp-app/**", "test-app/**", "node_modules/**", ".next/**", "dist/**", "deploy_details.json"]
+    "ignore": [
+      "scratch/**",
+      "temp-app/**",
+      "test-app/**",
+      "node_modules/**",
+      ".next/**",
+      "dist/**",
+      "deploy_details.json",
+      "deploy_details*.json",
+      "war_room_secrets_verify.json"
+    ]
   },
   "vcs": {
     "enabled": true,
