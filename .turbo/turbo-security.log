@@ -2,7 +2,7 @@
 > war-room@0.1.0 security C:\Users\alexa\Workspaces\WarRoom
 > pnpm audit || true
 
-(node:55628) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(node:53232) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 ┌─────────────────────┬────────────────────────────────────────────────────────┐
 │ high                │ Next.js has a Denial of Service with Server Components │
