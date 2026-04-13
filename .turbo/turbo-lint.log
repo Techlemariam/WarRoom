@@ -2,19 +2,6 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\app\api\audit\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    15 │     return NextResponse.json(auditData);
-  > 16 │   } catch (error: any) {
-       │                   ^^^
-    17 │     console.error('Audit API Error:', error);
-    18 │     return NextResponse.json({ error: error.message }, { status: 500 });
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
 .\src\app\api\dispatch\route.ts:16:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × This else clause can be omitted because previous branches break early.
@@ -41,19 +28,6 @@
     20 19 │   
   
 
-.\src\app\api\workflows\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    15 │     return NextResponse.json(allWorkflows.flat());
-  > 16 │   } catch (error: any) {
-       │                   ^^^
-    17 │     return NextResponse.json({ error: error.message }, { status: 500 });
-    18 │   }
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
 .\src\app\api\infra\route.ts:50:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
@@ -66,22 +40,6 @@
     52 │     return NextResponse.json({ error: error.message }, { status: 500 });
   
   i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unknown property is not allowed.
-  
-    60 │   border-color: var(--sys-color-primary);
-    61 │   outline: none;
-  > 62 │   ring: 2px solid var(--sys-color-primary-container);
-       │   ^^^^
-    63 │ }
-    64 │ 
-  
-  i See CSS Specifications and browser specific properties for more details.
-  
-  i To resolve this issue, replace the unknown property with a valid CSS property.
   
 
 .\src\app\api\projects\route.ts:17:22 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -131,6 +89,22 @@
        32 │ + ············}·catch·(_e)·{
     33 33 │                 // File might not exist, skip
     34 34 │               }
+  
+
+.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unknown property is not allowed.
+  
+    60 │   border-color: var(--sys-color-primary);
+    61 │   outline: none;
+  > 62 │   ring: 2px solid var(--sys-color-primary-container);
+       │   ^^^^
+    63 │ }
+    64 │ 
+  
+  i See CSS Specifications and browser specific properties for more details.
+  
+  i To resolve this issue, replace the unknown property with a valid CSS property.
   
 
 .\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -308,56 +282,66 @@
   i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
   
 
-.\src\components\FocusPanel.tsx:64:11 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Provide an explicit type prop for the button element.
+  × Unexpected any. Specify a different type.
   
-    62 │             onKeyDown={(e) => e.key === 'Enter' && addTask()}
-    63 │           />
-  > 64 │           <button
-       │           ^^^^^^^
-  > 65 │             onClick={addTask}
-  > 66 │             disabled={tasks.length >= 3}
-  > 67 │             className="btn-standard p-2 bg-primary text-on-primary rounded-sm disabled:opacity-30 disabled:cursor-not-allowed"
-  > 68 │           >
-       │           ^
-    69 │             <Plus size={16} />
-    70 │           </button>
+     6 │ const key = new TextEncoder().encode(process.env.AUTH_SECRET || secretKey);
+     7 │ 
+   > 8 │ export async function encrypt(payload: any) {
+       │                                        ^^^
+     9 │   return await new SignJWT(payload)
+    10 │     .setProtectedHeader({ alg: 'HS256' })
   
-  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
-  
-  i Allowed button types are: submit, button or reset
+  i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\components\FocusPanel.tsx:76:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\auth.ts:16:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Avoid using the index of an array as key property in an element.
+  × Unexpected any. Specify a different type.
   
-    74 │           {tasks.map((task, i) => (
-    75 │             <div
-  > 76 │               key={i}
-       │                    ^
-    77 │               className="group flex items-center justify-between p-3 bg-surface-container-low border border-outline-variant rounded-sm hover:border-outline transition-all"
-    78 │             >
+    14 │ }
+    15 │ 
+  > 16 │ export async function decrypt(input: string): Promise<any> {
+       │                                                       ^^^
+    17 │   const { payload } = await jwtVerify(input, key, {
+    18 │     algorithms: ['HS256'],
   
-  i This is the source of the key value.
+  i any disables many type checking rules. Its use should be avoided.
   
-    73 │         <div className="space-y-2">
-  > 74 │           {tasks.map((task, i) => (
-       │                             ^
-    75 │             <div
-    76 │               key={i}
+
+.\src\components\InfraMonitor.tsx:7:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
   
+    6 │ export default function InfraMonitor() {
+  > 7 │   const [data, setData] = useState<any>(null);
+      │                                    ^^^
+    8 │   const [loading, setLoading] = useState(true);
+    9 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\components\InfraMonitor.tsx:41:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    39 │   const coolify = data?.coolify;
+    40 │ 
+  > 41 │   const getLatest = (metric: any) => {
+       │                              ^^^
+    42 │     if (!metric?.values) return 0;
+    43 │     const latest = metric.values[metric.values.length - 1];
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 33.
-Checked 33 files in 176ms. No fixes applied.
-Found 46 errors.
+Diagnostics not shown: 32.
+Checked 33 files in 56ms. No fixes applied.
+Found 45 errors.
 Found 7 warnings.
-  i The order of the items may change, and this also affects performances and component state.
-  
-  i Check the React documentation. 
-  
-
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
