@@ -1,0 +1,342 @@
+
+> war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
+> biome check .
+
+.\war_room_secrets_verify.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Expected an array, an object, or a literal but instead found the end of the file.
+  
+  > 1 │ 
+      │ 
+  
+  i Expected an array, an object, or a literal here.
+  
+  > 1 │ 
+      │ 
+  
+
+.\war_room_secrets_verify.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Expected an array, an object, or a literal but instead found the end of the file.
+  
+  > 1 │ 
+      │ 
+  
+  i Expected an array, an object, or a literal here.
+  
+  > 1 │ 
+      │ 
+  
+
+.\war_room_secrets_verify.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Code formatting aborted due to parsing errors. To format code with errors, enable the 'formatter.formatWithErrors' option.
+  
+
+.\scratch\awesome-skills\package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    68 68 │       "antigravity-awesome-skills": "tools/bin/install.js"
+    69 69 │     },
+    70    │ - ··"files":·[
+    71    │ - ····"tools/bin",
+    72    │ - ····"tools/lib"
+    73    │ - ··],
+    74    │ - ··"keywords":·[
+    75    │ - ····"claude-code",
+    76    │ - ····"cursor",
+    77    │ - ····"gemini-cli",
+    78    │ - ····"antigravity",
+    79    │ - ····"agentic-skills",
+    80    │ - ····"ai-coding"
+    81    │ - ··]
+       70 │ + ··"files":·["tools/bin",·"tools/lib"],
+       71 │ + ··"keywords":·["claude-code",·"cursor",·"gemini-cli",·"antigravity",·"agentic-skills",·"ai-coding"]
+    82 72 │   }
+    83 73 │   
+  
+
+.\temp-app\package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    24 24 │       "typescript": "^5"
+    25 25 │     }
+    26    │ - }␍
+       26 │ + }
+    27 27 │   
+  
+
+.\package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    35 35 │       "turbo": "^2.4.4"
+    36 36 │     }
+    37    │ - }␍
+       37 │ + }
+    38 38 │   
+  
+
+.\deploy_details.json internalError/io  INTERNAL  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × stream did not contain valid UTF-8
+  
+  ! This diagnostic was derived from an internal Biome error. Potential bug, please report it if necessary.
+  
+
+.\ironforge_dev_secrets.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Expected an array, an object, or a literal but instead found the end of the file.
+  
+  > 1 │ 
+      │ 
+  
+  i Expected an array, an object, or a literal here.
+  
+  > 1 │ 
+      │ 
+  
+
+.\ironforge_dev_secrets.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Expected an array, an object, or a literal but instead found the end of the file.
+  
+  > 1 │ 
+      │ 
+  
+  i Expected an array, an object, or a literal here.
+  
+  > 1 │ 
+      │ 
+  
+
+.\ironforge_dev_secrets.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Code formatting aborted due to parsing errors. To format code with errors, enable the 'formatter.formatWithErrors' option.
+  
+
+.\.vscode\settings.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    1   │ - {␍
+    2   │ - ····"snyk.advanced.autoSelectOrganization":·true␍
+    3   │ - }
+      1 │ + {
+      2 │ + ··"snyk.advanced.autoSelectOrganization":·true
+      3 │ + }
+      4 │ + 
+  
+
+.\next.config.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    1   │ - import·type·{·NextConfig·}·from·"next";
+      1 │ + import·type·{·NextConfig·}·from·'next';
+    2 2 │   
+    3 3 │   const nextConfig: NextConfig = {
+  
+
+.\temp-app\src\app\page.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     1    │ - import·Image·from·"next/image";
+        1 │ + import·Image·from·'next/image';
+     2  2 │   
+     3  3 │   export default function Home() {
+    ····· │ 
+    18 18 │             </h1>
+    19 19 │             <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+    20    │ - ············Looking·for·a·starting·point·or·more·instructions?·Head·over·to{"·"}
+       20 │ + ············Looking·for·a·starting·point·or·more·instructions?·Head·over·to{'·'}
+    21 21 │               <a
+    22 22 │                 href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+    ····· │ 
+    24 24 │               >
+    25 25 │                 Templates
+    26    │ - ············</a>{"·"}
+    27    │ - ············or·the{"·"}
+       26 │ + ············</a>{'·'}
+       27 │ + ············or·the{'·'}
+    28 28 │               <a
+    29 29 │                 href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+    ····· │ 
+    31 31 │               >
+    32 32 │                 Learning
+    33    │ - ············</a>{"·"}
+       33 │ + ············</a>{'·'}
+    34 34 │               center.
+    35 35 │             </p>
+  
+
+.\postcss.config.mjs format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    1 1 │   const config = {
+    2 2 │     plugins: {
+    3   │ - ····"@tailwindcss/postcss":·{},
+      3 │ + ····'@tailwindcss/postcss':·{},
+    4 4 │     },
+    5 5 │   };
+  
+
+.\scratch\awesome-skills\docs\integrations\jetski-gemini-loader\package.json format ━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    1 │ {·"type":·"module"·}
+      │  +                + 
+
+.\scratch\awesome-skills\.claude-plugin\plugin.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    10 10 │     "repository": "https://github.com/sickn33/antigravity-awesome-skills",
+    11 11 │     "license": "MIT",
+    12    │ - ··"keywords":·[
+    13    │ - ····"claude-code",
+    14    │ - ····"skills",
+    15    │ - ····"agentic-skills",
+    16    │ - ····"plugin-safe",
+    17    │ - ····"productivity"
+    18    │ - ··]
+       12 │ + ··"keywords":·["claude-code",·"skills",·"agentic-skills",·"plugin-safe",·"productivity"]
+    19 13 │   }
+    20 14 │   
+  
+
+.\scratch\awesome-skills\apps\web-app\postcss.config.js format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    1 1 │   export default {
+    2   │ - ····plugins:·{
+    3   │ - ········'@tailwindcss/postcss':·{},
+    4   │ - ········autoprefixer:·{},
+    5   │ - ····},
+    6   │ - }
+      2 │ + ··plugins:·{
+      3 │ + ····'@tailwindcss/postcss':·{},
+      4 │ + ····autoprefixer:·{},
+      5 │ + ··},
+      6 │ + };
+    7 7 │   
+  
+
+.\scratch\awesome-skills\apps\web-app\eslint.config.js organizeImports ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Import statements could be sorted:
+  
+     1  1 │   import js from '@eslint/js'
+     2    │ - import·globals·from·'globals'
+     3    │ - import·reactHooks·from·'eslint-plugin-react-hooks'
+        2 │ + import·reactHooks·from·'eslint-plugin-react-hooks'
+     4  3 │   import reactRefresh from 'eslint-plugin-react-refresh'
+     5    │ - import·tseslint·from·'typescript-eslint'
+     6    │ - import·{·defineConfig,·globalIgnores·}·from·'eslint/config'
+        4 │ + import·{·defineConfig,·globalIgnores·}·from·'eslint/config'
+        5 │ + import·globals·from·'globals'
+        6 │ + import·tseslint·from·'typescript-eslint'
+     7  7 │   
+     8  8 │   export default defineConfig([
+  
+
+.\temp-app\src\app\layout.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     1    │ - import·type·{·Metadata·}·from·"next";
+     2    │ - import·{·Geist,·Geist_Mono·}·from·"next/font/google";
+     3    │ - import·"./globals.css";
+        1 │ + import·type·{·Metadata·}·from·'next';
+        2 │ + import·{·Geist,·Geist_Mono·}·from·'next/font/google';
+        3 │ + import·'./globals.css';
+     4  4 │   
+     5  5 │   const geistSans = Geist({
+     6    │ - ··variable:·"--font-geist-sans",
+     7    │ - ··subsets:·["latin"],
+        6 │ + ··variable:·'--font-geist-sans',
+        7 │ + ··subsets:·['latin'],
+     8  8 │   });
+     9  9 │   
+    10 10 │   const geistMono = Geist_Mono({
+    11    │ - ··variable:·"--font-geist-mono",
+    12    │ - ··subsets:·["latin"],
+       11 │ + ··variable:·'--font-geist-mono',
+       12 │ + ··subsets:·['latin'],
+    13 13 │   });
+    14 14 │   
+    15 15 │   export const metadata: Metadata = {
+    16    │ - ··title:·"Create·Next·App",
+    17    │ - ··description:·"Generated·by·create·next·app",
+       16 │ + ··title:·'Create·Next·App',
+       17 │ + ··description:·'Generated·by·create·next·app',
+    18 18 │   };
+    19 19 │   
+    ····· │ 
+    24 24 │   }>) {
+    25 25 │     return (
+    26    │ - ····<html
+    27    │ - ······lang="en"
+    28    │ - ······className={`${geistSans.variable}·${geistMono.variable}·h-full·antialiased`}
+    29    │ - ····>
+       26 │ + ····<html·lang="en"·className={`${geistSans.variable}·${geistMono.variable}·h-full·antialiased`}>
+    30 27 │         <body className="min-h-full flex flex-col">{children}</body>
+    31 28 │       </html>
+  
+
+.\scratch\awesome-skills\apps\web-app\eslint.config.js format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     1    │ - import·js·from·'@eslint/js'
+     2    │ - import·globals·from·'globals'
+     3    │ - import·reactHooks·from·'eslint-plugin-react-hooks'
+     4    │ - import·reactRefresh·from·'eslint-plugin-react-refresh'
+     5    │ - import·tseslint·from·'typescript-eslint'
+     6    │ - import·{·defineConfig,·globalIgnores·}·from·'eslint/config'
+        1 │ + import·js·from·'@eslint/js';
+        2 │ + import·globals·from·'globals';
+        3 │ + import·reactHooks·from·'eslint-plugin-react-hooks';
+        4 │ + import·reactRefresh·from·'eslint-plugin-react-refresh';
+        5 │ + import·tseslint·from·'typescript-eslint';
+        6 │ + import·{·defineConfig,·globalIgnores·}·from·'eslint/config';
+     7  7 │   
+     8  8 │   export default defineConfig([
+    ····· │ 
+    32 32 │       rules: {
+    33 33 │         'no-unused-vars': 'off',
+    34    │ - ······'@typescript-eslint/no-unused-vars':·['error',·{·argsIgnorePattern:·'^_',·varsIgnorePattern:·'^[A-Z_]'·}],
+       34 │ + ······'@typescript-eslint/no-unused-vars':·[
+       35 │ + ········'error',
+       36 │ + ········{·argsIgnorePattern:·'^_',·varsIgnorePattern:·'^[A-Z_]'·},
+       37 │ + ······],
+    35 38 │         'react-refresh/only-export-components': 'off',
+    36 39 │       },
+    ····· │ 
+    42 45 │       },
+    43 46 │     },
+    44    │ - ])
+       47 │ + ]);
+    45 48 │   
+  
+Skipped 98 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+
+
+The number of diagnostics exceeds the number allowed by Biome.
+Diagnostics not shown: 1748.
+Checked 420 files in 1090ms. No fixes applied.
+Found 1573 errors.
+Found 124 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
+ ELIFECYCLE  Command failed with exit code 1.
