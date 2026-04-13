@@ -2,6 +2,29 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
+.\src\app\login\page.tsx:31:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! This variable is unused.
+  
+    29 │         setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
+    30 │       }
+  > 31 │     } catch (e) {
+       │              ^
+    32 │       setError('SYSTEM ERROR: UNABLE TO CONNECT');
+    33 │     } finally {
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend e with an underscore.
+  
+    29 29 │           setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
+    30 30 │         }
+    31    │ - ····}·catch·(e)·{
+       31 │ + ····}·catch·(_e)·{
+    32 32 │         setError('SYSTEM ERROR: UNABLE TO CONNECT');
+    33 33 │       } finally {
+  
+
 .\src\components\DecisionLog.tsx:42:21 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Avoid using the index of an array as key property in an element.
@@ -58,51 +81,12 @@
   i Allowed button types are: submit, button or reset
   
 
-.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\login\page.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Unexpected any. Specify a different type.
+  × Formatter would have printed the following content:
   
-    58 │     });
-    59 │     return { success: true };
-  > 60 │   } catch (error: any) {
-       │                   ^^^
-    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
-    62 │     return { success: false, error: error.message };
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    70 │   const fm = match[1];
-  > 71 │   const result: any = {};
-       │                 ^^^
-    72 │   fm.split('\n').forEach((line) => {
-    73 │     const [key, ...value] = line.split(':');
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    70 │   const fm = match[1];
-    71 │   const result: any = {};
-  > 72 │   fm.split('\n').forEach((line) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 73 │     const [key, ...value] = line.split(':');
-        ...
-  > 79 │     }
-  > 80 │   });
-       │   ^^
-    81 │   return result;
-    82 │ }
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
-  
+    50 │ ············<label·
+       │                   -
 
 .\src\components\MissionBoard.tsx:7:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -192,46 +176,6 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\components\InfraMonitor.tsx:116:15 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━
-
-  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
-  
-    114 │             </div>
-    115 │             <div className="w-full bg-surface-container h-1.5 rounded-sm">
-  > 116 │               <div
-        │               ^^^^
-  > 117 │                 className="bg-primary h-full transition-all duration-1000 rounded-sm"
-  > 118 │                 style={{ width: `${cpuUsage}%` }}
-  > 119 │               ></div>
-        │               ^^^^^^^
-    120 │             </div>
-    121 │           </div>
-  
-  i Unsafe fix: Use a SelfClosingElement instead
-  
-    119 │ ··············></div>
-        │               -- --- 
-
-.\src\components\InfraMonitor.tsx:130:15 lint/style/useSelfClosingElements  FIXABLE  ━━━━━━━━━━━━━━━
-
-  × JSX elements without children should be marked as self-closing. In JSX, it is valid for any element to be self-closing.
-  
-    128 │             </div>
-    129 │             <div className="w-full bg-surface-container h-1.5 rounded-sm">
-  > 130 │               <div
-        │               ^^^^
-  > 131 │                 className="bg-secondary h-full transition-all duration-1000 rounded-sm"
-  > 132 │                 style={{ width: `${memUsagePercent}%` }}
-  > 133 │               ></div>
-        │               ^^^^^^^
-    134 │             </div>
-    135 │           </div>
-  
-  i Unsafe fix: Use a SelfClosingElement instead
-  
-    133 │ ··············></div>
-        │               -- --- 
-
 .\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
@@ -315,9 +259,69 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
+.\src\components\WorkflowConsole.tsx:50:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━
+
+  ! This variable is unused.
+  
+    48 │         setRunning((prev) => ({ ...prev, [id]: false }));
+    49 │       }
+  > 50 │     } catch (e) {
+       │              ^
+    51 │       setRunning((prev) => ({ ...prev, [id]: false }));
+    52 │     }
+  
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend e with an underscore.
+  
+     48  48 │           setRunning((prev) => ({ ...prev, [id]: false }));
+     49  49 │         }
+     50     │ - ····}·catch·(e)·{
+         50 │ + ····}·catch·(_e)·{
+     51  51 │         setRunning((prev) => ({ ...prev, [id]: false }));
+     52  52 │       }
+  
+
+.\src\components\WorkflowConsole.tsx:101:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+     99 │           />
+    100 │         </div>
+  > 101 │         <button className="px-4 py-2 border border-outline-variant text-[11px] font-bold uppercase rounded-sm bg-surface hover:bg-surface-container transition-colors flex items-center gap-2">
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    102 │           <Filter size={12} />
+    103 │           Filters
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\components\WorkflowConsole.tsx:139:17 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    137 │                 </div>
+    138 │ 
+  > 139 │                 <button
+        │                 ^^^^^^^
+  > 140 │                   onClick={() => handleRun(w)}
+         ...
+  > 144 │                   }`}
+  > 145 │                 >
+        │                 ^
+    146 │                   {isRunning ? (
+    147 │                     <>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
 The number of diagnostics exceeds the number allowed by Biome.
 Diagnostics not shown: 10.
-Checked 33 files in 53ms. No fixes applied.
+Checked 33 files in 55ms. No fixes applied.
 Found 26 errors.
 Found 4 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

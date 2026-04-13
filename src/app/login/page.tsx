@@ -47,7 +47,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label 
+            <label
               htmlFor="access-key"
               className="text-[10px] font-bold text-text-secondary uppercase"
             >
