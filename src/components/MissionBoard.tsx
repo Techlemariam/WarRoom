@@ -58,9 +58,9 @@ export default function MissionBoard() {
 
           <div className="flex-1 p-4 space-y-4 overflow-y-auto">
             <div className="space-y-3">
-            <div className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest block">
-              Deployment Scope
-            </div>
+              <div className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest block">
+                Deployment Scope
+              </div>
               <div className="space-y-1.5">
                 {project.active?.tasks?.slice(0, 3).map((task) => (
                   <div

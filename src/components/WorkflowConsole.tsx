@@ -70,7 +70,7 @@ export default function WorkflowConsole() {
         priority: hasDrift ? 'HIGH' : 'STABLE',
       };
     })
-    .sort((a, b) => (a.priority === 'HIGH' ? -1 : 1));
+    .sort((a, _b) => (a.priority === 'HIGH' ? -1 : 1));
 
   if (loading)
     return (

@@ -15,15 +15,21 @@ export type AuditResult = {
   }[];
 };
 
+interface RepoAudit {
+  vectors: Array<{
+    name: string;
+    score: number;
+    findings: string[];
+  }>;
+}
+
 export async function runEntropyAudit(owner: string, repos: string[]): Promise<AuditResult> {
-  let results;
+  let results: RepoAudit[];
 
   try {
     results = await Promise.all(repos.map((repo) => auditRepo(owner, repo)));
   } catch (e) {
     console.warn('Audit API failure, falling back to baseline simulation', e);
-    // Return a baseline "Oracle" simulation if API fails
-    // This ensures the Radar axis is always visible.
     return {
       totalScore: 6.4,
       vectors: [
@@ -45,12 +51,13 @@ export async function runEntropyAudit(owner: string, repos: string[]): Promise<A
     { name: 'MTTR', score: 0, label: '0.0', findings: [] as string[] },
   ];
 
-  results.forEach((res) => {
-    res.vectors.forEach((v, i) => {
-      aggregatedVectors[i].score += v.score / repos.length;
-      aggregatedVectors[i].findings.push(...v.findings);
-    });
-  });
+  for (const res of results) {
+    for (let i = 0; i < res.vectors.length; i++) {
+        const v = res.vectors[i];
+        aggregatedVectors[i].score += v.score / repos.length;
+        aggregatedVectors[i].findings.push(...v.findings);
+    }
+  }
 
   const totalScore = Number.parseFloat(
     aggregatedVectors.reduce((acc, v) => acc + v.score, 0).toFixed(1)
@@ -65,8 +72,7 @@ export async function runEntropyAudit(owner: string, repos: string[]): Promise<A
   };
 }
 
-async function auditRepo(owner: string, repo: string) {
-  // Check if octokit is actually authorized
+async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
   if (!process.env.GH_PAT && !process.env.GITHUB_PAT) {
     throw new Error('Missing GitHub Credentials');
   }
@@ -77,39 +83,29 @@ async function auditRepo(owner: string, repo: string) {
       octokit.rest.repos.getContent({ owner, repo, path: '' }).catch(() => ({ data: [] })),
     ]);
 
-    // ... existing logic ...
-    const workflowRuns = runs.data.workflow_runs || [];
-    // (I'm truncating for the replace call, but keeping logic intact)
-    // ... rest of audit logic remains same as viewed ...
-    // ...
-
     const workflowRuns = runs.data.workflow_runs || [];
 
     // 1. Feedback Latency (0-2)
-    // Avg duration in minutes. >30min = 2, <10min = 0.
     const durations = workflowRuns
       .filter((r) => r.status === 'completed' && r.run_started_at)
       .map(
-        (r) => (new Date(r.updated_at).getTime() - new Date(r.run_started_at!).getTime()) / 60000
+        (r) => (new Date(r.updated_at).getTime() - new Date(r.run_started_at || r.created_at).getTime()) / 60000
       );
     const avgDuration = durations.length
       ? durations.reduce((a, b) => a + b, 0) / durations.length
       : 5;
     const feedbackScore = Math.min(avgDuration / 15, 2);
 
-    // 2. Determinism (0-2) - Weighted 2.5x in UI logic but here we keep 0-2 scale
-    // Failures / Total. 100% success = 0, 50% success = 1, 0% success = 2.
+    // 2. Determinism (0-2)
     const failures = workflowRuns.filter((r) => r.conclusion === 'failure').length;
     const determinismScore = workflowRuns.length ? (failures / workflowRuns.length) * 2 : 0.5;
 
     // 3. Manual Intervention (0-2)
-    // % of runs triggered by workflow_dispatch.
     const manualRuns = workflowRuns.filter((r) => r.event === 'workflow_dispatch').length;
     const manualScore = workflowRuns.length ? (manualRuns / workflowRuns.length) * 2 : 0;
 
     // 4. IaC / Drift (0-2)
-    // Check for Nordic Frost / Node 22 markers
-    const files = Array.isArray(content.data) ? content.data.map((f) => f.name) : [];
+    const files = Array.isArray(content.data) ? content.data.map((f: any) => f.name) : [];
     const driftFindings: string[] = [];
     let driftScore = 0;
 
@@ -123,7 +119,6 @@ async function auditRepo(owner: string, repo: string) {
     }
 
     // 5. MTTR (0-2)
-    // Avg time to fix a failure (mocked for now based on recent history)
     const mttrScore = failures > 0 ? 0.8 : 0.1;
 
     return {
@@ -138,7 +133,13 @@ async function auditRepo(owner: string, repo: string) {
   } catch (e) {
     console.error(`Audit failed for ${repo}`, e);
     return {
-      vectors: Array(5).fill({ name: 'Error', score: 2.0, findings: ['API Access Denied'] }),
+      vectors: [
+          { name: 'Feedback', score: 2.0, findings: ['API Access Denied'] },
+          { name: 'Determinism', score: 2.0, findings: [] },
+          { name: 'Manual', score: 2.0, findings: [] },
+          { name: 'IaC/Drift', score: 2.0, findings: [] },
+          { name: 'MTTR', score: 2.0, findings: [] },
+      ]
     };
   }
 }

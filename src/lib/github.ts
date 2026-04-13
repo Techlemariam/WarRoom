@@ -57,9 +57,10 @@ export async function dispatchWorkflow(owner: string, repo: string, workflowComm
       },
     });
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error(`Error dispatching workflow for ${repo}:`, error);
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -68,8 +69,8 @@ function parseFrontmatter(content: string) {
   if (!match) return { description: 'No description' };
 
   const fm = match[1];
-  const result: any = {};
-  fm.split('\n').forEach((line) => {
+  const result: Record<string, string> = {};
+  for (const line of fm.split('\n')) {
     const [key, ...value] = line.split(':');
     if (key && value.length) {
       result[key.trim()] = value
@@ -77,6 +78,6 @@ function parseFrontmatter(content: string) {
         .trim()
         .replace(/^["']|["']$/g, '');
     }
-  });
+  }
   return result;
 }

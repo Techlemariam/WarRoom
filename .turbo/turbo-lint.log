@@ -2,21 +2,66 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\components\MissionBoard.tsx:61:15 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × A form label must be associated with an input.
+  × Unexpected any. Specify a different type.
   
-    59 │           <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-    60 │             <div className="space-y-3">
-  > 61 │               <label className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest block">
-       │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 62 │                 Deployment Scope
-  > 63 │               </label>
-       │               ^^^^^^^^
-    64 │               <div className="space-y-1.5">
-    65 │                 {project.active?.tasks?.slice(0, 3).map((task) => (
+    58 │     });
+    59 │     return { success: true };
+  > 60 │   } catch (error: any) {
+       │                   ^^^
+    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
+    62 │     return { success: false, error: error.message };
   
-  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    70 │   const fm = match[1];
+  > 71 │   const result: any = {};
+       │                 ^^^
+    72 │   fm.split('\n').forEach((line) => {
+    73 │     const [key, ...value] = line.split(':');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    70 │   const fm = match[1];
+    71 │   const result: any = {};
+  > 72 │   fm.split('\n').forEach((line) => {
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 73 │     const [key, ...value] = line.split(':');
+        ...
+  > 79 │     }
+  > 80 │   });
+       │   ^^
+    81 │   return result;
+    82 │ }
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+.\src\components\MissionBoard.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    59 59 │             <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+    60 60 │               <div className="space-y-3">
+    61    │ - ············<div·className="text-[10px]·font-bold·text-on-surface-variant/60·uppercase·tracking-widest·block">
+    62    │ - ··············Deployment·Scope
+    63    │ - ············</div>
+       61 │ + ··············<div·className="text-[10px]·font-bold·text-on-surface-variant/60·uppercase·tracking-widest·block">
+       62 │ + ················Deployment·Scope
+       63 │ + ··············</div>
+    64 64 │                 <div className="space-y-1.5">
+    65 65 │                   {project.active?.tasks?.slice(0, 3).map((task) => (
   
 
 .\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -45,29 +90,6 @@
     18 │     algorithms: ['HS256'],
   
   i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\components\WorkflowConsole.tsx:73:15 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━
-
-  ! This parameter is unused.
-  
-    71 │       };
-    72 │     })
-  > 73 │     .sort((a, b) => (a.priority === 'HIGH' ? -1 : 1));
-       │               ^
-    74 │ 
-    75 │   if (loading)
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend b with an underscore.
-  
-     71  71 │         };
-     72  72 │       })
-     73     │ - ····.sort((a,·b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
-         73 │ + ····.sort((a,·_b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
-     74  74 │   
-     75  75 │     if (loading)
   
 
 .\src\lib\audit.ts:19:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -157,53 +179,30 @@
      83  83 │       // ... rest of audit logic remains same as viewed ...
   
 
-.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\WorkflowConsole.tsx:73:15 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━
 
-  × Unexpected any. Specify a different type.
+  ! This parameter is unused.
   
-    58 │     });
-    59 │     return { success: true };
-  > 60 │   } catch (error: any) {
-       │                   ^^^
-    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
-    62 │     return { success: false, error: error.message };
+    71 │       };
+    72 │     })
+  > 73 │     .sort((a, b) => (a.priority === 'HIGH' ? -1 : 1));
+       │               ^
+    74 │ 
+    75 │   if (loading)
   
-  i any disables many type checking rules. Its use should be avoided.
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
   
-
-.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
+  i Unsafe fix: If this is intentional, prepend b with an underscore.
   
-    70 │   const fm = match[1];
-  > 71 │   const result: any = {};
-       │                 ^^^
-    72 │   fm.split('\n').forEach((line) => {
-    73 │     const [key, ...value] = line.split(':');
-  
-  i any disables many type checking rules. Its use should be avoided.
+     71  71 │         };
+     72  72 │       })
+     73     │ - ····.sort((a,·b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
+         73 │ + ····.sort((a,·_b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
+     74  74 │   
+     75  75 │     if (loading)
   
 
-.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    70 │   const fm = match[1];
-    71 │   const result: any = {};
-  > 72 │   fm.split('\n').forEach((line) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 73 │     const [key, ...value] = line.split(':');
-        ...
-  > 79 │     }
-  > 80 │   });
-       │   ^^
-    81 │   return result;
-    82 │ }
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
-  
-
-Checked 33 files in 69ms. No fixes applied.
+Checked 33 files in 44ms. No fixes applied.
 Found 9 errors.
 Found 3 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
