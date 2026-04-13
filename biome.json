@@ -8,9 +8,9 @@
       "node_modules/**",
       ".next/**",
       "dist/**",
-      "deploy_details.json",
       "deploy_details*.json",
-      "war_room_secrets_verify.json"
+      "war_room_secrets_verify.json",
+      "*_secrets.json"
     ]
   },
   "vcs": {
