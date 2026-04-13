@@ -1,22 +1,31 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { List, Calendar, ChevronRight, Plus } from "lucide-react";
+import { Calendar, ChevronRight, List, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function DecisionLog() {
   const [decisions, setDecisions] = useState<any[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("war-room-decisions");
+    const saved = localStorage.getItem('war-room-decisions');
     if (saved) {
       setDecisions(JSON.parse(saved));
     } else {
       const initial = [
-        { date: new Date().toISOString(), title: "REBRANDED TO OVERSIGHT", rationale: "Shifted to corporate-standard stealth layout for office compliance." },
-        { date: new Date().toISOString(), title: "MIGRATED FROM NORDIC FROST", rationale: "Decommissioned high-intensity visual system in favor of minimalist professional design." }
+        {
+          date: new Date().toISOString(),
+          title: 'REBRANDED TO OVERSIGHT',
+          rationale: 'Shifted to corporate-standard stealth layout for office compliance.',
+        },
+        {
+          date: new Date().toISOString(),
+          title: 'MIGRATED FROM NORDIC FROST',
+          rationale:
+            'Decommissioned high-intensity visual system in favor of minimalist professional design.',
+        },
       ];
       setDecisions(initial);
-      localStorage.setItem("war-room-decisions", JSON.stringify(initial));
+      localStorage.setItem('war-room-decisions', JSON.stringify(initial));
     }
   }, []);
 
@@ -29,10 +38,12 @@ export default function DecisionLog() {
               <Calendar size={10} />
               {new Date(d.date).toLocaleDateString()}
               <div className="h-1 w-1 bg-outline rounded-full" />
-              <span>LOG-#{i+1}</span>
+              <span>LOG-#{i + 1}</span>
             </div>
             <div className="font-bold text-[11px] text-on-surface uppercase mb-1">{d.title}</div>
-            <div className="text-[11px] text-on-surface-variant/70 leading-normal">{d.rationale}</div>
+            <div className="text-[11px] text-on-surface-variant/70 leading-normal">
+              {d.rationale}
+            </div>
           </div>
         ))}
       </div>

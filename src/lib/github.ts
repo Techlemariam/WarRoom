@@ -1,4 +1,4 @@
-import { Octokit } from "octokit";
+import { Octokit } from 'octokit';
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_PAT,
@@ -9,14 +9,14 @@ export async function getWorkflows(owner: string, repo: string) {
     const { data } = await octokit.rest.repos.getContent({
       owner,
       repo,
-      path: ".agent/workflows",
+      path: '.agent/workflows',
     });
 
     if (!Array.isArray(data)) return [];
 
     const workflows = await Promise.all(
       data
-        .filter((file) => file.name.endsWith(".md") && !file.name.startsWith("_"))
+        .filter((file) => file.name.endsWith('.md') && !file.name.startsWith('_'))
         .map(async (file) => {
           const { data: contentData } = await octokit.rest.repos.getContent({
             owner,
@@ -24,8 +24,8 @@ export async function getWorkflows(owner: string, repo: string) {
             path: file.path,
           });
 
-          if ("content" in contentData) {
-            const content = Buffer.from(contentData.content, "base64").toString();
+          if ('content' in contentData) {
+            const content = Buffer.from(contentData.content, 'base64').toString();
             const frontmatter = parseFrontmatter(content);
             return {
               name: file.name,
@@ -50,7 +50,7 @@ export async function dispatchWorkflow(owner: string, repo: string, workflowComm
     await octokit.rest.repos.createDispatchEvent({
       owner,
       repo,
-      event_type: "remote-trigger",
+      event_type: 'remote-trigger',
       client_payload: {
         workflow: workflowCommand,
         timestamp: new Date().toISOString(),
@@ -65,14 +65,17 @@ export async function dispatchWorkflow(owner: string, repo: string, workflowComm
 
 function parseFrontmatter(content: string) {
   const match = content.match(/^---([\s\S]*?)---/);
-  if (!match) return { description: "No description" };
+  if (!match) return { description: 'No description' };
 
   const fm = match[1];
   const result: any = {};
-  fm.split("\n").forEach((line) => {
-    const [key, ...value] = line.split(":");
+  fm.split('\n').forEach((line) => {
+    const [key, ...value] = line.split(':');
     if (key && value.length) {
-      result[key.trim()] = value.join(":").trim().replace(/^["']|["']$/g, "");
+      result[key.trim()] = value
+        .join(':')
+        .trim()
+        .replace(/^["']|["']$/g, '');
     }
   });
   return result;

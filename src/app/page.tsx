@@ -1,19 +1,19 @@
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import WorkflowConsole from "@/components/WorkflowConsole";
-import MissionBoard from "@/components/MissionBoard";
-import InfraMonitor from "@/components/InfraMonitor";
-import RevenueRadar from "@/components/RevenueRadar";
-import FocusPanel from "@/components/FocusPanel";
-import DecisionLog from "@/components/DecisionLog";
-import EntropyRadar from "@/components/EntropyRadar";
-import { LayoutDashboard, ShieldCheck, Zap, Activity, Briefcase, Database } from "lucide-react";
+import DecisionLog from '@/components/DecisionLog';
+import EntropyRadar from '@/components/EntropyRadar';
+import FocusPanel from '@/components/FocusPanel';
+import InfraMonitor from '@/components/InfraMonitor';
+import MissionBoard from '@/components/MissionBoard';
+import RevenueRadar from '@/components/RevenueRadar';
+import WorkflowConsole from '@/components/WorkflowConsole';
+import { getSession } from '@/lib/auth';
+import { Activity, Briefcase, Database, LayoutDashboard, ShieldCheck, Zap } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 export default async function Dashboard() {
   const session = await getSession();
 
   if (!session) {
-    redirect("/login");
+    redirect('/login');
   }
 
   return (
@@ -46,7 +46,6 @@ export default async function Dashboard() {
 
       <main className="p-6 lg:p-8 max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
           {/* Main Workspace */}
           <div className="lg:col-span-8 space-y-8">
             <section className="space-y-4">

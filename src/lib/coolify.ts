@@ -10,7 +10,7 @@ export async function getCoolifyHealth() {
     });
     return res.ok;
   } catch (error) {
-    console.error("Coolify health check failed:", error);
+    console.error('Coolify health check failed:', error);
     return false;
   }
 }
@@ -25,7 +25,7 @@ export async function getCoolifyApplications() {
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {
-    console.error("Failed to fetch Coolify applications:", error);
+    console.error('Failed to fetch Coolify applications:', error);
     return [];
   }
 }
@@ -40,7 +40,7 @@ export async function getCoolifyServices() {
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {
-    console.error("Failed to fetch Coolify services:", error);
+    console.error('Failed to fetch Coolify services:', error);
     return [];
   }
 }

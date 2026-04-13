@@ -46,7 +46,9 @@ body {
 }
 
 /* ── Standard Inputs ─────────────────────────────────── */
-input, select, textarea {
+input,
+select,
+textarea {
   border: 1px solid var(--sys-color-outline-variant);
   background: var(--sys-color-surface);
   border-radius: var(--radius-sm);
@@ -75,7 +77,8 @@ button.btn-standard:hover {
 }
 
 /* Removal of stylized Nordic utilities */
-.glass, .glass-bright {
+.glass,
+.glass-bright {
   background: var(--sys-color-surface-container-low);
   border: 1px solid var(--sys-color-outline-variant);
   backdrop-filter: none;

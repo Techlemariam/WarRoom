@@ -1,13 +1,13 @@
-import { getCoolifyHealth, getCoolifyApplications } from "@/lib/coolify";
-import { getHetznerServer, getHetznerMetrics, getHetznerServers } from "@/lib/hetzner";
-import { getSnykMetrics } from "@/lib/snyk";
-import { remediateDrift } from "@/lib/autonom";
-import { NextResponse } from "next/server";
+import { remediateDrift } from '@/lib/autonom';
+import { getCoolifyApplications, getCoolifyHealth } from '@/lib/coolify';
+import { getHetznerMetrics, getHetznerServer, getHetznerServers } from '@/lib/hetzner';
+import { getSnykMetrics } from '@/lib/snyk';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     let hetznerId = process.env.HETZNER_SERVER_ID;
-    
+
     // If no ID is provided, try to discover one
     if (!hetznerId) {
       const servers = await getHetznerServers();
@@ -16,17 +16,18 @@ export async function GET() {
       }
     }
 
-    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics, snykMetrics] = await Promise.all([
-      getCoolifyHealth(),
-      getCoolifyApplications(),
-      hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
-      hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
-      getSnykMetrics()
-    ]);
+    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics, snykMetrics] =
+      await Promise.all([
+        getCoolifyHealth(),
+        getCoolifyApplications(),
+        hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
+        hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
+        getSnykMetrics(),
+      ]);
 
     // Calculate Entropy Index including Security Vector
-    const entropyIndex = 1.2 + (snykMetrics.critical * 0.5); // Baseline + Security Weight
-    
+    const entropyIndex = 1.2 + snykMetrics.critical * 0.5; // Baseline + Security Weight
+
     // Trigger Autonomy Engine (Dry Run)
     const remediations = await remediateDrift(entropyIndex);
 
@@ -42,13 +43,12 @@ export async function GET() {
       entropy: {
         index: entropyIndex,
         securityScore: snykMetrics.score,
-        vulnerabilities: snykMetrics
+        vulnerabilities: snykMetrics,
       },
-      remediations
+      remediations,
     });
   } catch (error: any) {
-    console.error("Audit sensor error:", error);
+    console.error('Audit sensor error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

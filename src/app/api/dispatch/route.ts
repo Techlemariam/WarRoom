@@ -1,12 +1,12 @@
-import { dispatchWorkflow } from "@/lib/github";
-import { NextRequest, NextResponse } from "next/server";
+import { dispatchWorkflow } from '@/lib/github';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { owner, repo, command } = body;
 
   if (!owner || !repo || !command) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
   const result = await dispatchWorkflow(owner, repo, command);
