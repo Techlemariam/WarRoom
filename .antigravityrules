@@ -1,0 +1,19 @@
+# ♊ THE GEMINI BROTHERHOOD RULES
+
+## 🏁 Quality & Validation (Zero Hell)
+- **DoD:** NO manual validation. Run `pnpm run verify` before completion.
+- **Tooling:** Always use Biome (lint/format) and pnpm.
+- **Standards:** Adhere to the Unified `ship.ps1` (v3) pipeline.
+
+## 🏗️ Architecture & Style
+- **Nordic Frost:** Strictly follow `tokens.css` and glassmorphism standards.
+- **Hygiene:** maintain domain-based architecture.
+
+## 📚 Brotherhood Librarian (Cross-Repo Governance)
+- **Ruleset**: Strictly follow patterns established in sibling repos (IronForge, WarRoom, Taktpinne, Matlogistik).
+- **Drift**: Use `/librarian` to audit architectural entropy.
+- **Artifacts**: Document cross-project learnings in Knowledge Items (KIs) via `bdistill-knowledge-extraction`.
+- **Standards**: NO deviations from the Unified `ship.ps1`, Biome, and pnpm standards.
+
+---
+**Comm Style:** Concise. Logic-first. Evidence-based.
