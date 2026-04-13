@@ -1,17 +1,23 @@
 'use client';
 
-import { Calendar, ChevronRight, List, Plus } from 'lucide-react';
+import { Calendar, ChevronRight, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+interface Decision {
+  date: string;
+  title: string;
+  rationale: string;
+}
+
 export default function DecisionLog() {
-  const [decisions, setDecisions] = useState<any[]>([]);
+  const [decisions, setDecisions] = useState<Decision[]>([]);
 
   useEffect(() => {
     const saved = localStorage.getItem('war-room-decisions');
     if (saved) {
       setDecisions(JSON.parse(saved));
     } else {
-      const initial = [
+      const initial: Decision[] = [
         {
           date: new Date().toISOString(),
           title: 'REBRANDED TO OVERSIGHT',

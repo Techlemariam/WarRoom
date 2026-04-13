@@ -62,6 +62,7 @@ export default function FocusPanel() {
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
           />
           <button
+            type="button"
             onClick={addTask}
             disabled={tasks.length >= 3}
             className="btn-standard p-2 bg-primary text-on-primary rounded-sm disabled:opacity-30 disabled:cursor-not-allowed"
@@ -71,9 +72,9 @@ export default function FocusPanel() {
         </div>
 
         <div className="space-y-2">
-          {tasks.map((task, i) => (
+          {tasks.map((task) => (
             <div
-              key={i}
+              key={task}
               className="group flex items-center justify-between p-3 bg-surface-container-low border border-outline-variant rounded-sm hover:border-outline transition-all"
             >
               <div className="flex items-center gap-3">
@@ -81,7 +82,8 @@ export default function FocusPanel() {
                 <span className="text-[11px] font-medium text-on-surface">{task}</span>
               </div>
               <button
-                onClick={() => removeTask(i)}
+                type="button"
+                onClick={() => removeTask(tasks.indexOf(task))}
                 className="opacity-0 group-hover:opacity-100 p-1 text-on-surface-variant/40 hover:text-error transition-all"
               >
                 <Trash2 size={12} />

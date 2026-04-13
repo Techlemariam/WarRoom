@@ -18,9 +18,9 @@ export async function remediateDrift(driftScore: number): Promise<RemediationAct
 
   // Logic: If drift score is high (e.g. > 1.5), identify candidates for remediation
   if (driftScore > 1.5) {
-    const apps = await getCoolifyApplications();
+    const apps = (await getCoolifyApplications()) as Array<{ status: string; uuid: string; name: string }>;
     const unstable = apps.filter(
-      (a: any) => a.status === 'exited' || a.status === 'restarting' || a.status === 'error'
+      (a) => a.status === 'exited' || a.status === 'restarting' || a.status === 'error'
     );
 
     for (const app of unstable) {

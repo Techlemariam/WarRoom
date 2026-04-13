@@ -3,8 +3,41 @@
 import { Activity, AlertCircle, Database, Server } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+interface MetricValue {
+  values?: Array<[number, string]>;
+}
+
+interface InfraData {
+  hetzner?: {
+    server?: {
+      name: string;
+      status: string;
+      memory: number;
+      public_net?: {
+        ipv4?: {
+          ip: string;
+        };
+      };
+    };
+    metrics?: {
+      time_series: {
+        cpu: MetricValue;
+        mem: MetricValue;
+      };
+    };
+  };
+  coolify?: {
+    healthy: boolean;
+    apps: Array<{
+      uuid: string;
+      name: string;
+      status: string;
+    }>;
+  };
+}
+
 export default function InfraMonitor() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<InfraData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +71,7 @@ export default function InfraMonitor() {
   const metrics = data?.hetzner?.metrics?.time_series;
   const coolify = data?.coolify;
 
-  const getLatest = (metric: any) => {
+  const getLatest = (metric?: MetricValue) => {
     if (!metric?.values) return 0;
     const latest = metric.values[metric.values.length - 1];
     return latest ? Number.parseFloat(latest[1]) : 0;
@@ -54,7 +87,6 @@ export default function InfraMonitor() {
 
   return (
     <div className="space-y-4">
-      {/* Node Card */}
       <div className="card-professional p-4 shadow-sm">
         <div className="flex justify-between items-center mb-4 pb-3 border-b border-outline-variant">
           <div className="flex items-center gap-2">
@@ -104,7 +136,6 @@ export default function InfraMonitor() {
         </div>
       </div>
 
-      {/* Services List */}
       <div className="card-professional overflow-hidden">
         <div className="p-3 bg-surface-container-low border-b border-outline-variant flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -117,7 +148,7 @@ export default function InfraMonitor() {
         </div>
         <div className="max-h-[250px] overflow-y-auto">
           <div className="divide-y divide-outline-variant">
-            {coolify?.apps?.map((app: any) => (
+            {coolify?.apps?.map((app) => (
               <div
                 key={app.uuid}
                 className="p-3 flex items-center justify-between hover:bg-surface-container-low transition-colors"

@@ -16,88 +16,18 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\app\api\infra\route.ts:36:59 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\api\infra\route.ts:38:59 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-    34 │       security: {
-    35 │         totalVulnerabilities: vulnerabilities.length,
-  > 36 │         critical: vulnerabilities.reduce((acc: number, v: any) => acc + v.critical, 0),
+    36 │       security: {
+    37 │         totalVulnerabilities: vulnerabilities.length,
+  > 38 │         critical: vulnerabilities.reduce((acc: number, v: any) => acc + v.critical, 0),
        │                                                           ^^^
-    37 │       },
-    38 │       drift: {
+    39 │       },
+    40 │       drift: {
   
   i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\app\api\infra\route.ts organizeImports ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Import statements could be sorted:
-  
-     1    │ - import·{·getSnykProjects·}·from·'@/lib/snyk';
-     2    │ - import·{·runEntropyAudit·}·from·'@/lib/audit';
-        1 │ + import·{·runEntropyAudit·}·from·'@/lib/audit';
-        2 │ + import·{·getSnykProjects·}·from·'@/lib/snyk';
-     3  3 │   import { NextResponse } from 'next/server';
-     4  4 │   
-  
-
-.\src\app\api\infra\route.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-    24 24 │   
-    25 25 │       // 3. Automated Prescriptions
-    26    │ - ····const·remediations·=·auditData.filter((a)·=>·a.entropy·>·0.3).map((a)·=>·({
-    27    │ - ······target:·a.project,
-    28    │ - ······action:·'Run·Standard·Parity·Sync',
-    29    │ - ······priority:·a.entropy·>·0.7·?·'CRITICAL'·:·'HIGH',
-    30    │ - ····}));
-       26 │ + ····const·remediations·=·auditData
-       27 │ + ······.filter((a)·=>·a.entropy·>·0.3)
-       28 │ + ······.map((a)·=>·({
-       29 │ + ········target:·a.project,
-       30 │ + ········action:·'Run·Standard·Parity·Sync',
-       31 │ + ········priority:·a.entropy·>·0.7·?·'CRITICAL'·:·'HIGH',
-       32 │ + ······}));
-    31 33 │   
-    32 34 │       return NextResponse.json({
-  
-
-.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unknown property is not allowed.
-  
-    60 │   border-color: var(--sys-color-primary);
-    61 │   outline: none;
-  > 62 │   ring: 2px solid var(--sys-color-primary-container);
-       │   ^^^^
-    63 │ }
-    64 │ 
-  
-  i See CSS Specifications and browser specific properties for more details.
-  
-  i To resolve this issue, replace the unknown property with a valid CSS property.
-  
-
-.\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Do not use template literals if interpolation and special-character handling are not needed.
-  
-     7 │   try {
-   > 8 │     const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
-       │                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     9 │       headers: {
-    10 │         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
-  
-  i Unsafe fix: Replace with string literal
-  
-     6  6 │   
-     7  7 │     try {
-     8    │ - ····const·res·=·await·fetch(`https://api.hetzner.cloud/v1/servers`,·{
-        8 │ + ····const·res·=·await·fetch('https://api.hetzner.cloud/v1/servers',·{
-     9  9 │         headers: {
-    10 10 │           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
   
 
 .\src\app\login\page.tsx:50:13 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -138,6 +68,26 @@
        31 │ + ····}·catch·(_e)·{
     32 32 │         setError('SYSTEM ERROR: UNABLE TO CONNECT');
     33 33 │       } finally {
+  
+
+.\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not use template literals if interpolation and special-character handling are not needed.
+  
+     7 │   try {
+   > 8 │     const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
+       │                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     9 │       headers: {
+    10 │         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+  
+  i Unsafe fix: Replace with string literal
+  
+     6  6 │   
+     7  7 │     try {
+     8    │ - ····const·res·=·await·fetch(`https://api.hetzner.cloud/v1/servers`,·{
+        8 │ + ····const·res·=·await·fetch('https://api.hetzner.cloud/v1/servers',·{
+     9  9 │         headers: {
+    10 10 │           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
   
 
 .\src\components\DecisionLog.tsx:7:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -357,13 +307,58 @@
   i Either include them or remove the dependency array
   
 
-Skipped 1 suggested fixes.
-If you wish to apply the suggested (unsafe) fixes, use the command biome check --fix --unsafe
+.\src\components\EntropyRadar.tsx:68:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    66 │           Compliance Metrics
+    67 │         </h3>
+  > 68 │         <button
+       │         ^^^^^^^
+  > 69 │           onClick={updateMetrics}
+  > 70 │           className="p-1.5 hover:bg-surface-container rounded-sm transition-colors text-on-surface-variant/40 hover:text-primary"
+  > 71 │         >
+       │         ^
+    72 │           <RefreshCcw size={14} />
+    73 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+     6 │ const key = new TextEncoder().encode(process.env.AUTH_SECRET || secretKey);
+     7 │ 
+   > 8 │ export async function encrypt(payload: any) {
+       │                                        ^^^
+     9 │   return await new SignJWT(payload)
+    10 │     .setProtectedHeader({ alg: 'HS256' })
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\lib\auth.ts:16:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    14 │ }
+    15 │ 
+  > 16 │ export async function decrypt(input: string): Promise<any> {
+       │                                                       ^^^
+    17 │   const { payload } = await jwtVerify(input, key, {
+    18 │     algorithms: ['HS256'],
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
 
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 30.
-Checked 33 files in 54ms. No fixes applied.
-Found 44 errors.
+Diagnostics not shown: 27.
+Checked 33 files in 62ms. No fixes applied.
+Found 41 errors.
 Found 6 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

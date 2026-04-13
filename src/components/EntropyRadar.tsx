@@ -1,48 +1,44 @@
 'use client';
 
-import { AlertCircle, CheckCircle2, Info, RefreshCcw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AlertCircle, RefreshCcw } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+
+interface AuditVector {
+  name: string;
+  score: number;
+}
+
+interface InfraData {
+  totalScore: number;
+  vectors: AuditVector[];
+  infraScore?: number;
+  entropy?: {
+    index: number;
+    securityScore: number;
+  };
+}
 
 export default function EntropyRadar() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<InfraData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const defaultLogs = [
-    { label: 'Infrastructure', value: 85, full: 100 },
-    { label: 'CI/CD Entropy', value: 65, full: 100 },
-    { label: 'Sec-Vector', value: 45, full: 100 },
-    { label: 'Financial Drift', value: 30, full: 100 },
-    { label: 'Latent Tech Debt', value: 55, full: 100 },
-  ];
-
-  const [auditData, setAuditData] = useState(defaultLogs);
-
-  const updateMetrics = async () => {
+  const updateMetrics = useCallback(async () => {
     try {
       const res = await fetch('/api/infra');
-      const data = await res.json();
-
-      if (data.entropy) {
-        setAuditData([
-          { label: 'Infrastructure', value: data.infraScore || 85, full: 100 },
-          { label: 'CI/CD Entropy', value: data.entropy.index * 10 || 65, full: 100 },
-          { label: 'Sec-Vector', value: data.entropy.securityScore || 45, full: 100 },
-          { label: 'Financial Drift', value: 30, full: 100 },
-          { label: 'Latent Tech Debt', value: 55, full: 100 },
-        ]);
-      }
+      const json = await res.json();
+      setData(json);
       setLoading(false);
     } catch (e) {
       console.error('Entropy sync failure', e);
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     updateMetrics();
     const interval = setInterval(updateMetrics, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [updateMetrics]);
 
   if (loading)
     return (
@@ -66,6 +62,7 @@ export default function EntropyRadar() {
           Compliance Metrics
         </h3>
         <button
+          type="button"
           onClick={updateMetrics}
           className="p-1.5 hover:bg-surface-container rounded-sm transition-colors text-on-surface-variant/40 hover:text-primary"
         >
@@ -100,7 +97,7 @@ export default function EntropyRadar() {
         </div>
 
         <div className="space-y-4">
-          {vectors.map((v: any) => (
+          {vectors.map((v) => (
             <div key={v.name} className="space-y-2">
               <div className="flex justify-between items-center text-[11px]">
                 <div className="flex items-center gap-2 font-semibold text-on-surface-variant">
@@ -120,23 +117,6 @@ export default function EntropyRadar() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="p-3 bg-surface-container-low border-t border-outline-variant grid grid-cols-2 gap-4">
-        <div className="flex items-center gap-2">
-          <Info size={12} className="text-on-surface-variant/40" />
-          <span className="text-[10px] text-on-surface-variant/60">
-            Target Threshold: <strong>{target}</strong>
-          </span>
-        </div>
-        <div className="text-right text-[10px] text-on-surface-variant/60">
-          Variance:{' '}
-          <strong className={isHealthy ? 'text-primary' : 'text-error'}>
-            {isHealthy
-              ? `-${(target - totalScore).toFixed(1)}`
-              : `+${(totalScore - target).toFixed(1)}`}
-          </strong>
         </div>
       </div>
     </div>
