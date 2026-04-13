@@ -5,7 +5,7 @@ export async function getHetznerServers() {
   if (!HETZNER_API_TOKEN) return [];
 
   try {
-    const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
+    const res = await fetch('https://api.hetzner.cloud/v1/servers', {
       headers: {
         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
       },
