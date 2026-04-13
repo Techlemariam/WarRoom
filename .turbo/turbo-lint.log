@@ -2,64 +2,60 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\DecisionLog.tsx:42:21 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Do not use template literals if interpolation and special-character handling are not needed.
+  × Avoid using the index of an array as key property in an element.
   
-     7 │   try {
-   > 8 │     const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
-       │                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     9 │       headers: {
-    10 │         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+    40 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
+    41 │         {decisions.map((d, i) => (
+  > 42 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
+       │                     ^
+    43 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
+    44 │               <Calendar size={10} />
   
-  i Unsafe fix: Replace with string literal
+  i This is the source of the key value.
   
-     6  6 │   
-     7  7 │     try {
-     8    │ - ····const·res·=·await·fetch(`https://api.hetzner.cloud/v1/servers`,·{
-        8 │ + ····const·res·=·await·fetch('https://api.hetzner.cloud/v1/servers',·{
-     9  9 │         headers: {
-    10 10 │           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+    39 │     <div className="card-professional flex flex-col h-[300px]">
+    40 │       <div className="flex-1 overflow-y-auto p-4 space-y-5">
+  > 41 │         {decisions.map((d, i) => (
+       │                            ^
+    42 │           <div key={i} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
+    43 │             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
   
-
-.\src\app\login\page.tsx:50:13 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × A form label must be associated with an input.
+  i The order of the items may change, and this also affects performances and component state.
   
-    48 │         <form onSubmit={handleSubmit} className="space-y-6">
-    49 │           <div className="space-y-2">
-  > 50 │             <label className="text-[10px] font-bold text-text-secondary uppercase">
-       │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 51 │               Access Key
-  > 52 │             </label>
-       │             ^^^^^^^^
-    53 │             <div className="relative">
-    54 │               <Lock
-  
-  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  i Check the React documentation. 
   
 
-.\src\app\login\page.tsx:31:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\DecisionLog.tsx:58:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ! This variable is unused.
+  × Provide an explicit type prop for the button element.
   
-    29 │         setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
-    30 │       }
-  > 31 │     } catch (e) {
-       │              ^
-    32 │       setError('SYSTEM ERROR: UNABLE TO CONNECT');
-    33 │     } finally {
+    57 │       <div className="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
+  > 58 │         <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    59 │           <ChevronRight size={12} />
+    60 │           Full Audit Log
   
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
   
-  i Unsafe fix: If this is intentional, prepend e with an underscore.
+  i Allowed button types are: submit, button or reset
   
-    29 29 │           setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
-    30 30 │         }
-    31    │ - ····}·catch·(e)·{
-       31 │ + ····}·catch·(_e)·{
-    32 32 │         setError('SYSTEM ERROR: UNABLE TO CONNECT');
-    33 33 │       } finally {
+
+.\src\components\DecisionLog.tsx:62:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    60 │           Full Audit Log
+    61 │         </button>
+  > 62 │         <button className="text-primary hover:underline flex items-center gap-1">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    63 │           <Plus size={12} />
+    64 │           New Entry
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
   
 
 .\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -264,75 +260,65 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\lib\audit.ts:19:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\WorkflowConsole.tsx:7:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × This variable implicitly has the any type.
+  × Unexpected any. Specify a different type.
   
-    18 │ export async function runEntropyAudit(owner: string, repos: string[]): Promise<AuditResult> {
-  > 19 │   let results;
-       │       ^^^^^^^
-    20 │ 
-    21 │   try {
+    6 │ export default function WorkflowConsole() {
+  > 7 │   const [workflows, setWorkflows] = useState<any[]>([]);
+      │                                              ^^^
+    8 │   const [auditData, setAuditData] = useState<any>(null);
+    9 │   const [loading, setLoading] = useState(true);
   
-  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
-  
-
-.\src\lib\audit.ts:48:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    46 │   ];
-    47 │ 
-  > 48 │   results.forEach((res) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 49 │     res.vectors.forEach((v, i) => {
-  > 50 │       aggregatedVectors[i].score += v.score / repos.length;
-  > 51 │       aggregatedVectors[i].findings.push(...v.findings);
-  > 52 │     });
-  > 53 │   });
-       │   ^^
-    54 │ 
-    55 │   const totalScore = Number.parseFloat(
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\lib\audit.ts:93:61 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\WorkflowConsole.tsx:8:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ! Forbidden non-null assertion.
+  × Unexpected any. Specify a different type.
   
-    91 │       .filter((r) => r.status === 'completed' && r.run_started_at)
-    92 │       .map(
-  > 93 │         (r) => (new Date(r.updated_at).getTime() - new Date(r.run_started_at!).getTime()) / 60000
-       │                                                             ^^^^^^^^^^^^^^^^^
-    94 │       );
-    95 │     const avgDuration = durations.length
+     6 │ export default function WorkflowConsole() {
+     7 │   const [workflows, setWorkflows] = useState<any[]>([]);
+   > 8 │   const [auditData, setAuditData] = useState<any>(null);
+       │                                              ^^^
+     9 │   const [loading, setLoading] = useState(true);
+    10 │   const [running, setRunning] = useState<Record<string, boolean>>({});
+  
+  i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\lib\audit.ts:86:11 lint/suspicious/noRedeclare ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\components\WorkflowConsole.tsx:31:38 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Shouldn't redeclare 'workflowRuns'. Consider to delete it or rename it.
+  × Unexpected any. Specify a different type.
   
-    84 │     // ...
-    85 │ 
-  > 86 │     const workflowRuns = runs.data.workflow_runs || [];
-       │           ^^^^^^^^^^^^
-    87 │ 
-    88 │     // 1. Feedback Latency (0-2)
+    29 │   }, []);
+    30 │ 
+  > 31 │   async function handleRun(workflow: any) {
+       │                                      ^^^
+    32 │     const id = `${workflow.repo}-${workflow.command}`;
+    33 │     setRunning((prev) => ({ ...prev, [id]: true }));
   
-  i 'workflowRuns' is defined here:
+  i any disables many type checking rules. Its use should be avoided.
   
-    80 │     // ... existing logic ...
-  > 81 │     const workflowRuns = runs.data.workflow_runs || [];
-       │           ^^^^^^^^^^^^
-    82 │     // (I'm truncating for the replace call, but keeping logic intact)
-    83 │     // ... rest of audit logic remains same as viewed ...
+
+.\src\components\WorkflowConsole.tsx:58:20 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    56 │     .map((w) => {
+    57 │       const hasDrift = auditData?.vectors
+  > 58 │         ?.find((v: any) => v.name === 'IaC/Drift')
+       │                    ^^^
+    59 │         ?.findings?.some((f: string) => f.includes(w.repo));
+    60 │       return {
+  
+  i any disables many type checking rules. Its use should be avoided.
   
 
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 11.
-Checked 33 files in 45ms. No fixes applied.
-Found 27 errors.
+Diagnostics not shown: 10.
+Checked 33 files in 53ms. No fixes applied.
+Found 26 errors.
 Found 4 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
