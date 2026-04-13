@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "files": {
-    "ignore": ["scratch/**", "temp-app/**", "test-app/**", "node_modules/**", ".next/**", "dist/**"]
+    "ignore": ["scratch/**", "temp-app/**", "test-app/**", "node_modules/**", ".next/**", "dist/**", "deploy_details.json"]
   },
   "vcs": {
     "enabled": true,
