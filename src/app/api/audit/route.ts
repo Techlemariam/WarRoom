@@ -13,8 +13,9 @@ export async function GET() {
     const auditData = await runEntropyAudit(owner, repos);
 
     return NextResponse.json(auditData);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Audit API Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
