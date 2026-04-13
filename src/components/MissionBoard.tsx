@@ -40,7 +40,10 @@ export default function MissionBoard() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {projects.map((project) => (
-        <div key={`${project.owner}/${project.name}`} className="card-professional flex flex-col h-[280px]">
+        <div
+          key={`${project.owner}/${project.name}`}
+          className="card-professional flex flex-col h-[280px]"
+        >
           <div className="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Package size={14} className="text-primary" />

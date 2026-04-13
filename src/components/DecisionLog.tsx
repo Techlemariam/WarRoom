@@ -39,7 +39,10 @@ export default function DecisionLog() {
     <div className="card-professional flex flex-col h-[300px]">
       <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {decisions.map((d, i) => (
-          <div key={`${d.date}-${d.title}`} className="pb-4 border-b border-outline-variant last:border-0 last:pb-0">
+          <div
+            key={`${d.date}-${d.title}`}
+            className="pb-4 border-b border-outline-variant last:border-0 last:pb-0"
+          >
             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-on-surface-variant/40 mb-1">
               <Calendar size={10} />
               {new Date(d.date).toLocaleDateString()}
@@ -55,7 +58,10 @@ export default function DecisionLog() {
       </div>
 
       <div className="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
-        <button type="button" className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
+        <button
+          type="button"
+          className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors"
+        >
           <ChevronRight size={12} />
           Full Audit Log
         </button>

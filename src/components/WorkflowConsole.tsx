@@ -89,7 +89,10 @@ export default function WorkflowConsole() {
             className="bg-surface border border-outline-variant text-[11px] px-3 py-1.5 rounded-sm w-48 focus:outline-none focus:border-primary transition-all"
           />
         </div>
-        <button type="button" className="px-4 py-2 border border-outline-variant text-[11px] font-bold uppercase rounded-sm bg-surface hover:bg-surface-container transition-colors flex items-center gap-2">
+        <button
+          type="button"
+          className="px-4 py-2 border border-outline-variant text-[11px] font-bold uppercase rounded-sm bg-surface hover:bg-surface-container transition-colors flex items-center gap-2"
+        >
           <Filter size={12} />
           Filters
         </button>
