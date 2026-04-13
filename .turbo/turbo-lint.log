@@ -2,209 +2,64 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\lib\github.ts:60:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\audit.ts:108:70 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
   
-    58 │     });
-    59 │     return { success: true };
-  > 60 │   } catch (error: any) {
-       │                   ^^^
-    61 │     console.error(`Error dispatching workflow for ${repo}:`, error);
-    62 │     return { success: false, error: error.message };
+    107 │     // 4. IaC / Drift (0-2)
+  > 108 │     const files = Array.isArray(content.data) ? content.data.map((f: any) => f.name) : [];
+        │                                                                      ^^^
+    109 │     const driftFindings: string[] = [];
+    110 │     let driftScore = 0;
   
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\lib\github.ts:71:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    70 │   const fm = match[1];
-  > 71 │   const result: any = {};
-       │                 ^^^
-    72 │   fm.split('\n').forEach((line) => {
-    73 │     const [key, ...value] = line.split(':');
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\github.ts:72:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    70 │   const fm = match[1];
-    71 │   const result: any = {};
-  > 72 │   fm.split('\n').forEach((line) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 73 │     const [key, ...value] = line.split(':');
-        ...
-  > 79 │     }
-  > 80 │   });
-       │   ^^
-    81 │   return result;
-    82 │ }
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
-  
-
-.\src\components\MissionBoard.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\audit.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Formatter would have printed the following content:
   
-    59 59 │             <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-    60 60 │               <div className="space-y-3">
-    61    │ - ············<div·className="text-[10px]·font-bold·text-on-surface-variant/60·uppercase·tracking-widest·block">
-    62    │ - ··············Deployment·Scope
-    63    │ - ············</div>
-       61 │ + ··············<div·className="text-[10px]·font-bold·text-on-surface-variant/60·uppercase·tracking-widest·block">
-       62 │ + ················Deployment·Scope
-       63 │ + ··············</div>
-    64 64 │                 <div className="space-y-1.5">
-    65 65 │                   {project.active?.tasks?.slice(0, 3).map((task) => (
+     54  54 │     for (const res of results) {
+     55  55 │       for (let i = 0; i < res.vectors.length; i++) {
+     56     │ - ········const·v·=·res.vectors[i];
+     57     │ - ········aggregatedVectors[i].score·+=·v.score·/·repos.length;
+     58     │ - ········aggregatedVectors[i].findings.push(...v.findings);
+         56 │ + ······const·v·=·res.vectors[i];
+         57 │ + ······aggregatedVectors[i].score·+=·v.score·/·repos.length;
+         58 │ + ······aggregatedVectors[i].findings.push(...v.findings);
+     59  59 │       }
+     60  60 │     }
+    ······· │ 
+     90  90 │         .filter((r) => r.status === 'completed' && r.run_started_at)
+     91  91 │         .map(
+     92     │ - ········(r)·=>·(new·Date(r.updated_at).getTime()·-·new·Date(r.run_started_at·||·r.created_at).getTime())·/·60000
+         92 │ + ········(r)·=>
+         93 │ + ··········(new·Date(r.updated_at).getTime()·-
+         94 │ + ············new·Date(r.run_started_at·||·r.created_at).getTime())·/
+         95 │ + ··········60000
+     93  96 │         );
+     94  97 │       const avgDuration = durations.length
+    ······· │ 
+    135 138 │       return {
+    136 139 │         vectors: [
+    137     │ - ··········{·name:·'Feedback',·score:·2.0,·findings:·['API·Access·Denied']·},
+    138     │ - ··········{·name:·'Determinism',·score:·2.0,·findings:·[]·},
+    139     │ - ··········{·name:·'Manual',·score:·2.0,·findings:·[]·},
+    140     │ - ··········{·name:·'IaC/Drift',·score:·2.0,·findings:·[]·},
+    141     │ - ··········{·name:·'MTTR',·score:·2.0,·findings:·[]·},
+    142     │ - ······]
+        140 │ + ········{·name:·'Feedback',·score:·2.0,·findings:·['API·Access·Denied']·},
+        141 │ + ········{·name:·'Determinism',·score:·2.0,·findings:·[]·},
+        142 │ + ········{·name:·'Manual',·score:·2.0,·findings:·[]·},
+        143 │ + ········{·name:·'IaC/Drift',·score:·2.0,·findings:·[]·},
+        144 │ + ········{·name:·'MTTR',·score:·2.0,·findings:·[]·},
+        145 │ + ······],
+    143 146 │       };
+    144 147 │     }
   
 
-.\src\lib\auth.ts:8:40 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-     6 │ const key = new TextEncoder().encode(process.env.AUTH_SECRET || secretKey);
-     7 │ 
-   > 8 │ export async function encrypt(payload: any) {
-       │                                        ^^^
-     9 │   return await new SignJWT(payload)
-    10 │     .setProtectedHeader({ alg: 'HS256' })
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\auth.ts:16:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    14 │ }
-    15 │ 
-  > 16 │ export async function decrypt(input: string): Promise<any> {
-       │                                                       ^^^
-    17 │   const { payload } = await jwtVerify(input, key, {
-    18 │     algorithms: ['HS256'],
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\lib\audit.ts:19:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × This variable implicitly has the any type.
-  
-    18 │ export async function runEntropyAudit(owner: string, repos: string[]): Promise<AuditResult> {
-  > 19 │   let results;
-       │       ^^^^^^^
-    20 │ 
-    21 │   try {
-  
-  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
-  
-
-.\src\lib\audit.ts:48:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Prefer for...of instead of forEach.
-  
-    46 │   ];
-    47 │ 
-  > 48 │   results.forEach((res) => {
-       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  > 49 │     res.vectors.forEach((v, i) => {
-  > 50 │       aggregatedVectors[i].score += v.score / repos.length;
-  > 51 │       aggregatedVectors[i].findings.push(...v.findings);
-  > 52 │     });
-  > 53 │   });
-       │   ^^
-    54 │ 
-    55 │   const totalScore = Number.parseFloat(
-  
-  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
-  
-
-.\src\lib\audit.ts:93:61 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  ! Forbidden non-null assertion.
-  
-    91 │       .filter((r) => r.status === 'completed' && r.run_started_at)
-    92 │       .map(
-  > 93 │         (r) => (new Date(r.updated_at).getTime() - new Date(r.run_started_at!).getTime()) / 60000
-       │                                                             ^^^^^^^^^^^^^^^^^
-    94 │       );
-    95 │     const avgDuration = durations.length
-  
-
-.\src\lib\audit.ts:86:11 lint/suspicious/noRedeclare ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Shouldn't redeclare 'workflowRuns'. Consider to delete it or rename it.
-  
-    84 │     // ...
-    85 │ 
-  > 86 │     const workflowRuns = runs.data.workflow_runs || [];
-       │           ^^^^^^^^^^^^
-    87 │ 
-    88 │     // 1. Feedback Latency (0-2)
-  
-  i 'workflowRuns' is defined here:
-  
-    80 │     // ... existing logic ...
-  > 81 │     const workflowRuns = runs.data.workflow_runs || [];
-       │           ^^^^^^^^^^^^
-    82 │     // (I'm truncating for the replace call, but keeping logic intact)
-    83 │     // ... rest of audit logic remains same as viewed ...
-  
-
-.\src\lib\audit.ts:81:11 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  ! This variable is unused.
-  
-    80 │     // ... existing logic ...
-  > 81 │     const workflowRuns = runs.data.workflow_runs || [];
-       │           ^^^^^^^^^^^^
-    82 │     // (I'm truncating for the replace call, but keeping logic intact)
-    83 │     // ... rest of audit logic remains same as viewed ...
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend workflowRuns with an underscore.
-  
-     79  79 │   
-     80  80 │       // ... existing logic ...
-     81     │ - ····const·workflowRuns·=·runs.data.workflow_runs·||·[];
-         81 │ + ····const·_workflowRuns·=·runs.data.workflow_runs·||·[];
-     82  82 │       // (I'm truncating for the replace call, but keeping logic intact)
-     83  83 │       // ... rest of audit logic remains same as viewed ...
-  
-
-.\src\components\WorkflowConsole.tsx:73:15 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━
-
-  ! This parameter is unused.
-  
-    71 │       };
-    72 │     })
-  > 73 │     .sort((a, b) => (a.priority === 'HIGH' ? -1 : 1));
-       │               ^
-    74 │ 
-    75 │   if (loading)
-  
-  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
-  
-  i Unsafe fix: If this is intentional, prepend b with an underscore.
-  
-     71  71 │         };
-     72  72 │       })
-     73     │ - ····.sort((a,·b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
-         73 │ + ····.sort((a,·_b)·=>·(a.priority·===·'HIGH'·?·-1·:·1));
-     74  74 │   
-     75  75 │     if (loading)
-  
-
-Checked 33 files in 44ms. No fixes applied.
-Found 9 errors.
-Found 3 warnings.
+Checked 33 files in 67ms. No fixes applied.
+Found 2 errors.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
