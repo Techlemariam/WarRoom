@@ -47,7 +47,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-text-secondary uppercase">
+            <label 
+              htmlFor="access-key"
+              className="text-[10px] font-bold text-text-secondary uppercase"
+            >
               Access Key
             </label>
             <div className="relative">
@@ -56,6 +59,7 @@ export default function LoginPage() {
                 size={14}
               />
               <input
+                id="access-key"
                 type="password"
                 required
                 className="w-full bg-surface border border-border px-10 py-3 text-sm font-mono focus:outline-none focus:border-accent transition-all"
