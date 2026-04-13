@@ -104,7 +104,10 @@ if ($Force) {
   while ($verifyAttempt -le $MAX_RETRIES -and -not $verifyPassed) {
     $verifyAttempt++
     Write-Info "Attempt $verifyAttempt of $($MAX_RETRIES + 1)..."
+    # Temporarily ignore stderr-based Parser/Native errors from Turbo
+    $oldEap = $ErrorActionPreference; $ErrorActionPreference = "SilentlyContinue"
     $verifyOutput = pnpm run agent:verify 2>&1 | Out-String
+    $ErrorActionPreference = $oldEap
     
     if ($LASTEXITCODE -eq 0) {
       $verifyPassed = $true
