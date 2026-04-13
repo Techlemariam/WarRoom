@@ -2,57 +2,6 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\war_room_secrets_verify.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Expected an array, an object, or a literal but instead found the end of the file.
-  
-  > 1 │ 
-      │ 
-  
-  i Expected an array, an object, or a literal here.
-  
-  > 1 │ 
-      │ 
-  
-
-.\war_room_secrets_verify.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Expected an array, an object, or a literal but instead found the end of the file.
-  
-  > 1 │ 
-      │ 
-  
-  i Expected an array, an object, or a literal here.
-  
-  > 1 │ 
-      │ 
-  
-
-.\war_room_secrets_verify.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Code formatting aborted due to parsing errors. To format code with errors, enable the 'formatter.formatWithErrors' option.
-  
-
-.\biome.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-     2  2 │     "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-     3  3 │     "files": {
-     4    │ - ····"ignore":·["scratch/**",·"temp-app/**",·"test-app/**",·"node_modules/**",·".next/**",·"dist/**",·"deploy_details.json"]
-        4 │ + ····"ignore":·[
-        5 │ + ······"scratch/**",
-        6 │ + ······"temp-app/**",
-        7 │ + ······"test-app/**",
-        8 │ + ······"node_modules/**",
-        9 │ + ······".next/**",
-       10 │ + ······"dist/**",
-       11 │ + ······"deploy_details.json"
-       12 │ + ····]
-     5 13 │     },
-     6 14 │     "vcs": {
-  
-
 .\ironforge_dev_secrets.json:1:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Expected an array, an object, or a literal but instead found the end of the file.
@@ -97,32 +46,6 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\app\api\auth\route.ts:12:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × This else clause can be omitted because previous branches break early.
-  
-    10 │   if (success) {
-    11 │     return NextResponse.json({ success: true });
-  > 12 │   } else {
-       │     ^^^^^^
-  > 13 │     return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
-  > 14 │   }
-       │   ^
-    15 │ }
-    16 │ 
-  
-  i Unsafe fix: Omit the else clause.
-  
-    10 10 │     if (success) {
-    11 11 │       return NextResponse.json({ success: true });
-    12    │ - ··}·else·{
-       12 │ + ··}
-    13 13 │       return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
-    14    │ - ··}
-    15 14 │   }
-    16 15 │   
-  
-
 .\src\app\api\dispatch\route.ts:16:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × This else clause can be omitted because previous branches break early.
@@ -149,6 +72,20 @@
     20 19 │   
   
 
+.\src\app\api\infra\route.ts:50:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    48 │       remediations,
+    49 │     });
+  > 50 │   } catch (error: any) {
+       │                   ^^^
+    51 │     console.error('Audit sensor error:', error);
+    52 │     return NextResponse.json({ error: error.message }, { status: 500 });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
 .\src\app\api\workflows\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
@@ -162,18 +99,20 @@
   i any disables many type checking rules. Its use should be avoided.
   
 
-.\src\app\api\infra\route.ts:50:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Unexpected any. Specify a different type.
+  × Unknown property is not allowed.
   
-    48 │       remediations,
-    49 │     });
-  > 50 │   } catch (error: any) {
-       │                   ^^^
-    51 │     console.error('Audit sensor error:', error);
-    52 │     return NextResponse.json({ error: error.message }, { status: 500 });
+    60 │   border-color: var(--sys-color-primary);
+    61 │   outline: none;
+  > 62 │   ring: 2px solid var(--sys-color-primary-container);
+       │   ^^^^
+    63 │ }
+    64 │ 
   
-  i any disables many type checking rules. Its use should be avoided.
+  i See CSS Specifications and browser specific properties for more details.
+  
+  i To resolve this issue, replace the unknown property with a valid CSS property.
   
 
 .\src\app\api\projects\route.ts:17:22 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -225,40 +164,70 @@
     34 34 │               }
   
 
-.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\login\page.tsx:50:13 lint/a11y/noLabelWithoutControl ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Unknown property is not allowed.
+  × A form label must be associated with an input.
   
-    60 │   border-color: var(--sys-color-primary);
-    61 │   outline: none;
-  > 62 │   ring: 2px solid var(--sys-color-primary-container);
-       │   ^^^^
-    63 │ }
-    64 │ 
+    48 │         <form onSubmit={handleSubmit} className="space-y-6">
+    49 │           <div className="space-y-2">
+  > 50 │             <label className="text-[10px] font-bold text-text-secondary uppercase">
+       │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 51 │               Access Key
+  > 52 │             </label>
+       │             ^^^^^^^^
+    53 │             <div className="relative">
+    54 │               <Lock
   
-  i See CSS Specifications and browser specific properties for more details.
-  
-  i To resolve this issue, replace the unknown property with a valid CSS property.
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
   
 
-.\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\login\page.tsx:31:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × Do not use template literals if interpolation and special-character handling are not needed.
+  ! This variable is unused.
   
-     7 │   try {
-   > 8 │     const res = await fetch(`https://api.hetzner.cloud/v1/servers`, {
-       │                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     9 │       headers: {
-    10 │         Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+    29 │         setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
+    30 │       }
+  > 31 │     } catch (e) {
+       │              ^
+    32 │       setError('SYSTEM ERROR: UNABLE TO CONNECT');
+    33 │     } finally {
   
-  i Unsafe fix: Replace with string literal
+  i Unused variables usually are result of incomplete refactoring, typos and other source of bugs.
   
-     6  6 │   
-     7  7 │     try {
-     8    │ - ····const·res·=·await·fetch(`https://api.hetzner.cloud/v1/servers`,·{
-        8 │ + ····const·res·=·await·fetch('https://api.hetzner.cloud/v1/servers',·{
-     9  9 │         headers: {
-    10 10 │           Authorization: `Bearer ${HETZNER_API_TOKEN}`,
+  i Unsafe fix: If this is intentional, prepend e with an underscore.
+  
+    29 29 │           setError('AUTHENTICATION FAILED: INVALID CREDENTIALS');
+    30 30 │         }
+    31    │ - ····}·catch·(e)·{
+       31 │ + ····}·catch·(_e)·{
+    32 32 │         setError('SYSTEM ERROR: UNABLE TO CONNECT');
+    33 33 │       } finally {
+  
+
+.\src\app\api\auth\route.ts:12:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This else clause can be omitted because previous branches break early.
+  
+    10 │   if (success) {
+    11 │     return NextResponse.json({ success: true });
+  > 12 │   } else {
+       │     ^^^^^^
+  > 13 │     return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
+  > 14 │   }
+       │   ^
+    15 │ }
+    16 │ 
+  
+  i Unsafe fix: Omit the else clause.
+  
+    10 10 │     if (success) {
+    11 11 │       return NextResponse.json({ success: true });
+    12    │ - ··}·else·{
+       12 │ + ··}
+    13 13 │       return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
+    14    │ - ··}
+    15 14 │   }
+    16 15 │   
   
 
 .\src\components\DecisionLog.tsx:7:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -314,10 +283,71 @@
   i Allowed button types are: submit, button or reset
   
 
+.\src\components\DecisionLog.tsx:56:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    54 │           Full Audit Log
+    55 │         </button>
+  > 56 │         <button className="text-primary hover:underline flex items-center gap-1">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    57 │           <Plus size={12} />
+    58 │           New Entry
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\components\FocusPanel.tsx:64:11 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    62 │             onKeyDown={(e) => e.key === 'Enter' && addTask()}
+    63 │           />
+  > 64 │           <button
+       │           ^^^^^^^
+  > 65 │             onClick={addTask}
+  > 66 │             disabled={tasks.length >= 3}
+  > 67 │             className="btn-standard p-2 bg-primary text-on-primary rounded-sm disabled:opacity-30 disabled:cursor-not-allowed"
+  > 68 │           >
+       │           ^
+    69 │             <Plus size={16} />
+    70 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+.\src\components\FocusPanel.tsx:76:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    74 │           {tasks.map((task, i) => (
+    75 │             <div
+  > 76 │               key={i}
+       │                    ^
+    77 │               className="group flex items-center justify-between p-3 bg-surface-container-low border border-outline-variant rounded-sm hover:border-outline transition-all"
+    78 │             >
+  
+  i This is the source of the key value.
+  
+    73 │         <div className="space-y-2">
+  > 74 │           {tasks.map((task, i) => (
+       │                             ^
+    75 │             <div
+    76 │               key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
 The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 41.
-Checked 36 files in 49ms. No fixes applied.
-Found 54 errors.
+Diagnostics not shown: 37.
+Checked 34 files in 122ms. No fixes applied.
+Found 50 errors.
 Found 7 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
