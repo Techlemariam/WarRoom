@@ -2,30 +2,17 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\app\api\auth\route.ts:12:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\app\api\audit\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  × This else clause can be omitted because previous branches break early.
+  × Unexpected any. Specify a different type.
   
-    10 │   if (success) {
-    11 │     return NextResponse.json({ success: true });
-  > 12 │   } else {
-       │     ^^^^^^
-  > 13 │     return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
-  > 14 │   }
-       │   ^
-    15 │ }
-    16 │ 
+    15 │     return NextResponse.json(auditData);
+  > 16 │   } catch (error: any) {
+       │                   ^^^
+    17 │     console.error('Audit API Error:', error);
+    18 │     return NextResponse.json({ error: error.message }, { status: 500 });
   
-  i Unsafe fix: Omit the else clause.
-  
-    10 10 │     if (success) {
-    11 11 │       return NextResponse.json({ success: true });
-    12    │ - ··}·else·{
-       12 │ + ··}
-    13 13 │       return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
-    14    │ - ··}
-    15 14 │   }
-    16 15 │   
+  i any disables many type checking rules. Its use should be avoided.
   
 
 .\src\app\api\dispatch\route.ts:16:5 lint/style/noUselessElse  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -54,6 +41,19 @@
     20 19 │   
   
 
+.\src\app\api\workflows\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    15 │     return NextResponse.json(allWorkflows.flat());
+  > 16 │   } catch (error: any) {
+       │                   ^^^
+    17 │     return NextResponse.json({ error: error.message }, { status: 500 });
+    18 │   }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
 .\src\app\api\infra\route.ts:50:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Unexpected any. Specify a different type.
@@ -66,6 +66,22 @@
     52 │     return NextResponse.json({ error: error.message }, { status: 500 });
   
   i any disables many type checking rules. Its use should be avoided.
+  
+
+.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unknown property is not allowed.
+  
+    60 │   border-color: var(--sys-color-primary);
+    61 │   outline: none;
+  > 62 │   ring: 2px solid var(--sys-color-primary-container);
+       │   ^^^^
+    63 │ }
+    64 │ 
+  
+  i See CSS Specifications and browser specific properties for more details.
+  
+  i To resolve this issue, replace the unknown property with a valid CSS property.
   
 
 .\src\app\api\projects\route.ts:17:22 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -115,35 +131,6 @@
        32 │ + ············}·catch·(_e)·{
     33 33 │                 // File might not exist, skip
     34 34 │               }
-  
-
-.\src\app\api\workflows\route.ts:16:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    15 │     return NextResponse.json(allWorkflows.flat());
-  > 16 │   } catch (error: any) {
-       │                   ^^^
-    17 │     return NextResponse.json({ error: error.message }, { status: 500 });
-    18 │   }
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
-.\src\app\globals.css:62:3 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unknown property is not allowed.
-  
-    60 │   border-color: var(--sys-color-primary);
-    61 │   outline: none;
-  > 62 │   ring: 2px solid var(--sys-color-primary-container);
-       │   ^^^^
-    63 │ }
-    64 │ 
-  
-  i See CSS Specifications and browser specific properties for more details.
-  
-  i To resolve this issue, replace the unknown property with a valid CSS property.
   
 
 .\src\lib\hetzner.ts:8:29 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -361,16 +348,16 @@
     75 │             <div
     76 │               key={i}
   
+The number of diagnostics exceeds the number allowed by Biome.
+Diagnostics not shown: 33.
+Checked 33 files in 176ms. No fixes applied.
+Found 46 errors.
+Found 7 warnings.
   i The order of the items may change, and this also affects performances and component state.
   
   i Check the React documentation. 
   
 
-The number of diagnostics exceeds the number allowed by Biome.
-Diagnostics not shown: 34.
-Checked 33 files in 63ms. No fixes applied.
-Found 47 errors.
-Found 7 warnings.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
