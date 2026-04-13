@@ -2,64 +2,22 @@
 > war-room@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\lib\audit.ts:108:70 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Unexpected any. Specify a different type.
-  
-    107 │     // 4. IaC / Drift (0-2)
-  > 108 │     const files = Array.isArray(content.data) ? content.data.map((f: any) => f.name) : [];
-        │                                                                      ^^^
-    109 │     const driftFindings: string[] = [];
-    110 │     let driftScore = 0;
-  
-  i any disables many type checking rules. Its use should be avoided.
-  
-
 .\src\lib\audit.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Formatter would have printed the following content:
   
-     54  54 │     for (const res of results) {
-     55  55 │       for (let i = 0; i < res.vectors.length; i++) {
-     56     │ - ········const·v·=·res.vectors[i];
-     57     │ - ········aggregatedVectors[i].score·+=·v.score·/·repos.length;
-     58     │ - ········aggregatedVectors[i].findings.push(...v.findings);
-         56 │ + ······const·v·=·res.vectors[i];
-         57 │ + ······aggregatedVectors[i].score·+=·v.score·/·repos.length;
-         58 │ + ······aggregatedVectors[i].findings.push(...v.findings);
-     59  59 │       }
-     60  60 │     }
-    ······· │ 
-     90  90 │         .filter((r) => r.status === 'completed' && r.run_started_at)
-     91  91 │         .map(
-     92     │ - ········(r)·=>·(new·Date(r.updated_at).getTime()·-·new·Date(r.run_started_at·||·r.created_at).getTime())·/·60000
-         92 │ + ········(r)·=>
-         93 │ + ··········(new·Date(r.updated_at).getTime()·-
-         94 │ + ············new·Date(r.run_started_at·||·r.created_at).getTime())·/
-         95 │ + ··········60000
-     93  96 │         );
-     94  97 │       const avgDuration = durations.length
-    ······· │ 
-    135 138 │       return {
-    136 139 │         vectors: [
-    137     │ - ··········{·name:·'Feedback',·score:·2.0,·findings:·['API·Access·Denied']·},
-    138     │ - ··········{·name:·'Determinism',·score:·2.0,·findings:·[]·},
-    139     │ - ··········{·name:·'Manual',·score:·2.0,·findings:·[]·},
-    140     │ - ··········{·name:·'IaC/Drift',·score:·2.0,·findings:·[]·},
-    141     │ - ··········{·name:·'MTTR',·score:·2.0,·findings:·[]·},
-    142     │ - ······]
-        140 │ + ········{·name:·'Feedback',·score:·2.0,·findings:·['API·Access·Denied']·},
-        141 │ + ········{·name:·'Determinism',·score:·2.0,·findings:·[]·},
-        142 │ + ········{·name:·'Manual',·score:·2.0,·findings:·[]·},
-        143 │ + ········{·name:·'IaC/Drift',·score:·2.0,·findings:·[]·},
-        144 │ + ········{·name:·'MTTR',·score:·2.0,·findings:·[]·},
-        145 │ + ······],
-    143 146 │       };
-    144 147 │     }
+    109 109 │   
+    110 110 │       // 4. IaC / Drift (0-2)
+    111     │ - ····const·files·=·Array.isArray(content.data)·?·content.data.map((f:·{·name:·string·})·=>·f.name)·:·[];
+        111 │ + ····const·files·=·Array.isArray(content.data)
+        112 │ + ······?·content.data.map((f:·{·name:·string·})·=>·f.name)
+        113 │ + ······:·[];
+    112 114 │       const driftFindings: string[] = [];
+    113 115 │       let driftScore = 0;
   
+Checked 33 files in 51ms. No fixes applied.
+Found 1 error.
 
-Checked 33 files in 67ms. No fixes applied.
-Found 2 errors.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.

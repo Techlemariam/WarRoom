@@ -121,14 +121,14 @@ if ($Force) {
         # Biome Fix
         if ($verifyOutput -match "biome") {
           Write-Info "Detected formatting/lint issues. Running biome check --write..."
-          pnpm biome check --write . 2>&1 | Out-Null
+          & pnpm biome check --write . 2>$null
           $autoFixed = $true
         }
         
         # Security Audit Fix
         if ($verifyOutput -match "audit|security") {
           Write-Info "Detected security vulnerabilities. Running pnpm audit fix..."
-          pnpm audit fix 2>&1 | Out-String | Out-Null
+          & pnpm audit fix --silent 2>$null
           $autoFixed = $true
         }
         

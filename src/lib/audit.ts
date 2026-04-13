@@ -108,7 +108,9 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     const manualScore = workflowRuns.length ? (manualRuns / workflowRuns.length) * 2 : 0;
 
     // 4. IaC / Drift (0-2)
-    const files = Array.isArray(content.data) ? content.data.map((f: { name: string }) => f.name) : [];
+    const files = Array.isArray(content.data)
+      ? content.data.map((f: { name: string }) => f.name)
+      : [];
     const driftFindings: string[] = [];
     let driftScore = 0;
 
