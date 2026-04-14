@@ -1,5 +1,5 @@
 setup:
-  project: war-room
+  project: panopticon
   config: dev
 
 # This is a template for Doppler. 
