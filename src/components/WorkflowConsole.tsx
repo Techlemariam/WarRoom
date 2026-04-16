@@ -62,15 +62,22 @@ export default function WorkflowConsole() {
 
   const prioritizedWorkflows = workflows
     .map((w) => {
-      const hasDrift = auditData?.vectors
-        ?.find((v) => v.name === 'IaC/Drift')
-        ?.findings?.some((f) => f.includes(w.repo));
+      // Prioritize based on Remediation Engine prescriptions
+      const prescription = auditData?.remediations?.find((r) => r.routine === w.command);
+
       return {
         ...w,
-        priority: hasDrift ? 'HIGH' : 'STABLE',
+        priority: prescription ? prescription.severity : 'STABLE',
+        prescription: prescription,
       };
     })
-    .sort((a, _b) => (a.priority === 'HIGH' ? -1 : 1));
+    .sort((a, b) => {
+      const priorityOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3, STABLE: 4 };
+      return (
+        (priorityOrder[a.priority as keyof typeof priorityOrder] || 4) -
+        (priorityOrder[b.priority as keyof typeof priorityOrder] || 4)
+      );
+    });
 
   if (loading)
     return (

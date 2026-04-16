@@ -1,0 +1,11 @@
+{
+  "title": "Cross-Project Overlap Audit & Factory Governance",
+  "summary": "Audited 7 conversations for overlap with Factory analysis. Key finding: ship.ps1 handles release, Factory handles full lifecycle — complementary, not duplicated. Standard Nine skills already distributed. Branch strategy unified. What's genuinely new: Factory Lite (3-station orchestration), claim-task, spec-first, factory-manager script, night-shift. What to skip: Gatekeeper (covered by ship.ps1), Pre-PR (covered by ship.ps1).",
+  "original_conversation_id": "d0b15dc1-9046-40cd-a8e6-f0baa1f16794",
+  "created_at": "2026-04-15T19:52:00Z",
+  "references": [
+    "brain/d0b15dc1-9046-40cd-a8e6-f0baa1f16794/overlap_audit.md",
+    "brain/d0b15dc1-9046-40cd-a8e6-f0baa1f16794/analysis_results.md",
+    "WarRoom/.agent/workflows/factory-lite.md"
+  ]
+}

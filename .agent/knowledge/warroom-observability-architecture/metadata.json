@@ -1,0 +1,14 @@
+{
+  "title": "WarRoom Observability Architecture",
+  "summary": "EntropyRadar vector system (6 vectors, 0-2.0 scale), Snyk integration (score normalization 0-100→0-2.0), TokenTracker for Doppler secret rotation monitoring, and the Remediation Engine (generatePrescriptions in autonom.ts) that maps diagnostics to actionable routines in Dry-Run mode.",
+  "original_conversation_id": "c994997f-8de5-4725-9561-2915f3c91a42",
+  "created_at": "2026-04-15T19:49:00Z",
+  "references": [
+    "WarRoom/src/lib/autonom.ts",
+    "WarRoom/src/lib/snyk.ts",
+    "WarRoom/src/lib/tokens.ts",
+    "WarRoom/src/components/EntropyRadar.tsx",
+    "WarRoom/src/components/TokenTracker.tsx",
+    "WarRoom/src/app/api/infra/route.ts"
+  ]
+}

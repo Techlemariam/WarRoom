@@ -1,16 +1,8 @@
 import { runEntropyAudit } from '@/lib/audit';
-import { getSnykProjects } from '@/lib/snyk';
+import { generatePrescriptions } from '@/lib/autonom';
+import { getSnykMetrics } from '@/lib/snyk';
+import { getTokenMetrics } from '@/lib/tokens';
 import { NextResponse } from 'next/server';
-
-interface SnykProject {
-  attributes: {
-    name: string;
-    issue_counts_by_severity: {
-      critical: number;
-      high: number;
-    };
-  };
-}
 
 export async function GET() {
   try {
@@ -21,37 +13,44 @@ export async function GET() {
       .filter(Boolean) as string[];
     const owner = reposRaw.split(',')[0]?.split('/')[0] || 'Techlemariam';
 
-    // 1. Snyk Security Filter
-    const snykData = (await getSnykProjects()) as SnykProject[];
-    const vulnerabilities = snykData.map((p) => ({
-      name: p.attributes.name,
-      critical: p.attributes.issue_counts_by_severity.critical,
-      high: p.attributes.issue_counts_by_severity.high,
-    }));
+    // 1. Fetch Parallel Diagnostics across all vectors
+    const [snykMetrics, auditData, tokenMetrics] = await Promise.all([
+      getSnykMetrics(),
+      runEntropyAudit(owner, repos),
+      getTokenMetrics(),
+    ]);
 
-    // 2. Entropy Sensor (Drift)
-    const auditData = await runEntropyAudit(owner, repos);
+    // 2. Normalize Snyk Score (0-100 to 0-2.0)
+    const securityScore = Number((snykMetrics.score / 50).toFixed(1));
 
-    // 3. Automated Prescriptions
-    const remediations = auditData
-      .filter((a) => a.entropy > 0.3)
-      .map((a) => ({
-        target: a.project,
-        action: 'Run Standard Parity Sync',
-        priority: a.entropy > 0.7 ? 'CRITICAL' : 'HIGH',
-      }));
+    // 3. Inject Security Vector into Entropy Audit results
+    const combinedVectors = [
+      ...auditData.vectors,
+      {
+        name: 'Security',
+        score: securityScore,
+        label: securityScore.toFixed(1),
+        highlight: snykMetrics.status === 'critical',
+        findings: [
+          `${snykMetrics.critical} Critical, ${snykMetrics.high} High vulnerabilities`,
+          `Status: ${snykMetrics.status.toUpperCase()}`,
+        ],
+      },
+    ];
+
+    // 4. Recalculate Total Score (Sum of all 6 vectors)
+    const totalScore = Number(combinedVectors.reduce((acc, v) => acc + v.score, 0).toFixed(1));
+
+    // 5. Generate Dynamic Prescriptions
+    const remediations = await generatePrescriptions(auditData, snykMetrics, tokenMetrics);
 
     return NextResponse.json({
+      totalScore,
+      vectors: combinedVectors,
       timestamp: new Date().toISOString(),
-      security: {
-        totalVulnerabilities: vulnerabilities.length,
-        critical: vulnerabilities.reduce((acc, v) => acc + v.critical, 0),
-      },
-      drift: {
-        avgEntropy: auditData.reduce((acc, a) => acc + a.entropy, 0) / auditData.length,
-        projectsAffected: auditData.filter((a) => a.entropy > 0.1).length,
-      },
       remediations,
+      security: snykMetrics, // Extra context for client-side detail
+      tokens: tokenMetrics,
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';

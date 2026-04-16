@@ -4,6 +4,7 @@ import FocusPanel from '@/components/FocusPanel';
 import InfraMonitor from '@/components/InfraMonitor';
 import MissionBoard from '@/components/MissionBoard';
 import RevenueRadar from '@/components/RevenueRadar';
+import TokenTracker from '@/components/TokenTracker';
 import WorkflowConsole from '@/components/WorkflowConsole';
 import { getSession } from '@/lib/auth';
 import { Activity, Briefcase, Database, LayoutDashboard, ShieldCheck, Zap } from 'lucide-react';
@@ -76,6 +77,7 @@ export default async function Dashboard() {
               </h2>
               <div className="space-y-4">
                 <EntropyRadar />
+                <TokenTracker />
                 <div className="card-professional p-2">
                   <RevenueRadar />
                 </div>
