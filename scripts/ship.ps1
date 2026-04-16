@@ -34,7 +34,6 @@ $MAX_RETRIES = 2
 $STAGING_CONFIG = @{
   "matlogistik" = "https://matlogistik-staging.tailafb692.ts.net";
   "WarRoom"     = "https://warroom-staging.tailafb692.ts.net";
-  "WarRoom"   = "https://WarRoom-staging.tailafb692.ts.net";
   "IronForge"   = "https://ironforge-staging.tailafb692.ts.net"
 }
 $STAGING_URL = $STAGING_CONFIG[$PROJECT]
