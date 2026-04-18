@@ -2,3 +2,32 @@
 > panopticon@0.1.0 build C:\Users\alexa\Workspaces\WarRoom
 > next build
 
+▲ Next.js 16.2.3 (Turbopack)
+
+  Creating an optimized production build ...
+Found 1 warning while optimizing generated CSS:
+
+[2m│   }[22m
+[2m│ }[22m
+[2m│[22m @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
+[2m┆[22m        [33m[2m^--[22m @import rules must precede all rules aside from @charset and @layer statements[39m
+[2m┆[22m
+[2m│ .dark {[22m
+[2m│   --sys-color-background: #09090b;[22m
+
+✓ Compiled successfully in 15.4s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/api/dispatch/route.ts:8:66
+Type error: Expected 3 arguments, but got 5.
+
+  [90m 6 |[0m   [36mconst[0m { owner, repo, workflowId, ref, inputs } = body;
+  [90m 7 |[0m
+[31m[1m>[0m [90m 8 |[0m   [36mconst[0m result = [36mawait[0m dispatchWorkflow(owner, repo, workflowId, ref, inputs);
+  [90m   |[0m                                                                  [31m[1m^[0m
+  [90m 9 |[0m
+  [90m10 |[0m   [36mif[0m (result.success) {
+  [90m11 |[0m     [36mreturn[0m [33mNextResponse[0m.json({ success: [36mtrue[0m });
+Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.

@@ -31,13 +31,14 @@ export async function runEntropyAudit(owner: string, repos: string[]): Promise<A
   } catch (e) {
     console.warn('Audit API failure, falling back to baseline simulation', e);
     return {
-      totalScore: 6.4,
+      totalScore: 7.4,
       vectors: [
         { name: 'Feedback', score: 0.8, label: '0.8', findings: ['DOPPLER_GH_TOKEN missing'] },
         { name: 'Determinism', score: 1.2, label: '1.2', findings: ['Partial CI/CD visibility'] },
         { name: 'Manual', score: 0.5, label: '0.5', findings: [] },
         { name: 'IaC/Drift', score: 1.5, label: '1.5', findings: ['System baseline audit used'] },
         { name: 'MTTR', score: 2.4, label: '2.4', findings: [] },
+        { name: 'Task Debt', score: 1.0, label: '1.0', findings: ['System baseline audit used'] },
       ],
     };
   }
@@ -49,6 +50,7 @@ export async function runEntropyAudit(owner: string, repos: string[]): Promise<A
     { name: 'Manual', score: 0, label: '0.0', findings: [] as string[] },
     { name: 'IaC/Drift', score: 0, label: '0.0', findings: [] as string[] },
     { name: 'MTTR', score: 0, label: '0.0', findings: [] as string[] },
+    { name: 'Task Debt', score: 0, label: '0.0', findings: [] as string[] },
   ];
 
   for (const res of results) {
@@ -78,9 +80,10 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
   }
 
   try {
-    const [runs, content] = await Promise.all([
+    const [runs, content, backlogRes] = await Promise.all([
       octokit.rest.actions.listWorkflowRunsForRepo({ owner, repo, per_page: 10 }),
       octokit.rest.repos.getContent({ owner, repo, path: '' }).catch(() => ({ data: [] })),
+      octokit.rest.repos.getContent({ owner, repo, path: 'BACKLOG.md' }).catch(() => null),
     ]);
 
     const workflowRuns = runs.data.workflow_runs || [];
@@ -126,6 +129,23 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     // 5. MTTR (0-2)
     const mttrScore = failures > 0 ? 0.8 : 0.1;
 
+    // 6. Task Debt (0-2)
+    let openTasks = 0;
+    const taskFindings: string[] = [];
+    if (backlogRes && 'data' in backlogRes && !Array.isArray(backlogRes.data) && backlogRes.data.content) {
+      const backlogText = Buffer.from(backlogRes.data.content, 'base64').toString();
+      const openMatches = backlogText.match(/- \[[ \/]\]/g); // Matches [ ] and [/]
+      if (openMatches) {
+        openTasks = openMatches.length;
+      }
+      if (openTasks > 0) {
+        taskFindings.push(`Found ${openTasks} open/in-progress tasks in BACKLOG.md`);
+      }
+    } else {
+      taskFindings.push(`No BACKLOG.md found`);
+    }
+    const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
+
     return {
       vectors: [
         { name: 'Feedback', score: feedbackScore, findings: [] },
@@ -133,6 +153,7 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
         { name: 'Manual', score: manualScore, findings: [] },
         { name: 'IaC/Drift', score: driftScore, findings: driftFindings },
         { name: 'MTTR', score: mttrScore, findings: [] },
+        { name: 'Task Debt', score: taskDebtScore, findings: taskFindings },
       ],
     };
   } catch (e) {
@@ -144,6 +165,7 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
         { name: 'Manual', score: 2.0, findings: [] },
         { name: 'IaC/Drift', score: 2.0, findings: [] },
         { name: 'MTTR', score: 2.0, findings: [] },
+        { name: 'Task Debt', score: 2.0, findings: [] },
       ],
     };
   }

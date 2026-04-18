@@ -17,9 +17,9 @@ export async function POST(request: Request) {
 
     if (result.success) {
       return NextResponse.json({ success: true, message: result.message });
-    } else {
-      return NextResponse.json({ success: false, error: result.error }, { status: 500 });
     }
+
+    return NextResponse.json({ success: false, error: result.error }, { status: 500 });
   } catch (error) {
     console.error('[Remedy API Error]', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

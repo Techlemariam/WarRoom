@@ -111,14 +111,14 @@ export default function InfraMonitor() {
         const newDecision = {
           date: new Date().toISOString(),
           title: `AUTO-HEAL: ${app.name.toUpperCase()}`,
-          rationale: `Remediation Engine detected downtime and triggered an automated redeploy.`,
+          rationale: 'Remediation Engine detected downtime and triggered an automated redeploy.',
         };
         localStorage.setItem('war-room-decisions', JSON.stringify([newDecision, ...decisions]));
         window.dispatchEvent(new Event('storage')); // Trigger update in other components
       } else {
         alert(`Failed: ${result.error}`);
       }
-    } catch (e) {
+    } catch (_e) {
       alert('Remediation system communication error.');
     }
   };
@@ -206,6 +206,7 @@ export default function InfraMonitor() {
                 </div>
                 {!app.status?.includes('running') && (
                   <button
+                    type="button"
                     onClick={() => handleRemedy(app)}
                     className="px-2 py-1 rounded bg-error/10 text-error text-[10px] font-bold uppercase hover:bg-error hover:text-error-container transition-all"
                   >

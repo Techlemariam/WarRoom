@@ -44,8 +44,15 @@ The structure must be:
 - **Blocked/Stagnant Operations** (if any context suggests the AI stopped due to an error or missing review).
 - **Recommended Next Steps** for the user.
 
+### 4. Sync to Local Backlog (Hybrid Model)
+After generating the report, you MUST synchronize the findings to the respective project's `BACKLOG.md` file.
+- Format the findings as actionable items (e.g., `- [ ] Fix webhook integration`).
+- Append them under a `## 🧠 Brain Audit Findings` section in the target project's `BACKLOG.md`.
+- This ensures WarRoom can accurately calculate the "Task Debt" vector across the ecosystem.
+
 ---
 // Brain Audit Dispatch
 1. Run `.\scripts\brain-scanner.ps1`
 2. Analyze the aggregate output and group the tasks by Project (IronForge, Taktpinne, etc).
 3. Format and output the final `brain_backlog_audit.md` artifact.
+4. Synchronize the open tasks `[ ]` to the `BACKLOG.md` files of the affected projects.

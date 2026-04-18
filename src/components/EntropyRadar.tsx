@@ -82,7 +82,7 @@ export default function EntropyRadar() {
               >
                 {totalScore.toFixed(1)}
               </span>
-              <span className="text-xs text-on-surface-variant/40 font-medium">/ 10.0</span>
+              <span className="text-xs text-on-surface-variant/40 font-medium">/ 14.0</span>
             </div>
           </div>
           <div
