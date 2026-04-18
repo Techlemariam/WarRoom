@@ -2,46 +2,29 @@
 > panopticon@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\lib\audit.ts:145:25 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.\src\lib\audit.ts:150:25 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Do not use template literals if interpolation and special-character handling are not needed.
   
-    143 │       }
-    144 │     } else {
-  > 145 │       taskFindings.push(`No BACKLOG.md found`);
+    148 │       }
+    149 │     } else {
+  > 150 │       taskFindings.push(`No BACKLOG.md found`);
         │                         ^^^^^^^^^^^^^^^^^^^^^
-    146 │     }
-    147 │     const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
+    151 │     }
+    152 │     const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
   
   i Unsafe fix: Replace with string literal
   
-    143 143 │         }
-    144 144 │       } else {
-    145     │ - ······taskFindings.push(`No·BACKLOG.md·found`);
-        145 │ + ······taskFindings.push('No·BACKLOG.md·found');
-    146 146 │       }
-    147 147 │       const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
+    148 148 │         }
+    149 149 │       } else {
+    150     │ - ······taskFindings.push(`No·BACKLOG.md·found`);
+        150 │ + ······taskFindings.push('No·BACKLOG.md·found');
+    151 151 │       }
+    152 152 │       const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
   
 
-.\src\lib\audit.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Formatter would have printed the following content:
-  
-    133 133 │       let openTasks = 0;
-    134 134 │       const taskFindings: string[] = [];
-    135     │ - ····if·(backlogRes·&&·'data'·in·backlogRes·&&·!Array.isArray(backlogRes.data)·&&·backlogRes.data.content)·{
-        135 │ + ····if·(
-        136 │ + ······backlogRes·&&
-        137 │ + ······'data'·in·backlogRes·&&
-        138 │ + ······!Array.isArray(backlogRes.data)·&&
-        139 │ + ······backlogRes.data.content
-        140 │ + ····)·{
-    136 141 │         const backlogText = Buffer.from(backlogRes.data.content, 'base64').toString();
-    137 142 │         const openMatches = backlogText.match(/- \[[ \/]\]/g); // Matches [ ] and [/]
-  
-
-Checked 51 files in 91ms. No fixes applied.
-Found 2 errors.
+Checked 51 files in 59ms. No fixes applied.
+Found 1 error.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.
