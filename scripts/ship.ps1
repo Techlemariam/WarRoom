@@ -30,6 +30,14 @@ $PROJECT = Split-Path (git rev-parse --show-toplevel) -Leaf
 $LOG_DIR = Join-Path $PSScriptRoot ".ship-logs"
 $MAX_RETRIES = 2
 
+$VERSION = "unknown"
+if (Test-Path "package.json") {
+  $VERSION = (Get-Content package.json -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json).version
+} elseif (Test-Path "src-tauri/tauri.conf.json") {
+  $VERSION = (Get-Content src-tauri/tauri.conf.json -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json).version
+}
+
+
 # Project-specific overrides (Staging URLs)
 $STAGING_CONFIG = @{
   "matlogistik" = "https://matlogistik-staging.tailafb692.ts.net";
@@ -61,7 +69,7 @@ function Write-ShipLog {
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════" -ForegroundColor Magenta
 Write-Host "  🚢 ship.ps1 v3 — Unified Zero-Hell Pipeline" -ForegroundColor Magenta
-Write-Host "  📍 Project: $PROJECT" -ForegroundColor Magenta
+Write-Host "  📍 Project: $PROJECT (v$VERSION)" -ForegroundColor Magenta
 Write-Host "═══════════════════════════════════════════════════" -ForegroundColor Magenta
 
 if ($DryRun) { Write-Host "  🧪 DRY RUN MODE" -ForegroundColor Yellow }
@@ -189,6 +197,7 @@ $PR_TITLE = "release: ship $script:BRANCH for project $PROJECT"
 $PR_BODY = @"
 ## 🚢 Automated Ship (v3) — Zero-Hell Standard
 - **Project**: $PROJECT
+- **Version**: v$VERSION
 - **Source**: ``$script:BRANCH``
 - **Verification**: ✅ Passed $(if ($verifyAttempt -gt 1) { "(Auto-fixed after $verifyAttempt attempts)" })
 - **Staging**: 🚀 Triggered
@@ -209,6 +218,6 @@ if (-not $DryRun) { git checkout $script:BRANCH }
 
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════" -ForegroundColor Green
-Write-Host "  ✅ SHIP COMPLETE! ($PROJECT)" -ForegroundColor Green
+Write-Host "  ✅ SHIP COMPLETE! ($PROJECT v$VERSION)" -ForegroundColor Green
 Write-Host "═══════════════════════════════════════════════════" -ForegroundColor Green
-Write-ShipLog -Event "SHIP_SUCCESS" -Detail "Finished unified ship cycle"
+Write-ShipLog -Event "SHIP_SUCCESS" -Detail "Finished unified ship cycle for v$VERSION"

@@ -85,6 +85,44 @@ export default function InfraMonitor() {
     100
   );
 
+  const handleRemedy = async (app: { uuid: string; name: string }) => {
+    if (!confirm(`Trigger automated remediation (REDEPLOY) for ${app.name}?`)) return;
+
+    try {
+      const res = await fetch('/api/remedy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: `remedy-${app.uuid}`,
+          type: 'REDEPLOY',
+          target: app.name,
+          severity: 'HIGH',
+          mode: 'ACTIVE',
+        }),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        alert(result.message || 'Remediation dispatched successfully.');
+        
+        // Log to DecisionLog via localStorage sync
+        const saved = localStorage.getItem('war-room-decisions');
+        const decisions = saved ? JSON.parse(saved) : [];
+        const newDecision = {
+          date: new Date().toISOString(),
+          title: `AUTO-HEAL: ${app.name.toUpperCase()}`,
+          rationale: `Remediation Engine detected downtime and triggered an automated redeploy.`,
+        };
+        localStorage.setItem('war-room-decisions', JSON.stringify([newDecision, ...decisions]));
+        window.dispatchEvent(new Event('storage')); // Trigger update in other components
+      } else {
+        alert(`Failed: ${result.error}`);
+      }
+    } catch (e) {
+      alert('Remediation system communication error.');
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="card-professional p-4 shadow-sm">
@@ -156,14 +194,24 @@ export default function InfraMonitor() {
                 <div className="flex items-center gap-3 overflow-hidden">
                   <div
                     className={`w-1.5 h-1.5 rounded-full ${
-                      app.status?.includes('running') ? 'bg-green-500' : 'bg-slate-300'
+                      app.status?.includes('running') ? 'bg-green-500' : 'bg-red-500'
                     }`}
                   />
-                  <span className="text-xs font-medium text-on-surface truncate">{app.name}</span>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-xs font-medium text-on-surface truncate">{app.name}</span>
+                    <span className="text-[9px] text-on-surface-variant/50 font-mono uppercase tracking-tighter">
+                      {app.status?.split('(')[0] || 'unknown'}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] text-on-surface-variant/60 font-mono">
-                  {app.status?.split('(')[0] || 'unknown'}
-                </span>
+                {!app.status?.includes('running') && (
+                  <button
+                    onClick={() => handleRemedy(app)}
+                    className="px-2 py-1 rounded bg-error/10 text-error text-[10px] font-bold uppercase hover:bg-error hover:text-error-container transition-all"
+                  >
+                    Remedy
+                  </button>
+                )}
               </div>
             ))}
             {(!coolify?.apps || coolify.apps.length === 0) && (

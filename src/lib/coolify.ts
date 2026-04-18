@@ -44,3 +44,22 @@ export async function getCoolifyServices() {
     return [];
   }
 }
+export async function deployApplication(uuid: string) {
+  try {
+    const res = await fetch(`${COOLIFY_API_URL}/api/v1/applications/${uuid}/deploy`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${COOLIFY_API_TOKEN}`,
+      },
+    });
+    if (!res.ok) {
+      const error = await res.text();
+      console.error(`Coolify deploy failed for ${uuid}:`, error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Failed to trigger Coolify deployment:', error);
+    return false;
+  }
+}

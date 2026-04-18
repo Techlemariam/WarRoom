@@ -17,6 +17,57 @@ export interface RemediationAction {
   mode: 'DRY-RUN' | 'ACTIVE';
 }
 
+export interface ExecutionResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+/**
+ * Execution Bridge: Bridges prescriptions to actual infrastructure mutations.
+ */
+export async function executeAction(action: RemediationAction): Promise<ExecutionResult> {
+  console.log(`[Autonom] Executing ${action.type} for ${action.target}...`);
+
+  try {
+    switch (action.type) {
+      case 'REDEPLOY': {
+        // Target is the app name, id might contain the uuid or we find it
+        // Note: For now, we assume id/action metadata has the uuid or we derive it
+        const uuid = action.id.startsWith('remedy-') ? action.id.replace('remedy-', '') : null;
+        if (!uuid) return { success: false, error: 'No UUID found for redeploy' };
+        
+        const { deployApplication } = await import('./coolify');
+        const success = await deployApplication(uuid);
+        
+        return { 
+          success, 
+          message: success ? `Redeployment triggered for ${action.target}` : 'Deployment failed' 
+        };
+      }
+
+      case 'PATCH':
+      case 'SYNC': {
+        // Bridges to GitHub Workflows
+        const { dispatchWorkflow } = await import('./github');
+        const routine = action.routine || 'nightly-maint';
+        const result = await dispatchWorkflow('Techlemariam', 'WarRoom', routine, 'main', {});
+        
+        return { 
+          success: result.success, 
+          message: result.success ? `Workflow '${routine}' dispatched.` : result.error 
+        };
+      }
+
+      default:
+        return { success: false, error: `Action type ${action.type} not yet implemented for ACTIVE execution.` };
+    }
+  } catch (error) {
+    console.error('[Autonom] Execution failed', error);
+    return { success: false, error: 'Internal execution bridge failure' };
+  }
+}
+
 /**
  * Maps diagnostics from multiple vectors into actionable prescriptions.
  */
