@@ -104,7 +104,7 @@ export default function InfraMonitor() {
       const result = await res.json();
       if (result.success) {
         alert(result.message || 'Remediation dispatched successfully.');
-        
+
         // Log to DecisionLog via localStorage sync
         const saved = localStorage.getItem('war-room-decisions');
         const decisions = saved ? JSON.parse(saved) : [];

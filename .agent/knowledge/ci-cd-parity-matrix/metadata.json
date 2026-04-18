@@ -3,7 +3,5 @@
   "summary": "Cross-project CI/CD maturity comparison: ship.ps1, agent:verify, git-guard, CI on PR, Jules QA, n8n Active Handover, Coolify deploy, semantic release, Docker/GHCR, E2E tests, self-healing pipeline. IronForge 8/10, Taktpinne 6/10 (after stabilization), Matlogistik 1/10, WarRoom 2/10. Used by /manager assess.",
   "original_conversation_id": "ab2ab0af-d320-42aa-98cb-97e23410068a",
   "created_at": "2026-04-15T19:51:00Z",
-  "references": [
-    "brain/ab2ab0af-d320-42aa-98cb-97e23410068a/analysis_results.md"
-  ]
+  "references": ["brain/ab2ab0af-d320-42aa-98cb-97e23410068a/analysis_results.md"]
 }

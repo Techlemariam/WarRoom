@@ -36,13 +36,13 @@ export async function executeAction(action: RemediationAction): Promise<Executio
         // Note: For now, we assume id/action metadata has the uuid or we derive it
         const uuid = action.id.startsWith('remedy-') ? action.id.replace('remedy-', '') : null;
         if (!uuid) return { success: false, error: 'No UUID found for redeploy' };
-        
+
         const { deployApplication } = await import('./coolify');
         const success = await deployApplication(uuid);
-        
-        return { 
-          success, 
-          message: success ? `Redeployment triggered for ${action.target}` : 'Deployment failed' 
+
+        return {
+          success,
+          message: success ? `Redeployment triggered for ${action.target}` : 'Deployment failed',
         };
       }
 
@@ -52,15 +52,18 @@ export async function executeAction(action: RemediationAction): Promise<Executio
         const { dispatchWorkflow } = await import('./github');
         const routine = action.routine || 'nightly-maint';
         const result = await dispatchWorkflow('Techlemariam', 'WarRoom', routine, 'main', {});
-        
-        return { 
-          success: result.success, 
-          message: result.success ? `Workflow '${routine}' dispatched.` : result.error 
+
+        return {
+          success: result.success,
+          message: result.success ? `Workflow '${routine}' dispatched.` : result.error,
         };
       }
 
       default:
-        return { success: false, error: `Action type ${action.type} not yet implemented for ACTIVE execution.` };
+        return {
+          success: false,
+          error: `Action type ${action.type} not yet implemented for ACTIVE execution.`,
+        };
     }
   } catch (error) {
     console.error('[Autonom] Execution failed', error);
