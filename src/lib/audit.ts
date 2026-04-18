@@ -132,7 +132,12 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     // 6. Task Debt (0-2)
     let openTasks = 0;
     const taskFindings: string[] = [];
-    if (backlogRes && 'data' in backlogRes && !Array.isArray(backlogRes.data) && backlogRes.data.content) {
+    if (
+      backlogRes &&
+      'data' in backlogRes &&
+      !Array.isArray(backlogRes.data) &&
+      backlogRes.data.content
+    ) {
       const backlogText = Buffer.from(backlogRes.data.content, 'base64').toString();
       const openMatches = backlogText.match(/- \[[ \/]\]/g); // Matches [ ] and [/]
       if (openMatches) {
