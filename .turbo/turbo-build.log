@@ -15,7 +15,7 @@ Found 1 warning while optimizing generated CSS:
 [2m│ .dark {[22m
 [2m│   --sys-color-background: #09090b;[22m
 
-✓ Compiled successfully in 19.1s
+✓ Compiled successfully in 18.6s
   Running TypeScript ...
 Failed to type check.
 
