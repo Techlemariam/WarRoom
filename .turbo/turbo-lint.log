@@ -21,10 +21,10 @@
         150 │ + ······taskFindings.push('No·BACKLOG.md·found');
     151 151 │       }
     152 152 │       const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
+Checked 51 files in 84ms. No fixes applied.
+Found 1 error.
   
 
-Checked 51 files in 59ms. No fixes applied.
-Found 1 error.
 check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   × Some errors were emitted while running checks.

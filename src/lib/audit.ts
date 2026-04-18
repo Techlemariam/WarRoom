@@ -147,7 +147,7 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
         taskFindings.push(`Found ${openTasks} open/in-progress tasks in BACKLOG.md`);
       }
     } else {
-      taskFindings.push(`No BACKLOG.md found`);
+      taskFindings.push('No BACKLOG.md found');
     }
     const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
 
