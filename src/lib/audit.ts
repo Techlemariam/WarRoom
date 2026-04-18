@@ -136,6 +136,7 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
       backlogRes &&
       'data' in backlogRes &&
       !Array.isArray(backlogRes.data) &&
+      'content' in backlogRes.data &&
       backlogRes.data.content
     ) {
       const backlogText = Buffer.from(backlogRes.data.content, 'base64').toString();

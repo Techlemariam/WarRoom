@@ -45,7 +45,13 @@ export async function getWorkflows(owner: string, repo: string) {
   }
 }
 
-export async function dispatchWorkflow(owner: string, repo: string, workflowCommand: string) {
+export async function dispatchWorkflow(
+  owner: string,
+  repo: string,
+  workflowCommand: string,
+  ref = 'main',
+  inputs: Record<string, unknown> = {}
+) {
   try {
     await octokit.rest.repos.createDispatchEvent({
       owner,
@@ -53,6 +59,8 @@ export async function dispatchWorkflow(owner: string, repo: string, workflowComm
       event_type: 'remote-trigger',
       client_payload: {
         workflow: workflowCommand,
+        ref,
+        ...inputs,
         timestamp: new Date().toISOString(),
       },
     });

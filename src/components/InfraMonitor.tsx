@@ -79,11 +79,8 @@ export default function InfraMonitor() {
 
   const cpuUsage = getLatest(metrics?.cpu);
   const memUsageRaw = getLatest(metrics?.mem);
-  const memTotal = 4 * 1024 * 1024 * 1024;
-  const memUsagePercent = Math.min(
-    (memUsageRaw / (hetzner?.memory * 1024 * 1024 * 1024 || memTotal)) * 100,
-    100
-  );
+  const totalMemBytes = (hetzner?.memory || 4) * 1024 ** 3;
+  const memUsagePercent = Math.min((memUsageRaw / totalMemBytes) * 100, 100);
 
   const handleRemedy = async (app: { uuid: string; name: string }) => {
     if (!confirm(`Trigger automated remediation (REDEPLOY) for ${app.name}?`)) return;

@@ -1,5 +1,6 @@
 'use client';
 
+import type { RemediationAction } from '@/lib/autonom';
 import { ChevronRight, Filter, Play, RefreshCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -14,6 +15,7 @@ interface AuditData {
     name: string;
     findings?: string[];
   }>;
+  remediations?: RemediationAction[];
 }
 
 export default function WorkflowConsole() {
