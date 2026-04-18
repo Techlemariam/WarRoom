@@ -2,32 +2,4 @@
 > panopticon@0.1.0 lint C:\Users\alexa\Workspaces\WarRoom
 > biome check .
 
-.\src\lib\audit.ts:150:25 lint/style/noUnusedTemplateLiteral  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Do not use template literals if interpolation and special-character handling are not needed.
-  
-    148 │       }
-    149 │     } else {
-  > 150 │       taskFindings.push(`No BACKLOG.md found`);
-        │                         ^^^^^^^^^^^^^^^^^^^^^
-    151 │     }
-    152 │     const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
-  
-  i Unsafe fix: Replace with string literal
-  
-    148 148 │         }
-    149 149 │       } else {
-    150     │ - ······taskFindings.push(`No·BACKLOG.md·found`);
-        150 │ + ······taskFindings.push('No·BACKLOG.md·found');
-    151 151 │       }
-    152 152 │       const taskDebtScore = Math.min((openTasks / 10) * 2.0, 2.0);
-Checked 51 files in 84ms. No fixes applied.
-Found 1 error.
-  
-
-check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  × Some errors were emitted while running checks.
-  
-
- ELIFECYCLE  Command failed with exit code 1.
+Checked 51 files in 99ms. No fixes applied.
