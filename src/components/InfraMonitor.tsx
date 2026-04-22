@@ -1,8 +1,8 @@
 'use client';
 
+import { RARITY_COLORS } from '@/lib/rarity';
 import { Activity, AlertCircle, Database, Server } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { RARITY_COLORS } from '@/lib/rarity';
 
 interface MetricValue {
   values?: Array<[number, string]>;
@@ -133,9 +133,13 @@ export default function InfraMonitor() {
           </div>
           <div
             className="px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase transition-colors"
-            style={{ 
-              backgroundColor: hetzner?.status === 'running' ? `rgba(var(--color-rarity-uncommon-rgb), 0.15)` : `rgba(var(--color-rarity-legendary-rgb), 0.15)`,
-              color: hetzner?.status === 'running' ? RARITY_COLORS.UNCOMMON : RARITY_COLORS.LEGENDARY 
+            style={{
+              backgroundColor:
+                hetzner?.status === 'running'
+                  ? 'rgba(var(--color-rarity-uncommon-rgb), 0.15)'
+                  : 'rgba(var(--color-rarity-legendary-rgb), 0.15)',
+              color:
+                hetzner?.status === 'running' ? RARITY_COLORS.UNCOMMON : RARITY_COLORS.LEGENDARY,
             }}
           >
             {hetzner?.status || 'Offline'}
@@ -180,7 +184,9 @@ export default function InfraMonitor() {
               Active Services
             </span>
           </div>
-          {!coolify?.healthy && <AlertCircle size={14} style={{ color: RARITY_COLORS.LEGENDARY }} />}
+          {!coolify?.healthy && (
+            <AlertCircle size={14} style={{ color: RARITY_COLORS.LEGENDARY }} />
+          )}
         </div>
         <div className="max-h-[250px] overflow-y-auto">
           <div className="divide-y divide-outline-variant">
@@ -192,7 +198,11 @@ export default function InfraMonitor() {
                 <div className="flex items-center gap-3 overflow-hidden">
                   <div
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: app.status?.includes('running') ? RARITY_COLORS.UNCOMMON : RARITY_COLORS.LEGENDARY }}
+                    style={{
+                      backgroundColor: app.status?.includes('running')
+                        ? RARITY_COLORS.UNCOMMON
+                        : RARITY_COLORS.LEGENDARY,
+                    }}
                   />
                   <div className="flex flex-col overflow-hidden">
                     <span className="text-xs font-medium text-on-surface truncate">{app.name}</span>

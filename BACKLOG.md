@@ -31,12 +31,12 @@
 Dessa uppgifter har extraherats från lokala konversationer för att stänga gapet mellan planering och genomförande.
 
 ### Panopticon & n8n Stability
-- [ ] Implementera Discord Webhook Verifier (Signatur-validering i n8n).
-- [ ] Verifiera `/status` flödet mot den nya Edge Gateway-arkitekturen.
+- [x] Implementera Discord Webhook Verifier (Signatur-validering i n8n).
+- [x] Verifiera `/status` flödet mot den nya Edge Gateway-arkitekturen.
 
 ### IronForge Infrastructure
-- [ ] Fixa Unhealthy Supabase Storage containers.
-- [ ] Implementera Equipment Recall logik i UI.
+- [x] Fixa Unhealthy Supabase Storage containers.
+- [x] Implementera Equipment Recall logik i UI.
 
 ---
 *Librarian Audit History*

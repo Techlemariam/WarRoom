@@ -1,8 +1,8 @@
 'use client';
 
+import { RARITY_COLORS } from '@/lib/rarity';
 import { AlertCircle, RefreshCcw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { RARITY_COLORS } from '@/lib/rarity';
 
 interface AuditVector {
   name: string;
@@ -80,7 +80,9 @@ export default function EntropyRadar() {
             <div className="flex items-baseline gap-1.5">
               <span
                 className="text-3xl font-bold"
-                style={{ color: isHealthy ? 'var(--sys-color-on-surface)' : RARITY_COLORS.LEGENDARY }}
+                style={{
+                  color: isHealthy ? 'var(--sys-color-on-surface)' : RARITY_COLORS.LEGENDARY,
+                }}
               >
                 {totalScore.toFixed(1)}
               </span>
@@ -89,10 +91,14 @@ export default function EntropyRadar() {
           </div>
           <div
             className="px-2.5 py-1 text-[10px] font-bold uppercase rounded border transition-colors"
-            style={{ 
-              backgroundColor: isHealthy ? `rgba(var(--color-rarity-uncommon-rgb), 0.1)` : `rgba(var(--color-rarity-legendary-rgb), 0.1)`,
+            style={{
+              backgroundColor: isHealthy
+                ? 'rgba(var(--color-rarity-uncommon-rgb), 0.1)'
+                : 'rgba(var(--color-rarity-legendary-rgb), 0.1)',
               color: isHealthy ? RARITY_COLORS.UNCOMMON : RARITY_COLORS.LEGENDARY,
-              borderColor: isHealthy ? `rgba(var(--color-rarity-uncommon-rgb), 0.2)` : `rgba(var(--color-rarity-legendary-rgb), 0.2)`
+              borderColor: isHealthy
+                ? 'rgba(var(--color-rarity-uncommon-rgb), 0.2)'
+                : 'rgba(var(--color-rarity-legendary-rgb), 0.2)',
             }}
           >
             {isHealthy ? 'Compliant' : 'Action Required'}
@@ -105,7 +111,9 @@ export default function EntropyRadar() {
               <div className="flex justify-between items-center text-[11px]">
                 <div className="flex items-center gap-2 font-semibold text-on-surface-variant">
                   {v.name.toUpperCase()}
-                  {v.score > 1.2 && <AlertCircle size={12} style={{ color: RARITY_COLORS.LEGENDARY }} />}
+                  {v.score > 1.2 && (
+                    <AlertCircle size={12} style={{ color: RARITY_COLORS.LEGENDARY }} />
+                  )}
                 </div>
                 <div className="font-mono font-bold text-on-surface">{v.score.toFixed(1)}</div>
               </div>
@@ -113,9 +121,14 @@ export default function EntropyRadar() {
               <div className="h-2 bg-surface-container-high w-full rounded-sm overflow-hidden">
                 <div
                   className="h-full transition-all duration-1000"
-                  style={{ 
+                  style={{
                     width: `${Math.min((v.score / 2) * 100, 100)}%`,
-                    backgroundColor: v.score > 1.5 ? RARITY_COLORS.LEGENDARY : v.score > 1.0 ? RARITY_COLORS.GOLD : RARITY_COLORS.UNCOMMON
+                    backgroundColor:
+                      v.score > 1.5
+                        ? RARITY_COLORS.LEGENDARY
+                        : v.score > 1.0
+                          ? RARITY_COLORS.GOLD
+                          : RARITY_COLORS.UNCOMMON,
                   }}
                 />
               </div>

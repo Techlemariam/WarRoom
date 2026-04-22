@@ -1,9 +1,9 @@
 import { runEntropyAudit } from '@/lib/audit';
 import { generatePrescriptions } from '@/lib/autonom';
+import { getCoolifyApplications, getCoolifyHealth } from '@/lib/coolify';
+import { getHetznerMetrics, getHetznerServer, getHetznerServers } from '@/lib/hetzner';
 import { getSnykMetrics } from '@/lib/snyk';
 import { getTokenMetrics } from '@/lib/tokens';
-import { getCoolifyHealth, getCoolifyApplications } from '@/lib/coolify';
-import { getHetznerServers, getHetznerServer, getHetznerMetrics } from '@/lib/hetzner';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -25,13 +25,13 @@ export async function GET() {
 
     // 1. Fetch Parallel Diagnostics across all vectors and infra
     const [
-      snykMetrics, 
-      auditData, 
+      snykMetrics,
+      auditData,
       tokenMetrics,
       coolifyHealth,
       coolifyApps,
       hetznerServer,
-      hetznerMetrics
+      hetznerMetrics,
     ] = await Promise.all([
       getSnykMetrics(),
       runEntropyAudit(owner, repos),

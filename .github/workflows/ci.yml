@@ -45,3 +45,10 @@ jobs:
 
       - name: Agent Verify (Lint, Build, Security)
         run: pnpm run agent:verify
+
+      - name: "🩺 Active Handover: CI Failure"
+        if: failure()
+        run: |
+          curl -X POST "${{ secrets.N8N_CI_TRIAGE_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"repo":"${{ github.event.repository.name }}","run_id":"${{ github.run_id }}","conclusion":"failure"}'

@@ -1,1 +1,1983 @@
-[{"updatedAt":"2026-04-19T08:01:42.668Z","createdAt":"2026-02-08T09:14:12.273Z","id":"Tv0z7QUCzTfgLDGq","name":"Monitoring Dashboard","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"url":"=https://ironforge-coolify.tailafb692.ts.net/api/health","options":{}},"id":"b343ccfc-4365-491e-b8c3-8b0c6cf74db7","name":"Check Health API","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32]},{"parameters":{"conditions":{"number":[{"value1":"={{ $json.statusCode }}","operation":"equals","value2":200}]}},"id":"da9cfd02-9793-46cd-bb0a-df0f11fe2fcf","name":"Is Healthy?","type":"n8n-nodes-base.if","typeVersion":1,"position":[432,32]},{"parameters":{"url":"https://discord.com/api/webhooks/1469991396373958688/4WDf2TawGhR_QQ0FY7xExCcTLZ3plj1O8wcVvG8pxvAHbr1jfQg4DqUiktyuAn1LIe05","options":{}},"id":"84498432-0480-4212-8e4e-a180b62d5647","name":"Alert Discord/Slack","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[640,144]}],"connections":{"Check Health API":{"main":[[{"node":"Is Healthy?","type":"main","index":0}]]},"Is Healthy?":{"main":[[],[{"node":"Alert Discord/Slack","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","availableInMCP":true,"timeSavedMode":"fixed","callerPolicy":"workflowsFromSameOwner","binaryMode":"separate"},"staticData":{"node:Every 15 mins":{"recurrenceRules":[]}},"meta":null,"pinData":{},"versionId":"fbb2b13c-9133-4943-a0ea-7a714d7e4ac0","activeVersionId":"73bc527e-a276-4317-b827-254781af7e1d","versionCounter":48,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-02-08T09:14:12.285Z","createdAt":"2026-02-08T09:14:12.285Z","role":"workflow:owner","workflowId":"Tv0z7QUCzTfgLDGq","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-09T10:25:16.718Z","createdAt":"2026-02-09T10:04:31.674Z","id":"N6l6IZxtvbhnwS3x","name":"IronForge Remote Trigger V3","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"ironforge-trigger","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[250,300],"webhookId":"776e9ed4-b76f-40a2-b4d5-6701a66227c5","id":"76202c18-1fbc-4747-a63f-0ad3d9b195c6"},{"parameters":{"conditions":{"boolean":[{"value1":"={{ $json.body.token.trim() === 'IF_SECURE_TRIGGER_2026_X9' }}","value2":true}]}},"name":"ValidateToken","type":"n8n-nodes-base.if","typeVersion":1,"position":[450,300],"id":"7e0c9346-746e-46d3-b7e7-a244539e2d13"},{"parameters":{"url":"https://api.github.com/repos/Techlemariam/IronForge/dispatches","method":"POST","sendHeaders":true,"headerParameters":{"parameters":[{"name":"Accept","value":"application/vnd.github.v3+json"},{"name":"Authorization","value":"token github_pat_REDACTED_BY_ANTIGRAVITY"}]},"sendBody":true,"specifyBody":"json","jsonBody":"={{ JSON.stringify({ event_type: 'remote-trigger', client_payload: { workflow: $json.body.workflow || '/health-check', branch: $json.body.branch || 'main', token: $json.body.token } }) }}","options":{}},"name":"TriggerGitHub","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[650,200],"id":"8074f9fe-f088-47a7-8727-774c5c1c2806"}],"connections":{"Webhook":{"main":[[{"node":"ValidateToken","type":"main","index":0}]]},"ValidateToken":{"main":[[{"node":"TriggerGitHub","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"892993bb-f6a6-411d-bade-e3cb3f24db67","activeVersionId":"892993bb-f6a6-411d-bade-e3cb3f24db67","versionCounter":49,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-02-09T10:04:31.699Z","createdAt":"2026-02-09T10:04:31.699Z","role":"workflow:owner","workflowId":"N6l6IZxtvbhnwS3x","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T12:44:15.918Z","createdAt":"2026-02-10T12:44:15.918Z","id":"jck5aC2fOOfMnQpq","name":"Remote OpenClaw Trigger","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"openclaw-trigger","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[460,300],"id":"1fdcb50b-2d10-4a2d-a869-570f88e4f815"},{"parameters":{"url":"http://100.117.44.51:18789/api/v1/session","method":"POST","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendHeaders":true,"headerParameter":{"parameters":[{"name":"Authorization","value":"Bearer dev-token-123"}]},"options":{}},"name":"Create Session","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[680,300],"id":"b60f9a92-e2c1-4150-8240-95b30c168e9a"},{"parameters":{"url":"={{ 'http://100.117.44.51:18789/api/v1/session/' + $json.id + '/message' }}","method":"POST","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendHeaders":true,"headerParameter":{"parameters":[{"name":"Authorization","value":"Bearer dev-token-123"}]},"sendBody":true,"bodyParameters":{"parameters":[{"name":"text","value":"={{ $('Webhook').item.json.body.command || 'Run /status' }}"}]},"options":{}},"name":"Send Command","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[900,300],"id":"4f6839d7-f9c5-440f-8612-8b539f491eac"}],"connections":{"Webhook":{"main":[[{"node":"Create Session","type":"main","index":0}]]},"Create Session":{"main":[[{"node":"Send Command","type":"main","index":0}]]}},"settings":{"callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"36773439-e3ae-448a-b519-72e18a43574e","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T12:44:15.940Z","createdAt":"2026-02-10T12:44:15.940Z","role":"workflow:owner","workflowId":"jck5aC2fOOfMnQpq","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:00:00.247Z","createdAt":"2026-02-10T23:00:00.247Z","id":"HnqBLUEIeszuuoJR","name":"Trigger Night Shift (IronForge)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"path":"trigger-night-shift","responseMode":"lastNode","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[460,300],"credentials":{"httpHeaderAuth":{"id":"IRONFORGE_LOCAL_SECRET","name":"IronForge Local Secret"}},"webhookId":"fb857342-9a3d-4c3e-8c6e-1d5f3b7a5e9d","id":"0232fdcd-c806-4d32-aabe-239688da8052"},{"parameters":{"url":"https://khameleon.tailafb692.ts.net:8443/trigger-night-shift","method":"POST","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","options":{}},"name":"Trigger Local Script","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[680,300],"credentials":{"httpHeaderAuth":{"id":"IRONFORGE_LOCAL_SECRET","name":"IronForge Local Secret"}},"id":"5949f1a1-2d2c-44a8-b323-0bcbb1eef53f"}],"connections":{"Webhook":{"main":[[{"node":"Trigger Local Script","type":"main","index":0}]]}},"settings":{"saveManualExecutions":false,"callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"26aaf337-3416-457a-b7c1-b65a3f7ad274","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:00:00.288Z","createdAt":"2026-02-10T23:00:00.288Z","role":"workflow:owner","workflowId":"HnqBLUEIeszuuoJR","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:18:54.588Z","createdAt":"2026-02-10T23:18:54.588Z","id":"gBjZ4ovg2dAsI8RA","name":"Trigger Night Shift (IronForge)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"path":"trigger-night-shift","responseMode":"lastNode","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[32,32],"id":"98caf870-70eb-47b2-9e88-f111b35f8525"},{"parameters":{"method":"POST","url":"https://khameleon.tailafb692.ts.net:8443/trigger-night-shift","options":{}},"name":"Trigger Local Script","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32],"id":"6a672ba9-a366-4c86-bd0f-644b5dfb625e"}],"connections":{"Webhook":{"main":[[{"node":"Trigger Local Script","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"875074a4-59de-4fd1-bb65-e30865d423a3","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:18:54.604Z","createdAt":"2026-02-10T23:18:54.604Z","role":"workflow:owner","workflowId":"gBjZ4ovg2dAsI8RA","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:20:07.559Z","createdAt":"2026-02-10T23:20:07.559Z","id":"6dVoLiwQPGR5BuNd","name":"Trigger Night Shift (IronForge)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"path":"trigger-night-shift","responseMode":"lastNode","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[32,32],"id":"36b6f92c-1cd1-4d7a-a10f-cf20d9f62184"},{"parameters":{"method":"POST","url":"https://khameleon.tailafb692.ts.net:8443/trigger-night-shift","options":{}},"name":"Trigger Local Script","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32],"id":"c6a83992-f868-4c7c-926d-352e22a15f4e"}],"connections":{"Webhook":{"main":[[{"node":"Trigger Local Script","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"734f55b2-b07d-4459-be63-1dff58db25c4","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:20:07.562Z","createdAt":"2026-02-10T23:20:07.562Z","role":"workflow:owner","workflowId":"6dVoLiwQPGR5BuNd","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:20:35.806Z","createdAt":"2026-02-10T23:20:35.806Z","id":"Yn9IYzuBuKTrGR9p","name":"Trigger Night Shift (IronForge)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"path":"trigger-night-shift","responseMode":"lastNode","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[32,32],"id":"b9b9e203-60ca-447b-b333-3b2dd9ac5c0b"},{"parameters":{"method":"POST","url":"https://khameleon.tailafb692.ts.net:8443/trigger-night-shift","options":{}},"name":"Trigger Local Script","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32],"id":"7dff610c-4899-4a75-86c5-454f1be992f8"}],"connections":{"Webhook":{"main":[[{"node":"Trigger Local Script","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"219bf4fe-1043-4c28-a354-a60d9174ec6d","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:20:35.809Z","createdAt":"2026-02-10T23:20:35.809Z","role":"workflow:owner","workflowId":"Yn9IYzuBuKTrGR9p","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:20:57.781Z","createdAt":"2026-02-10T23:20:57.781Z","id":"WceXbko3DM59QHzF","name":"Trigger Night Shift (IronForge)","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"path":"trigger-night-shift","responseMode":"lastNode","options":{}},"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[32,32],"id":"2a0b086a-5f42-4359-b505-5d130a65f51a"},{"parameters":{"method":"POST","url":"https://khameleon.tailafb692.ts.net:8443/trigger-night-shift","options":{}},"name":"Trigger Local Script","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32],"id":"aed83536-fed6-4d51-8654-2c8bd64b8513"}],"connections":{"Webhook":{"main":[[{"node":"Trigger Local Script","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"ae25c185-025e-4aa4-b4f5-c1d1544737f4","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:20:57.786Z","createdAt":"2026-02-10T23:20:57.786Z","role":"workflow:owner","workflowId":"WceXbko3DM59QHzF","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-10T23:26:24.002Z","createdAt":"2026-02-10T23:21:26.398Z","id":"8z5fycjP1iyVX4PH","name":"IronForge Morning Reminder","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"url":"https://example.com","options":{}},"name":"Test Node","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[240,32],"id":"cd760b75-b16a-45c7-b42e-e007929793fc"},{"parameters":{"rule":{"interval":[{"field":"cronExpression","expression":"5 8 * * 1-5"}]}},"name":"Daily 09:05 CET","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.1,"position":[144,144],"id":"91db69f1-d9db-4dd7-abbc-c54920e9a802"},{"parameters":{"method":"POST","url":"https://discord.com/api/webhooks/1469991396373958688/4WDf2TawGhR_QQ0FY7xExCcTLZ3plj1O8wcVvG8pxvAHbr1jfQg4DqUiktyuAn1LIe05","sendBody":true,"bodyParameters":{"parameters":[{"name":"content","value":"☀️ **IronForge Morning Briefing** — Quota resettas!\n\n1. Kör `/startup` i Antigravity\n2. Kör `/triage` — process nya issues\n3. Check Night Shift logs: `.agent/logs/`"}]},"options":{}},"name":"Discord Reminder","type":"n8n-nodes-base.httpRequest","typeVersion":3,"position":[368,144],"id":"a2018606-c0b3-41f9-8885-89108cbb0e72"}],"connections":{"Daily 09:05 CET":{"main":[[{"node":"Discord Reminder","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":true,"timeSavedMode":"fixed"},"staticData":{"node:Daily 09:05 CET":{"recurrenceRules":[]}},"meta":null,"pinData":{},"versionId":"7ff6325d-9fac-470b-8150-3ec9920e4c2c","activeVersionId":"7ff6325d-9fac-470b-8150-3ec9920e4c2c","versionCounter":27,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-02-10T23:21:26.400Z","createdAt":"2026-02-10T23:21:26.400Z","role":"workflow:owner","workflowId":"8z5fycjP1iyVX4PH","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":"Version 7ff6325d","description":""}},{"updatedAt":"2026-02-27T09:19:20.000Z","createdAt":"2026-02-26T21:23:11.503Z","id":"Bk7n6AVIVtLIN6UD","name":"Untitled-1772140991306","description":null,"active":false,"isArchived":true,"nodes":[],"connections":{},"settings":{"callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"da7537c6-3d03-485c-b3f8-9bfd6c3bb38a","activeVersionId":null,"versionCounter":2,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-26T21:23:11.506Z","createdAt":"2026-02-26T21:23:11.506Z","role":"workflow:owner","workflowId":"Bk7n6AVIVtLIN6UD","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-02-27T09:19:17.000Z","createdAt":"2026-02-26T21:32:31.765Z","id":"jJGuAtUpXn1iMe2m","name":"Untitled","description":null,"active":false,"isArchived":true,"nodes":[],"connections":{},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false},"staticData":null,"meta":null,"pinData":null,"versionId":"bf414f31-15ba-4924-8ba7-4802f8f05b81","activeVersionId":null,"versionCounter":5,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-02-26T21:32:31.767Z","createdAt":"2026-02-26T21:32:31.767Z","role":"workflow:owner","workflowId":"jJGuAtUpXn1iMe2m","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:03:03.130Z","createdAt":"2026-02-26T22:32:00.290Z","id":"LLWLOkXohXpMxoPR","name":"CI Triage Router","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"ci-triage","options":{}},"id":"webhook-trigger","name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":1,"position":[650,300]},{"parameters":{"dataType":"string","value1":"={{$json.job_name}}","rules":{"rules":[{"value2":"l1-verify","output":0},{"value2":"l2-db-guard","output":1},{"value2":"l2-verification","output":2}]},"fallbackOutput":3},"id":"job-switch","name":"Job Switch","type":"n8n-nodes-base.switch","typeVersion":1,"position":[850,300]},{"parameters":{"method":"POST","url":"https://api.github.com/repos/Techlemariam/IronForge/dispatches","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"bodyParameters":{"parameters":[{"name":"event_type","value":"doctor-code"},{"name":"client_payload","value":"={{JSON.stringify($json)}}"}]},"options":{}},"id":"dispatch-code","name":"Dispatch Doctor Code","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[1100,150],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"POST","url":"https://api.github.com/repos/Techlemariam/IronForge/dispatches","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"bodyParameters":{"parameters":[{"name":"event_type","value":"doctor-infra"},{"name":"client_payload","value":"={{JSON.stringify($json)}}"}]},"options":{}},"id":"dispatch-infra","name":"Dispatch Doctor Infra","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[1100,300],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"POST","url":"https://api.github.com/repos/Techlemariam/IronForge/dispatches","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"bodyParameters":{"parameters":[{"name":"event_type","value":"doctor-qa"},{"name":"client_payload","value":"={{JSON.stringify($json)}}"}]},"options":{}},"id":"dispatch-qa","name":"Dispatch Doctor QA","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[1100,450],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"dataType":"string","value1":"={{.repository.name}}","rules":{"rules":[{"value2":"IronForge","output":0},{"value2":"taktpinne","output":1},{"value2":"matlogistik","output":2},{"value2":"war-room","output":3}]},"fallbackOutput":4},"id":"repo-switch","name":"Repository Switch","type":"n8n-nodes-base.switch","typeVersion":1,"position":[400,300]},{"parameters":{"method":"POST","url":"https://discord.com/api/webhooks/1492999204509847694/joCvkV4mRhDKhLhMT1EsdmvlWzwfgs-p1k1m7g2apZCewJhIOgCa5Y7fcc8HkvpkFATa","sendBody":true,"bodyParameters":{"parameters":[{"name":"content","value":"={{.repository.name}} triage requested: {{.job_name}}"}]},"options":{}},"id":"discord-ironforge","name":"Discord Ironforge","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[600,100]},{"parameters":{"method":"POST","url":"https://discord.com/api/webhooks/1492999684686483668/HDJ79YgkgxymJ1ko5RX1WvyhAEhB72csf3vZ1zyReG7F6qFRK5QlQLpLMYhS1P4uATP4","sendBody":true,"bodyParameters":{"parameters":[{"name":"content","value":"={{.repository.name}} triage requested: {{.job_name}}"}]},"options":{}},"id":"discord-taktpinne","name":"Discord Taktpinne","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[600,200]},{"parameters":{"method":"POST","url":"https://discord.com/api/webhooks/1493000935952355439/FnqNoaO2BAZWEpBB-cvdRfEcR0T-6Codqxw7r4A4QPTxlZj8JADm0UYZ9Lds9rzOf0tq","sendBody":true,"bodyParameters":{"parameters":[{"name":"content","value":"={{.repository.name}} triage requested: {{.job_name}}"}]},"options":{}},"id":"discord-matlogistik","name":"Discord Matlogistik","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[600,300]},{"parameters":{"method":"POST","url":"https://discord.com/api/webhooks/1493147766040563773/IJFvaZhPnALJ4OEduAhyiKO50OLFZ-h0FKl665O1pMLqPwZ_6XYxpdA8J_nwEeUyNMfw","sendBody":true,"bodyParameters":{"parameters":[{"name":"content","value":"={{.repository.name}} triage requested: {{.job_name}}"}]},"options":{}},"id":"discord-war-room","name":"Discord War-room","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[600,400]}],"connections":{"Webhook":{"main":[[{"node":"Repository Switch","type":"main","index":0}]]},"Job Switch":{"main":[[{"node":"Dispatch Doctor Code","type":"main","index":0}],[{"node":"Dispatch Doctor Infra","type":"main","index":0}],[{"node":"Dispatch Doctor QA","type":"main","index":0}]]},"Repository Switch":{"main":[[{"node":"Discord Ironforge","type":"main","index":0},{"node":"Job Switch","type":"main","index":0}],[{"node":"Discord Taktpinne","type":"main","index":0},{"node":"Job Switch","type":"main","index":0}],[{"node":"Discord Matlogistik","type":"main","index":0},{"node":"Job Switch","type":"main","index":0}],[{"node":"Discord War-room","type":"main","index":0},{"node":"Job Switch","type":"main","index":0}],[{"node":"Job Switch","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":true},"staticData":null,"meta":null,"pinData":null,"versionId":"71902255-6e15-44e4-94ed-e59dbfc6343a","activeVersionId":"71902255-6e15-44e4-94ed-e59dbfc6343a","versionCounter":37,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-02-26T22:32:00.298Z","createdAt":"2026-02-26T22:32:00.298Z","role":"workflow:owner","workflowId":"LLWLOkXohXpMxoPR","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:03:06.420Z","createdAt":"2026-02-26T22:32:08.787Z","id":"AD8oaoJQFMPQm6JO","name":"Reviewer Aggregator","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"reviewer-aggregate","responseMode":"onReceived","responseData":"allEntries"},"id":"webhook-trigger","name":"Review Event Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[250,300]},{"parameters":{"rule":{"interval":[{"field":"hours","hoursInterval":1}]}},"id":"cron-trigger","name":"Hourly Review Check","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.2,"position":[250,500]},{"parameters":{"method":"GET","url":"https://api.github.com/repos/Techlemariam/IronForge/pulls?state=open&sort=updated&direction=desc&per_page=5","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","options":{"response":{"response":{"response":{"fullResponse":false}}}}},"id":"fetch-open-prs","name":"Fetch Open PRs","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[500,400],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"GET","url":"=https://api.github.com/repos/Techlemariam/IronForge/pulls/{{ $json.number }}/reviews","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth"},"id":"fetch-reviews","name":"Fetch PR Reviews","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[750,300],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"GET","url":"=https://api.github.com/repos/Techlemariam/IronForge/pulls/{{ $json.number }}/comments","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth"},"id":"fetch-comments","name":"Fetch PR Comments","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[750,500],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"conditions":{"string":[{"value1":"={{ $json.user?.login }}","value2":"coderabbitai","operation":"equals"}]},"combineConditions":"any"},"id":"filter-ai-reviews","name":"Filter AI Reviewer Comments","type":"n8n-nodes-base.filter","typeVersion":2,"position":[1000,400]},{"parameters":{"jsCode":"// Extract actionable suggestions from CodeRabbit/DeepSource comments\nconst items = $input.all();\nconst suggestions = [];\n\nfor (const item of items) {\n  const body = item.json.body || '';\n  const author = item.json.user?.login || 'unknown';\n  const path = item.json.path || 'unknown';\n  const line = item.json.original_line || item.json.line || 0;\n  \n  // Extract code suggestions (```suggestion blocks)\n  const suggestionRegex = /```suggestion\\n([\\s\\S]*?)```/g;\n  let match;\n  while ((match = suggestionRegex.exec(body)) !== null) {\n    suggestions.push({\n      author,\n      path,\n      line,\n      suggestion: match[1].trim(),\n      type: 'code_suggestion',\n      autoFixable: true\n    });\n  }\n  \n  // Extract general comments (non-code)\n  if (!suggestionRegex.test(body) && body.length > 10) {\n    suggestions.push({\n      author,\n      path,\n      line,\n      suggestion: body.substring(0, 500),\n      type: 'comment',\n      autoFixable: false\n    });\n  }\n}\n\nconst autoFixable = suggestions.filter(s => s.autoFixable);\nconst manualReview = suggestions.filter(s => !s.autoFixable);\n\nreturn [{\n  json: {\n    totalSuggestions: suggestions.length,\n    autoFixableCount: autoFixable.length,\n    manualReviewCount: manualReview.length,\n    autoFixable,\n    manualReview,\n    timestamp: new Date().toISOString()\n  }\n}];"},"id":"parse-suggestions","name":"Parse Suggestions","type":"n8n-nodes-base.code","typeVersion":2,"position":[1250,400]},{"parameters":{"conditions":{"number":[{"value1":"={{ $json.autoFixableCount }}","value2":0,"operation":"gt"}]}},"id":"has-auto-fixes","name":"Has Auto-Fixable?","type":"n8n-nodes-base.if","typeVersion":2,"position":[1500,400]},{"parameters":{"method":"POST","url":"https://api.github.com/repos/Techlemariam/IronForge/dispatches","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"bodyContentType":"json","jsonBody":"={{ JSON.stringify({ event_type: \"doctor-code\", client_payload: { pr_number: $(\"Fetch Open PRs\").item.json.number, branch: $(\"Fetch Open PRs\").item.json.head.ref, job_name: \"reviewer-aggregator\", logs_summary: \"Auto-fixable suggestions: \" + $json.autoFixableCount } }) }}"},"id":"trigger-auto-fix","name":"Trigger Auto-Fix via doctor-code","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[1750,300],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"POST","url":"=https://api.github.com/repos/Techlemariam/IronForge/issues/{{ $('Fetch Open PRs').item.json.number }}/comments","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","sendBody":true,"bodyParameters":{"parameters":[{"name":"body","value":"=🩺 **Reviewer Aggregator Report**\\n\\n- Auto-fixable: {{ $json.autoFixableCount }}\\n- Manual review: {{ $json.manualReviewCount }}\\n\\n{{ $json.autoFixableCount > 0 ? '✅ Auto-fix dispatched via doctor-code.' : 'ℹ️ No auto-fixable suggestions found.' }}"}]}},"id":"post-summary","name":"Post Summary Comment","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[2250,400],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}}],"connections":{"Review Event Webhook":{"main":[[{"node":"Fetch Open PRs","type":"main","index":0}]]},"Hourly Review Check":{"main":[[{"node":"Fetch Open PRs","type":"main","index":0}]]},"Fetch Open PRs":{"main":[[{"node":"Fetch PR Reviews","type":"main","index":0},{"node":"Fetch PR Comments","type":"main","index":0}]]},"Fetch PR Reviews":{"main":[[{"node":"Filter AI Reviewer Comments","type":"main","index":0}]]},"Fetch PR Comments":{"main":[[{"node":"Filter AI Reviewer Comments","type":"main","index":0}]]},"Filter AI Reviewer Comments":{"main":[[{"node":"Parse Suggestions","type":"main","index":0}]]},"Parse Suggestions":{"main":[[{"node":"Has Auto-Fixable?","type":"main","index":0}]]},"Has Auto-Fixable?":{"main":[[{"node":"Trigger Auto-Fix via doctor-code","type":"main","index":0}],[{"node":"Post Summary Comment","type":"main","index":0}]]},"Trigger Auto-Fix via doctor-code":{"main":[[{"node":"Post Summary Comment","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":true},"staticData":{"node:Hourly Review Check":{"recurrenceRules":[]}},"meta":null,"pinData":null,"versionId":"12df8e62-fa8c-44c2-9e18-19efdb862a72","activeVersionId":"12df8e62-fa8c-44c2-9e18-19efdb862a72","versionCounter":37,"triggerCount":2,"tags":[],"shared":[{"updatedAt":"2026-02-26T22:32:08.794Z","createdAt":"2026-02-26T22:32:08.794Z","role":"workflow:owner","workflowId":"AD8oaoJQFMPQm6JO","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:02:59.801Z","createdAt":"2026-04-13T12:15:37.715Z","id":"Pw5ngZNduMrC40wC","name":"My workflow","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{},"type":"@florianai/n8n-nodes-discord-trigger.discordTrigger","typeVersion":1,"position":[0,0],"id":"a17bdd76-c05f-4f62-99d8-0b3647679041","name":"Discord Trigger","webhookId":"6c847c77-cee1-4a86-b7d2-01f60d36c803"}],"connections":{},"settings":{"executionOrder":"v1","binaryMode":"separate","availableInMCP":true},"staticData":null,"meta":null,"pinData":{},"versionId":"0d0a1d78-7d47-4ff9-b433-79f704936018","activeVersionId":null,"versionCounter":2,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-13T12:15:37.725Z","createdAt":"2026-04-13T12:15:37.725Z","role":"workflow:owner","workflowId":"Pw5ngZNduMrC40wC","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:02:55.792Z","createdAt":"2026-04-13T12:27:45.307Z","id":"evEv1aXE6ilvoEqq","name":"discord-interactions-gateway","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"discord-interactions","responseMode":"responseNode","options":{}},"type":"n8n-nodes-base.webhook","typeVersion":2.1,"position":[0,0],"id":"5a528ca9-6933-4a82-99be-df5d415a6c23","name":"Webhook","webhookId":"009c2162-7e01-48d7-bf0c-ba8fbfb0c8b1"},{"parameters":{"respondWith":"json","responseBody":"{\"type\": 1}","options":{}},"type":"n8n-nodes-base.respondToWebhook","typeVersion":1.5,"position":[56,0],"id":"e46b9b83-4be4-4c95-ac4b-0c3e9d4664a3","name":"Respond to Webhook"}],"connections":{"Webhook":{"main":[[{"node":"Respond to Webhook","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","binaryMode":"separate","availableInMCP":true},"staticData":null,"meta":null,"pinData":{},"versionId":"7bcdb7de-1e27-42cc-afe8-aa0d812dc496","activeVersionId":null,"versionCounter":18,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-04-13T12:27:45.309Z","createdAt":"2026-04-13T12:27:45.309Z","role":"workflow:owner","workflowId":"evEv1aXE6ilvoEqq","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":"Version 7bcdb7de","description":""}},{"updatedAt":"2026-04-19T07:49:04.769Z","createdAt":"2026-04-13T16:36:13.956Z","id":"80IPfYYTNJPFoNf2","name":"Panopticon: Interaction Gateway","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{"httpMethod":"POST","path":"interaction","responseMode":"responseNode","options":{"rawBody":true}},"id":"webhook-node","name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":2.1,"position":[100,300],"webhookId":"487dfcdf-1917-43be-a966-9b2c397e9cdb"},{"parameters":{"jsCode":"const nacl = require('tweetnacl');\n\nconst headers = $node[\"Webhook\"].json.headers;\nconst signature = headers['x-signature-ed25519'];\nconst timestamp = headers['x-signature-timestamp'];\nconst body = $node[\"Webhook\"].json.body;\n\n// Discord requires raw body string for verification\nconst rawBody = JSON.stringify(body);\n\nconst publicKey = 'e62778c8ab22009d2149d75eb77b1c3b2dc44a22aee4e1817201a6c6ecf59994';\n\ntry {\n  const isVerified = nacl.sign.detached.verify(\n    Buffer.from(timestamp + rawBody),\n    Buffer.from(signature, 'hex'),\n    Buffer.from(publicKey, 'hex')\n  );\n\n  if (!isVerified) {\n    throw new Error('Invalid signature');\n  }\n} catch (err) {\n  return { \n    error: 'Verification failed', \n    detail: err.message \n  };\n}\n\nreturn body;"},"id":"verify-node","name":"Verify Signature","type":"n8n-nodes-base.code","typeVersion":1,"position":[320,300]},{"parameters":{"conditions":{"number":[{"value1":"={{$json.type}}","operation":"equal","value2":1}]}},"id":"ping-check","name":"Is PING?","type":"n8n-nodes-base.if","typeVersion":1,"position":[540,300]},{"parameters":{"options":{"responseCode":200},"responseBody":"={\n  \"type\": 1\n}"},"id":"ping-response","name":"Respond to PING","type":"n8n-nodes-base.respondToWebhook","typeVersion":1,"position":[780,200]},{"parameters":{"dataType":"string","value1":"={{$json.data.name}}","rules":{"rules":[{"value2":"status"},{"value2":"health","output":1},{"value2":"deploy","output":2}]}},"id":"command-router","name":"Command Router","type":"n8n-nodes-base.switch","typeVersion":1,"position":[780,400]},{"parameters":{"workflowId":"p1YkkIGWEONDRBuK","options":{}},"id":"status-handler","name":"Call Status Handler","type":"n8n-nodes-base.executeWorkflow","typeVersion":1.1,"position":[1050,350]}],"connections":{"Webhook":{"main":[[{"node":"Verify Signature","type":"main","index":0}]]},"Verify Signature":{"main":[[{"node":"Is PING?","type":"main","index":0}]]},"Is PING?":{"main":[[{"node":"Respond to PING","type":"main","index":0}],[{"node":"Command Router","type":"main","index":0}]]},"Command Router":{"main":[[{"node":"Call Status Handler","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":false,"binaryMode":"separate","timeSavedMode":"fixed"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"pinData":{},"versionId":"dca9dda1-f9d2-4702-835e-36ed8d7b26c7","activeVersionId":"dca9dda1-f9d2-4702-835e-36ed8d7b26c7","versionCounter":176,"triggerCount":1,"tags":[],"shared":[{"updatedAt":"2026-04-13T16:36:13.974Z","createdAt":"2026-04-13T16:36:13.974Z","role":"workflow:owner","workflowId":"80IPfYYTNJPFoNf2","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:01:59.419Z","createdAt":"2026-04-13T16:36:14.246Z","id":"nm3K2Fqv5BQELeaF","name":"Panopticon: Status Command Handler","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{},"id":"trigger-node","name":"Execute Workflow Trigger","type":"n8n-nodes-base.executeWorkflowTrigger","typeVersion":1,"position":[250,300]},{"parameters":{"method":"POST","url":"=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback","sendBody":true,"bodyParameters":{"parameters":[{"name":"type","value":5}]},"options":{}},"id":"defer-interaction","name":"Defer Response","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[450,300]},{"parameters":{"url":"=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","options":{}},"id":"github-api","name":"GitHub CI Status","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[650,300],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"PATCH","url":"=https://discord.com/api/v10/webhooks/1493235518647832606/{{$json.interaction_token}}/messages/@original","sendBody":true,"bodyParameters":{"parameters":[{"name":"embeds","value":"=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"}]},"options":{}},"id":"discord-edit","name":"Post Rich Embed","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[850,300]}],"connections":{"Execute Workflow Trigger":{"main":[[{"node":"Defer Response","type":"main","index":0}]]},"Defer Response":{"main":[[{"node":"GitHub CI Status","type":"main","index":0}]]},"GitHub CI Status":{"main":[[{"node":"Post Rich Embed","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","callerPolicy":"workflowsFromSameOwner","availableInMCP":true,"binaryMode":"separate","timeSavedMode":"fixed"},"staticData":null,"meta":null,"pinData":null,"versionId":"8e219a6f-ad92-4dc0-b9c6-48786102f4cd","activeVersionId":"8e219a6f-ad92-4dc0-b9c6-48786102f4cd","versionCounter":11,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-13T16:36:14.247Z","createdAt":"2026-04-13T16:36:14.247Z","role":"workflow:owner","workflowId":"nm3K2Fqv5BQELeaF","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:02:38.000Z","createdAt":"2026-04-16T19:00:58.613Z","id":"fYsSxvKYRUT8quQq","name":"Panopticon: Status Command Handler","description":null,"active":false,"isArchived":true,"nodes":[{"parameters":{},"id":"a43ba15b-f447-442b-8242-667493085261","name":"Execute Workflow Trigger","type":"n8n-nodes-base.executeWorkflowTrigger","typeVersion":1,"position":[0,0]},{"parameters":{"method":"POST","url":"=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback","sendBody":true,"bodyParameters":{"parameters":[{"name":"type","value":5}]},"options":{}},"id":"e7ab0c3c-db26-4339-9575-98efb030ab84","name":"Defer Response","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[208,0]},{"parameters":{"url":"=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","options":{}},"id":"ac4560f6-9e2d-4dce-aa33-29301c41dc97","name":"GitHub CI Status","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[400,0],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"PATCH","url":"=https://discord.com/api/v10/webhooks/1493508595424165979/{{$json.interaction_token}}/messages/@original","sendBody":true,"bodyParameters":{"parameters":[{"name":"embeds","value":"=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"}]},"options":{}},"id":"17654e90-c66c-42c3-b193-7beadba567a4","name":"Post Rich Embed","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[608,0]}],"connections":{"Execute Workflow Trigger":{"main":[[{"node":"Defer Response","type":"main","index":0}]]},"Defer Response":{"main":[[{"node":"GitHub CI Status","type":"main","index":0}]]},"GitHub CI Status":{"main":[[{"node":"Post Rich Embed","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","binaryMode":"separate"},"staticData":null,"meta":null,"pinData":{},"versionId":"2636605a-d1cc-43c1-9496-4eb5c2c748fd","activeVersionId":null,"versionCounter":2,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-16T19:00:58.623Z","createdAt":"2026-04-16T19:00:58.623Z","role":"workflow:owner","workflowId":"fYsSxvKYRUT8quQq","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-16T19:05:13.797Z","createdAt":"2026-04-16T19:05:13.797Z","id":"p1YkkIGWEONDRBuK","name":"Panopticon: Status Command Handler","description":null,"active":true,"isArchived":false,"nodes":[{"parameters":{},"id":"eee94d38-277c-434d-9972-c951343b570e","name":"Execute Workflow Trigger","type":"n8n-nodes-base.executeWorkflowTrigger","typeVersion":1,"position":[0,0]},{"parameters":{"method":"POST","url":"=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback","sendBody":true,"bodyParameters":{"parameters":[{"name":"type","value":5}]},"options":{}},"id":"8182e31a-a95d-4823-aa34-ec10977adf92","name":"Defer Response","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[208,0]},{"parameters":{"url":"=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1","authentication":"genericCredentialType","genericAuthType":"httpHeaderAuth","options":{}},"id":"c20d51c4-fae6-446e-b13a-e394a495ca64","name":"GitHub CI Status","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[400,0],"credentials":{"httpHeaderAuth":{"id":"6BhE9M39PCG9q2Ob","name":"GitHub PAT"}}},{"parameters":{"method":"PATCH","url":"=https://discord.com/api/v10/webhooks/1493508595424165979/{{$json.interaction_token}}/messages/@original","sendBody":true,"bodyParameters":{"parameters":[{"name":"embeds","value":"=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"}]},"options":{}},"id":"3a6f4552-ce65-4614-a87d-959566cae880","name":"Post Rich Embed","type":"n8n-nodes-base.httpRequest","typeVersion":4.1,"position":[608,0]}],"connections":{"Execute Workflow Trigger":{"main":[[{"node":"Defer Response","type":"main","index":0}]]},"Defer Response":{"main":[[{"node":"GitHub CI Status","type":"main","index":0}]]},"GitHub CI Status":{"main":[[{"node":"Post Rich Embed","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","binaryMode":"separate"},"staticData":null,"meta":null,"pinData":{},"versionId":"bcce5f97-23d9-4e24-914a-0e01f831c3eb","activeVersionId":"bcce5f97-23d9-4e24-914a-0e01f831c3eb","versionCounter":11,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-16T19:05:13.801Z","createdAt":"2026-04-16T19:05:13.801Z","role":"workflow:owner","workflowId":"p1YkkIGWEONDRBuK","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":"Version bcce5f97","description":""}},{"updatedAt":"2026-04-18T05:46:42.128Z","createdAt":"2026-04-18T05:46:42.128Z","id":"drbu8LTjqeoXFNFB","name":"My Sub-Workflow 1","description":null,"active":false,"isArchived":false,"nodes":[{"id":"c055762a-8fe7-4141-a639-df2372f30060","typeVersion":1.1,"name":"When Executed by Another Workflow","type":"n8n-nodes-base.executeWorkflowTrigger","position":[260,340],"parameters":{}},{"id":"b5942df6-0160-4ef7-965d-57583acdc8aa","name":"Replace me with your logic","type":"n8n-nodes-base.noOp","position":[520,340],"parameters":{}}],"connections":{"When Executed by Another Workflow":{"main":[[{"node":"Replace me with your logic","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","availableInMCP":false},"staticData":null,"meta":null,"pinData":{},"versionId":"23b0391b-3c2c-4773-a082-7ea08f11b303","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-18T05:46:42.138Z","createdAt":"2026-04-18T05:46:42.138Z","role":"workflow:owner","workflowId":"drbu8LTjqeoXFNFB","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-04-18T05:47:09.781Z","createdAt":"2026-04-18T05:47:09.781Z","id":"PIh4lqbyrJM33dJT","name":"My Sub-Workflow 1","description":null,"active":false,"isArchived":false,"nodes":[{"id":"c055762a-8fe7-4141-a639-df2372f30060","typeVersion":1.1,"name":"When Executed by Another Workflow","type":"n8n-nodes-base.executeWorkflowTrigger","position":[260,340],"parameters":{}},{"id":"b5942df6-0160-4ef7-965d-57583acdc8aa","name":"Replace me with your logic","type":"n8n-nodes-base.noOp","position":[520,340],"parameters":{}}],"connections":{"When Executed by Another Workflow":{"main":[[{"node":"Replace me with your logic","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","availableInMCP":false},"staticData":null,"meta":null,"pinData":{},"versionId":"f939ba7b-43df-4c6c-9fe1-f538d161b518","activeVersionId":null,"versionCounter":1,"triggerCount":0,"tags":[],"shared":[{"updatedAt":"2026-04-18T05:47:09.784Z","createdAt":"2026-04-18T05:47:09.784Z","role":"workflow:owner","workflowId":"PIh4lqbyrJM33dJT","projectId":"xSv7yo2oxCZw4gZE","project":{"updatedAt":"2026-04-13T12:08:30.435Z","createdAt":"2026-02-04T22:07:22.992Z","id":"xSv7yo2oxCZw4gZE","name":"Alexander Teklemariam <alexander.teklemariam@gmail.com>","type":"personal","icon":null,"description":null,"creatorId":"918df8dd-28be-455c-af95-f541e364b1b4"}}],"versionMetadata":{"name":null,"description":null}}]
+[
+  {
+    "updatedAt": "2026-04-19T08:01:42.668Z",
+    "createdAt": "2026-02-08T09:14:12.273Z",
+    "id": "Tv0z7QUCzTfgLDGq",
+    "name": "Monitoring Dashboard",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://ironforge-coolify.tailafb692.ts.net/api/health",
+          "options": {}
+        },
+        "id": "b343ccfc-4365-491e-b8c3-8b0c6cf74db7",
+        "name": "Check Health API",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [
+              { "value1": "={{ $json.statusCode }}", "operation": "equals", "value2": 200 }
+            ]
+          }
+        },
+        "id": "da9cfd02-9793-46cd-bb0a-df0f11fe2fcf",
+        "name": "Is Healthy?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [432, 32]
+      },
+      {
+        "parameters": {
+          "url": "https://discord.com/api/webhooks/1469991396373958688/4WDf2TawGhR_QQ0FY7xExCcTLZ3plj1O8wcVvG8pxvAHbr1jfQg4DqUiktyuAn1LIe05",
+          "options": {}
+        },
+        "id": "84498432-0480-4212-8e4e-a180b62d5647",
+        "name": "Alert Discord/Slack",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [640, 144]
+      }
+    ],
+    "connections": {
+      "Check Health API": { "main": [[{ "node": "Is Healthy?", "type": "main", "index": 0 }]] },
+      "Is Healthy?": {
+        "main": [[], [{ "node": "Alert Discord/Slack", "type": "main", "index": 0 }]]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "availableInMCP": true,
+      "timeSavedMode": "fixed",
+      "callerPolicy": "workflowsFromSameOwner",
+      "binaryMode": "separate"
+    },
+    "staticData": { "node:Every 15 mins": { "recurrenceRules": [] } },
+    "meta": null,
+    "pinData": {},
+    "versionId": "fbb2b13c-9133-4943-a0ea-7a714d7e4ac0",
+    "activeVersionId": "73bc527e-a276-4317-b827-254781af7e1d",
+    "versionCounter": 48,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-08T09:14:12.285Z",
+        "createdAt": "2026-02-08T09:14:12.285Z",
+        "role": "workflow:owner",
+        "workflowId": "Tv0z7QUCzTfgLDGq",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-09T10:25:16.718Z",
+    "createdAt": "2026-02-09T10:04:31.674Z",
+    "id": "N6l6IZxtvbhnwS3x",
+    "name": "IronForge Remote Trigger V3",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "httpMethod": "POST", "path": "ironforge-trigger", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [250, 300],
+        "webhookId": "776e9ed4-b76f-40a2-b4d5-6701a66227c5",
+        "id": "76202c18-1fbc-4747-a63f-0ad3d9b195c6"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "boolean": [
+              {
+                "value1": "={{ $json.body.token.trim() === 'IF_SECURE_TRIGGER_2026_X9' }}",
+                "value2": true
+              }
+            ]
+          }
+        },
+        "name": "ValidateToken",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "id": "7e0c9346-746e-46d3-b7e7-a244539e2d13"
+      },
+      {
+        "parameters": {
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/dispatches",
+          "method": "POST",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              { "name": "Accept", "value": "application/vnd.github.v3+json" },
+              { "name": "Authorization", "value": "token github_pat_REDACTED_BY_ANTIGRAVITY" }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ event_type: 'remote-trigger', client_payload: { workflow: $json.body.workflow || '/health-check', branch: $json.body.branch || 'main', token: $json.body.token } }) }}",
+          "options": {}
+        },
+        "name": "TriggerGitHub",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [650, 200],
+        "id": "8074f9fe-f088-47a7-8727-774c5c1c2806"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "ValidateToken", "type": "main", "index": 0 }]] },
+      "ValidateToken": { "main": [[{ "node": "TriggerGitHub", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "892993bb-f6a6-411d-bade-e3cb3f24db67",
+    "activeVersionId": "892993bb-f6a6-411d-bade-e3cb3f24db67",
+    "versionCounter": 49,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-09T10:04:31.699Z",
+        "createdAt": "2026-02-09T10:04:31.699Z",
+        "role": "workflow:owner",
+        "workflowId": "N6l6IZxtvbhnwS3x",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T12:44:15.918Z",
+    "createdAt": "2026-02-10T12:44:15.918Z",
+    "id": "jck5aC2fOOfMnQpq",
+    "name": "Remote OpenClaw Trigger",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "httpMethod": "POST", "path": "openclaw-trigger", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [460, 300],
+        "id": "1fdcb50b-2d10-4a2d-a869-570f88e4f815"
+      },
+      {
+        "parameters": {
+          "url": "http://100.117.44.51:18789/api/v1/session",
+          "method": "POST",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameter": {
+            "parameters": [{ "name": "Authorization", "value": "Bearer dev-token-123" }]
+          },
+          "options": {}
+        },
+        "name": "Create Session",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [680, 300],
+        "id": "b60f9a92-e2c1-4150-8240-95b30c168e9a"
+      },
+      {
+        "parameters": {
+          "url": "={{ 'http://100.117.44.51:18789/api/v1/session/' + $json.id + '/message' }}",
+          "method": "POST",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameter": {
+            "parameters": [{ "name": "Authorization", "value": "Bearer dev-token-123" }]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "text",
+                "value": "={{ $('Webhook').item.json.body.command || 'Run /status' }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "name": "Send Command",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [900, 300],
+        "id": "4f6839d7-f9c5-440f-8612-8b539f491eac"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Create Session", "type": "main", "index": 0 }]] },
+      "Create Session": { "main": [[{ "node": "Send Command", "type": "main", "index": 0 }]] }
+    },
+    "settings": { "callerPolicy": "workflowsFromSameOwner", "availableInMCP": false },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "36773439-e3ae-448a-b519-72e18a43574e",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T12:44:15.940Z",
+        "createdAt": "2026-02-10T12:44:15.940Z",
+        "role": "workflow:owner",
+        "workflowId": "jck5aC2fOOfMnQpq",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:00:00.247Z",
+    "createdAt": "2026-02-10T23:00:00.247Z",
+    "id": "HnqBLUEIeszuuoJR",
+    "name": "Trigger Night Shift (IronForge)",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "path": "trigger-night-shift", "responseMode": "lastNode", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [460, 300],
+        "credentials": {
+          "httpHeaderAuth": { "id": "IRONFORGE_LOCAL_SECRET", "name": "IronForge Local Secret" }
+        },
+        "webhookId": "fb857342-9a3d-4c3e-8c6e-1d5f3b7a5e9d",
+        "id": "0232fdcd-c806-4d32-aabe-239688da8052"
+      },
+      {
+        "parameters": {
+          "url": "https://khameleon.tailafb692.ts.net:8443/trigger-night-shift",
+          "method": "POST",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {}
+        },
+        "name": "Trigger Local Script",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [680, 300],
+        "credentials": {
+          "httpHeaderAuth": { "id": "IRONFORGE_LOCAL_SECRET", "name": "IronForge Local Secret" }
+        },
+        "id": "5949f1a1-2d2c-44a8-b323-0bcbb1eef53f"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Trigger Local Script", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "saveManualExecutions": false,
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "26aaf337-3416-457a-b7c1-b65a3f7ad274",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:00:00.288Z",
+        "createdAt": "2026-02-10T23:00:00.288Z",
+        "role": "workflow:owner",
+        "workflowId": "HnqBLUEIeszuuoJR",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:18:54.588Z",
+    "createdAt": "2026-02-10T23:18:54.588Z",
+    "id": "gBjZ4ovg2dAsI8RA",
+    "name": "Trigger Night Shift (IronForge)",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "path": "trigger-night-shift", "responseMode": "lastNode", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [32, 32],
+        "id": "98caf870-70eb-47b2-9e88-f111b35f8525"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://khameleon.tailafb692.ts.net:8443/trigger-night-shift",
+          "options": {}
+        },
+        "name": "Trigger Local Script",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32],
+        "id": "6a672ba9-a366-4c86-bd0f-644b5dfb625e"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Trigger Local Script", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "875074a4-59de-4fd1-bb65-e30865d423a3",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:18:54.604Z",
+        "createdAt": "2026-02-10T23:18:54.604Z",
+        "role": "workflow:owner",
+        "workflowId": "gBjZ4ovg2dAsI8RA",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:20:07.559Z",
+    "createdAt": "2026-02-10T23:20:07.559Z",
+    "id": "6dVoLiwQPGR5BuNd",
+    "name": "Trigger Night Shift (IronForge)",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "path": "trigger-night-shift", "responseMode": "lastNode", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [32, 32],
+        "id": "36b6f92c-1cd1-4d7a-a10f-cf20d9f62184"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://khameleon.tailafb692.ts.net:8443/trigger-night-shift",
+          "options": {}
+        },
+        "name": "Trigger Local Script",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32],
+        "id": "c6a83992-f868-4c7c-926d-352e22a15f4e"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Trigger Local Script", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "734f55b2-b07d-4459-be63-1dff58db25c4",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:20:07.562Z",
+        "createdAt": "2026-02-10T23:20:07.562Z",
+        "role": "workflow:owner",
+        "workflowId": "6dVoLiwQPGR5BuNd",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:20:35.806Z",
+    "createdAt": "2026-02-10T23:20:35.806Z",
+    "id": "Yn9IYzuBuKTrGR9p",
+    "name": "Trigger Night Shift (IronForge)",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "path": "trigger-night-shift", "responseMode": "lastNode", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [32, 32],
+        "id": "b9b9e203-60ca-447b-b333-3b2dd9ac5c0b"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://khameleon.tailafb692.ts.net:8443/trigger-night-shift",
+          "options": {}
+        },
+        "name": "Trigger Local Script",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32],
+        "id": "7dff610c-4899-4a75-86c5-454f1be992f8"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Trigger Local Script", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "219bf4fe-1043-4c28-a354-a60d9174ec6d",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:20:35.809Z",
+        "createdAt": "2026-02-10T23:20:35.809Z",
+        "role": "workflow:owner",
+        "workflowId": "Yn9IYzuBuKTrGR9p",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:20:57.781Z",
+    "createdAt": "2026-02-10T23:20:57.781Z",
+    "id": "WceXbko3DM59QHzF",
+    "name": "Trigger Night Shift (IronForge)",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "path": "trigger-night-shift", "responseMode": "lastNode", "options": {} },
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [32, 32],
+        "id": "2a0b086a-5f42-4359-b505-5d130a65f51a"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://khameleon.tailafb692.ts.net:8443/trigger-night-shift",
+          "options": {}
+        },
+        "name": "Trigger Local Script",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32],
+        "id": "aed83536-fed6-4d51-8654-2c8bd64b8513"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Trigger Local Script", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "ae25c185-025e-4aa4-b4f5-c1d1544737f4",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:20:57.786Z",
+        "createdAt": "2026-02-10T23:20:57.786Z",
+        "role": "workflow:owner",
+        "workflowId": "WceXbko3DM59QHzF",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-10T23:26:24.002Z",
+    "createdAt": "2026-02-10T23:21:26.398Z",
+    "id": "8z5fycjP1iyVX4PH",
+    "name": "IronForge Morning Reminder",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "url": "https://example.com", "options": {} },
+        "name": "Test Node",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [240, 32],
+        "id": "cd760b75-b16a-45c7-b42e-e007929793fc"
+      },
+      {
+        "parameters": {
+          "rule": { "interval": [{ "field": "cronExpression", "expression": "5 8 * * 1-5" }] }
+        },
+        "name": "Daily 09:05 CET",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.1,
+        "position": [144, 144],
+        "id": "91db69f1-d9db-4dd7-abbc-c54920e9a802"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1469991396373958688/4WDf2TawGhR_QQ0FY7xExCcTLZ3plj1O8wcVvG8pxvAHbr1jfQg4DqUiktyuAn1LIe05",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "☀️ **IronForge Morning Briefing** — Quota resettas!\n\n1. Kör `/startup` i Antigravity\n2. Kör `/triage` — process nya issues\n3. Check Night Shift logs: `.agent/logs/`"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "name": "Discord Reminder",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 3,
+        "position": [368, 144],
+        "id": "a2018606-c0b3-41f9-8885-89108cbb0e72"
+      }
+    ],
+    "connections": {
+      "Daily 09:05 CET": { "main": [[{ "node": "Discord Reminder", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": true,
+      "timeSavedMode": "fixed"
+    },
+    "staticData": { "node:Daily 09:05 CET": { "recurrenceRules": [] } },
+    "meta": null,
+    "pinData": {},
+    "versionId": "7ff6325d-9fac-470b-8150-3ec9920e4c2c",
+    "activeVersionId": "7ff6325d-9fac-470b-8150-3ec9920e4c2c",
+    "versionCounter": 27,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-10T23:21:26.400Z",
+        "createdAt": "2026-02-10T23:21:26.400Z",
+        "role": "workflow:owner",
+        "workflowId": "8z5fycjP1iyVX4PH",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": "Version 7ff6325d", "description": "" }
+  },
+  {
+    "updatedAt": "2026-02-27T09:19:20.000Z",
+    "createdAt": "2026-02-26T21:23:11.503Z",
+    "id": "Bk7n6AVIVtLIN6UD",
+    "name": "Untitled-1772140991306",
+    "description": null,
+    "active": false,
+    "isArchived": true,
+    "nodes": [],
+    "connections": {},
+    "settings": { "callerPolicy": "workflowsFromSameOwner", "availableInMCP": false },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "da7537c6-3d03-485c-b3f8-9bfd6c3bb38a",
+    "activeVersionId": null,
+    "versionCounter": 2,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-26T21:23:11.506Z",
+        "createdAt": "2026-02-26T21:23:11.506Z",
+        "role": "workflow:owner",
+        "workflowId": "Bk7n6AVIVtLIN6UD",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-02-27T09:19:17.000Z",
+    "createdAt": "2026-02-26T21:32:31.765Z",
+    "id": "jJGuAtUpXn1iMe2m",
+    "name": "Untitled",
+    "description": null,
+    "active": false,
+    "isArchived": true,
+    "nodes": [],
+    "connections": {},
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "bf414f31-15ba-4924-8ba7-4802f8f05b81",
+    "activeVersionId": null,
+    "versionCounter": 5,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-26T21:32:31.767Z",
+        "createdAt": "2026-02-26T21:32:31.767Z",
+        "role": "workflow:owner",
+        "workflowId": "jJGuAtUpXn1iMe2m",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:03:03.130Z",
+    "createdAt": "2026-02-26T22:32:00.290Z",
+    "id": "LLWLOkXohXpMxoPR",
+    "name": "CI Triage Router",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "httpMethod": "POST", "path": "ci-triage", "options": {} },
+        "id": "webhook-trigger",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [650, 300]
+      },
+      {
+        "parameters": {
+          "dataType": "string",
+          "value1": "={{$json.job_name}}",
+          "rules": {
+            "rules": [
+              { "value2": "l1-verify", "output": 0 },
+              { "value2": "l2-db-guard", "output": 1 },
+              { "value2": "l2-verification", "output": 2 }
+            ]
+          },
+          "fallbackOutput": 3
+        },
+        "id": "job-switch",
+        "name": "Job Switch",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1,
+        "position": [850, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/dispatches",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              { "name": "event_type", "value": "doctor-code" },
+              { "name": "client_payload", "value": "={{JSON.stringify($json)}}" }
+            ]
+          },
+          "options": {}
+        },
+        "id": "dispatch-code",
+        "name": "Dispatch Doctor Code",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [1100, 150],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/dispatches",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              { "name": "event_type", "value": "doctor-infra" },
+              { "name": "client_payload", "value": "={{JSON.stringify($json)}}" }
+            ]
+          },
+          "options": {}
+        },
+        "id": "dispatch-infra",
+        "name": "Dispatch Doctor Infra",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [1100, 300],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/dispatches",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              { "name": "event_type", "value": "doctor-qa" },
+              { "name": "client_payload", "value": "={{JSON.stringify($json)}}" }
+            ]
+          },
+          "options": {}
+        },
+        "id": "dispatch-qa",
+        "name": "Dispatch Doctor QA",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [1100, 450],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "dataType": "string",
+          "value1": "={{.repository.name}}",
+          "rules": {
+            "rules": [
+              { "value2": "IronForge", "output": 0 },
+              { "value2": "taktpinne", "output": 1 },
+              { "value2": "matlogistik", "output": 2 },
+              { "value2": "war-room", "output": 3 }
+            ]
+          },
+          "fallbackOutput": 4
+        },
+        "id": "repo-switch",
+        "name": "Repository Switch",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1,
+        "position": [400, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1492999204509847694/joCvkV4mRhDKhLhMT1EsdmvlWzwfgs-p1k1m7g2apZCewJhIOgCa5Y7fcc8HkvpkFATa",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "={{.repository.name}} triage requested: {{.job_name}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "discord-ironforge",
+        "name": "Discord Ironforge",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [600, 100]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1492999684686483668/HDJ79YgkgxymJ1ko5RX1WvyhAEhB72csf3vZ1zyReG7F6qFRK5QlQLpLMYhS1P4uATP4",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "={{.repository.name}} triage requested: {{.job_name}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "discord-taktpinne",
+        "name": "Discord Taktpinne",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [600, 200]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1493000935952355439/FnqNoaO2BAZWEpBB-cvdRfEcR0T-6Codqxw7r4A4QPTxlZj8JADm0UYZ9Lds9rzOf0tq",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "={{.repository.name}} triage requested: {{.job_name}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "discord-matlogistik",
+        "name": "Discord Matlogistik",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [600, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://discord.com/api/webhooks/1493147766040563773/IJFvaZhPnALJ4OEduAhyiKO50OLFZ-h0FKl665O1pMLqPwZ_6XYxpdA8J_nwEeUyNMfw",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "={{.repository.name}} triage requested: {{.job_name}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "discord-war-room",
+        "name": "Discord War-room",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [600, 400]
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Repository Switch", "type": "main", "index": 0 }]] },
+      "Job Switch": {
+        "main": [
+          [{ "node": "Dispatch Doctor Code", "type": "main", "index": 0 }],
+          [{ "node": "Dispatch Doctor Infra", "type": "main", "index": 0 }],
+          [{ "node": "Dispatch Doctor QA", "type": "main", "index": 0 }]
+        ]
+      },
+      "Repository Switch": {
+        "main": [
+          [
+            { "node": "Discord Ironforge", "type": "main", "index": 0 },
+            { "node": "Job Switch", "type": "main", "index": 0 }
+          ],
+          [
+            { "node": "Discord Taktpinne", "type": "main", "index": 0 },
+            { "node": "Job Switch", "type": "main", "index": 0 }
+          ],
+          [
+            { "node": "Discord Matlogistik", "type": "main", "index": 0 },
+            { "node": "Job Switch", "type": "main", "index": 0 }
+          ],
+          [
+            { "node": "Discord War-room", "type": "main", "index": 0 },
+            { "node": "Job Switch", "type": "main", "index": 0 }
+          ],
+          [{ "node": "Job Switch", "type": "main", "index": 0 }]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": true
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "71902255-6e15-44e4-94ed-e59dbfc6343a",
+    "activeVersionId": "71902255-6e15-44e4-94ed-e59dbfc6343a",
+    "versionCounter": 37,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-26T22:32:00.298Z",
+        "createdAt": "2026-02-26T22:32:00.298Z",
+        "role": "workflow:owner",
+        "workflowId": "LLWLOkXohXpMxoPR",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:03:06.420Z",
+    "createdAt": "2026-02-26T22:32:08.787Z",
+    "id": "AD8oaoJQFMPQm6JO",
+    "name": "Reviewer Aggregator",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "reviewer-aggregate",
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        },
+        "id": "webhook-trigger",
+        "name": "Review Event Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [250, 300]
+      },
+      {
+        "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 1 }] } },
+        "id": "cron-trigger",
+        "name": "Hourly Review Check",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [250, 500]
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/pulls?state=open&sort=updated&direction=desc&per_page=5",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": { "response": { "response": { "response": { "fullResponse": false } } } }
+        },
+        "id": "fetch-open-prs",
+        "name": "Fetch Open PRs",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [500, 400],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/Techlemariam/IronForge/pulls/{{ $json.number }}/reviews",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth"
+        },
+        "id": "fetch-reviews",
+        "name": "Fetch PR Reviews",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [750, 300],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/Techlemariam/IronForge/pulls/{{ $json.number }}/comments",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth"
+        },
+        "id": "fetch-comments",
+        "name": "Fetch PR Comments",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [750, 500],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{ $json.user?.login }}",
+                "value2": "coderabbitai",
+                "operation": "equals"
+              }
+            ]
+          },
+          "combineConditions": "any"
+        },
+        "id": "filter-ai-reviews",
+        "name": "Filter AI Reviewer Comments",
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2,
+        "position": [1000, 400]
+      },
+      {
+        "parameters": {
+          "jsCode": "// Extract actionable suggestions from CodeRabbit/DeepSource comments\nconst items = $input.all();\nconst suggestions = [];\n\nfor (const item of items) {\n  const body = item.json.body || '';\n  const author = item.json.user?.login || 'unknown';\n  const path = item.json.path || 'unknown';\n  const line = item.json.original_line || item.json.line || 0;\n  \n  // Extract code suggestions (```suggestion blocks)\n  const suggestionRegex = /```suggestion\\n([\\s\\S]*?)```/g;\n  let match;\n  while ((match = suggestionRegex.exec(body)) !== null) {\n    suggestions.push({\n      author,\n      path,\n      line,\n      suggestion: match[1].trim(),\n      type: 'code_suggestion',\n      autoFixable: true\n    });\n  }\n  \n  // Extract general comments (non-code)\n  if (!suggestionRegex.test(body) && body.length > 10) {\n    suggestions.push({\n      author,\n      path,\n      line,\n      suggestion: body.substring(0, 500),\n      type: 'comment',\n      autoFixable: false\n    });\n  }\n}\n\nconst autoFixable = suggestions.filter(s => s.autoFixable);\nconst manualReview = suggestions.filter(s => !s.autoFixable);\n\nreturn [{\n  json: {\n    totalSuggestions: suggestions.length,\n    autoFixableCount: autoFixable.length,\n    manualReviewCount: manualReview.length,\n    autoFixable,\n    manualReview,\n    timestamp: new Date().toISOString()\n  }\n}];"
+        },
+        "id": "parse-suggestions",
+        "name": "Parse Suggestions",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1250, 400]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [
+              { "value1": "={{ $json.autoFixableCount }}", "value2": 0, "operation": "gt" }
+            ]
+          }
+        },
+        "id": "has-auto-fixes",
+        "name": "Has Auto-Fixable?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [1500, 400]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.github.com/repos/Techlemariam/IronForge/dispatches",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "bodyContentType": "json",
+          "jsonBody": "={{ JSON.stringify({ event_type: \"doctor-code\", client_payload: { pr_number: $(\"Fetch Open PRs\").item.json.number, branch: $(\"Fetch Open PRs\").item.json.head.ref, job_name: \"reviewer-aggregator\", logs_summary: \"Auto-fixable suggestions: \" + $json.autoFixableCount } }) }}"
+        },
+        "id": "trigger-auto-fix",
+        "name": "Trigger Auto-Fix via doctor-code",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [1750, 300],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.github.com/repos/Techlemariam/IronForge/issues/{{ $('Fetch Open PRs').item.json.number }}/comments",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "body",
+                "value": "=🩺 **Reviewer Aggregator Report**\\n\\n- Auto-fixable: {{ $json.autoFixableCount }}\\n- Manual review: {{ $json.manualReviewCount }}\\n\\n{{ $json.autoFixableCount > 0 ? '✅ Auto-fix dispatched via doctor-code.' : 'ℹ️ No auto-fixable suggestions found.' }}"
+              }
+            ]
+          }
+        },
+        "id": "post-summary",
+        "name": "Post Summary Comment",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [2250, 400],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      }
+    ],
+    "connections": {
+      "Review Event Webhook": {
+        "main": [[{ "node": "Fetch Open PRs", "type": "main", "index": 0 }]]
+      },
+      "Hourly Review Check": {
+        "main": [[{ "node": "Fetch Open PRs", "type": "main", "index": 0 }]]
+      },
+      "Fetch Open PRs": {
+        "main": [
+          [
+            { "node": "Fetch PR Reviews", "type": "main", "index": 0 },
+            { "node": "Fetch PR Comments", "type": "main", "index": 0 }
+          ]
+        ]
+      },
+      "Fetch PR Reviews": {
+        "main": [[{ "node": "Filter AI Reviewer Comments", "type": "main", "index": 0 }]]
+      },
+      "Fetch PR Comments": {
+        "main": [[{ "node": "Filter AI Reviewer Comments", "type": "main", "index": 0 }]]
+      },
+      "Filter AI Reviewer Comments": {
+        "main": [[{ "node": "Parse Suggestions", "type": "main", "index": 0 }]]
+      },
+      "Parse Suggestions": {
+        "main": [[{ "node": "Has Auto-Fixable?", "type": "main", "index": 0 }]]
+      },
+      "Has Auto-Fixable?": {
+        "main": [
+          [{ "node": "Trigger Auto-Fix via doctor-code", "type": "main", "index": 0 }],
+          [{ "node": "Post Summary Comment", "type": "main", "index": 0 }]
+        ]
+      },
+      "Trigger Auto-Fix via doctor-code": {
+        "main": [[{ "node": "Post Summary Comment", "type": "main", "index": 0 }]]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": true
+    },
+    "staticData": { "node:Hourly Review Check": { "recurrenceRules": [] } },
+    "meta": null,
+    "pinData": null,
+    "versionId": "12df8e62-fa8c-44c2-9e18-19efdb862a72",
+    "activeVersionId": "12df8e62-fa8c-44c2-9e18-19efdb862a72",
+    "versionCounter": 37,
+    "triggerCount": 2,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-02-26T22:32:08.794Z",
+        "createdAt": "2026-02-26T22:32:08.794Z",
+        "role": "workflow:owner",
+        "workflowId": "AD8oaoJQFMPQm6JO",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:02:59.801Z",
+    "createdAt": "2026-04-13T12:15:37.715Z",
+    "id": "Pw5ngZNduMrC40wC",
+    "name": "My workflow",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "@florianai/n8n-nodes-discord-trigger.discordTrigger",
+        "typeVersion": 1,
+        "position": [0, 0],
+        "id": "a17bdd76-c05f-4f62-99d8-0b3647679041",
+        "name": "Discord Trigger",
+        "webhookId": "6c847c77-cee1-4a86-b7d2-01f60d36c803"
+      }
+    ],
+    "connections": {},
+    "settings": { "executionOrder": "v1", "binaryMode": "separate", "availableInMCP": true },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "0d0a1d78-7d47-4ff9-b433-79f704936018",
+    "activeVersionId": null,
+    "versionCounter": 2,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-13T12:15:37.725Z",
+        "createdAt": "2026-04-13T12:15:37.725Z",
+        "role": "workflow:owner",
+        "workflowId": "Pw5ngZNduMrC40wC",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:02:55.792Z",
+    "createdAt": "2026-04-13T12:27:45.307Z",
+    "id": "evEv1aXE6ilvoEqq",
+    "name": "discord-interactions-gateway",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "discord-interactions",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [0, 0],
+        "id": "5a528ca9-6933-4a82-99be-df5d415a6c23",
+        "name": "Webhook",
+        "webhookId": "009c2162-7e01-48d7-bf0c-ba8fbfb0c8b1"
+      },
+      {
+        "parameters": { "respondWith": "json", "responseBody": "{\"type\": 1}", "options": {} },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [56, 0],
+        "id": "e46b9b83-4be4-4c95-ac4b-0c3e9d4664a3",
+        "name": "Respond to Webhook"
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+    },
+    "settings": { "executionOrder": "v1", "binaryMode": "separate", "availableInMCP": true },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "7bcdb7de-1e27-42cc-afe8-aa0d812dc496",
+    "activeVersionId": null,
+    "versionCounter": 18,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-13T12:27:45.309Z",
+        "createdAt": "2026-04-13T12:27:45.309Z",
+        "role": "workflow:owner",
+        "workflowId": "evEv1aXE6ilvoEqq",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": "Version 7bcdb7de", "description": "" }
+  },
+  {
+    "updatedAt": "2026-04-19T07:49:04.769Z",
+    "createdAt": "2026-04-13T16:36:13.956Z",
+    "id": "80IPfYYTNJPFoNf2",
+    "name": "Panopticon: Interaction Gateway",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "interaction",
+          "responseMode": "responseNode",
+          "options": { "rawBody": true }
+        },
+        "id": "webhook-node",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [100, 300],
+        "webhookId": "487dfcdf-1917-43be-a966-9b2c397e9cdb"
+      },
+      {
+        "parameters": {
+          "jsCode": "const nacl = require('tweetnacl');\n\nconst headers = $node[\"Webhook\"].json.headers;\nconst signature = headers['x-signature-ed25519'];\nconst timestamp = headers['x-signature-timestamp'];\nconst body = $node[\"Webhook\"].json.body;\n\n// Discord requires raw body string for verification\nconst rawBody = JSON.stringify(body);\n\nconst publicKey = 'e62778c8ab22009d2149d75eb77b1c3b2dc44a22aee4e1817201a6c6ecf59994';\n\ntry {\n  const isVerified = nacl.sign.detached.verify(\n    Buffer.from(timestamp + rawBody),\n    Buffer.from(signature, 'hex'),\n    Buffer.from(publicKey, 'hex')\n  );\n\n  if (!isVerified) {\n    throw new Error('Invalid signature');\n  }\n} catch (err) {\n  return { \n    error: 'Verification failed', \n    detail: err.message \n  };\n}\n\nreturn body;"
+        },
+        "id": "verify-node",
+        "name": "Verify Signature",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1,
+        "position": [320, 300]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [{ "value1": "={{$json.type}}", "operation": "equal", "value2": 1 }]
+          }
+        },
+        "id": "ping-check",
+        "name": "Is PING?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [540, 300]
+      },
+      {
+        "parameters": {
+          "options": { "responseCode": 200 },
+          "responseBody": "={\n  \"type\": 1\n}"
+        },
+        "id": "ping-response",
+        "name": "Respond to PING",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [780, 200]
+      },
+      {
+        "parameters": {
+          "dataType": "string",
+          "value1": "={{$json.data.name}}",
+          "rules": {
+            "rules": [
+              { "value2": "status" },
+              { "value2": "health", "output": 1 },
+              { "value2": "deploy", "output": 2 }
+            ]
+          }
+        },
+        "id": "command-router",
+        "name": "Command Router",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1,
+        "position": [780, 400]
+      },
+      {
+        "parameters": { "workflowId": "p1YkkIGWEONDRBuK", "options": {} },
+        "id": "status-handler",
+        "name": "Call Status Handler",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.1,
+        "position": [1050, 350]
+      }
+    ],
+    "connections": {
+      "Webhook": { "main": [[{ "node": "Verify Signature", "type": "main", "index": 0 }]] },
+      "Verify Signature": { "main": [[{ "node": "Is PING?", "type": "main", "index": 0 }]] },
+      "Is PING?": {
+        "main": [
+          [{ "node": "Respond to PING", "type": "main", "index": 0 }],
+          [{ "node": "Command Router", "type": "main", "index": 0 }]
+        ]
+      },
+      "Command Router": {
+        "main": [[{ "node": "Call Status Handler", "type": "main", "index": 0 }]]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false,
+      "binaryMode": "separate",
+      "timeSavedMode": "fixed"
+    },
+    "staticData": null,
+    "meta": { "templateCredsSetupCompleted": true },
+    "pinData": {},
+    "versionId": "dca9dda1-f9d2-4702-835e-36ed8d7b26c7",
+    "activeVersionId": "dca9dda1-f9d2-4702-835e-36ed8d7b26c7",
+    "versionCounter": 176,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-13T16:36:13.974Z",
+        "createdAt": "2026-04-13T16:36:13.974Z",
+        "role": "workflow:owner",
+        "workflowId": "80IPfYYTNJPFoNf2",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:01:59.419Z",
+    "createdAt": "2026-04-13T16:36:14.246Z",
+    "id": "nm3K2Fqv5BQELeaF",
+    "name": "Panopticon: Status Command Handler",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "trigger-node",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [250, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback",
+          "sendBody": true,
+          "bodyParameters": { "parameters": [{ "name": "type", "value": 5 }] },
+          "options": {}
+        },
+        "id": "defer-interaction",
+        "name": "Defer Response",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [450, 300]
+      },
+      {
+        "parameters": {
+          "url": "=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {}
+        },
+        "id": "github-api",
+        "name": "GitHub CI Status",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [650, 300],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://discord.com/api/v10/webhooks/1493235518647832606/{{$json.interaction_token}}/messages/@original",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "embeds",
+                "value": "=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "discord-edit",
+        "name": "Post Rich Embed",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [850, 300]
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [[{ "node": "Defer Response", "type": "main", "index": 0 }]]
+      },
+      "Defer Response": { "main": [[{ "node": "GitHub CI Status", "type": "main", "index": 0 }]] },
+      "GitHub CI Status": { "main": [[{ "node": "Post Rich Embed", "type": "main", "index": 0 }]] }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": true,
+      "binaryMode": "separate",
+      "timeSavedMode": "fixed"
+    },
+    "staticData": null,
+    "meta": null,
+    "pinData": null,
+    "versionId": "8e219a6f-ad92-4dc0-b9c6-48786102f4cd",
+    "activeVersionId": "8e219a6f-ad92-4dc0-b9c6-48786102f4cd",
+    "versionCounter": 11,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-13T16:36:14.247Z",
+        "createdAt": "2026-04-13T16:36:14.247Z",
+        "role": "workflow:owner",
+        "workflowId": "nm3K2Fqv5BQELeaF",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:02:38.000Z",
+    "createdAt": "2026-04-16T19:00:58.613Z",
+    "id": "fYsSxvKYRUT8quQq",
+    "name": "Panopticon: Status Command Handler",
+    "description": null,
+    "active": false,
+    "isArchived": true,
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "a43ba15b-f447-442b-8242-667493085261",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [0, 0]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback",
+          "sendBody": true,
+          "bodyParameters": { "parameters": [{ "name": "type", "value": 5 }] },
+          "options": {}
+        },
+        "id": "e7ab0c3c-db26-4339-9575-98efb030ab84",
+        "name": "Defer Response",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [208, 0]
+      },
+      {
+        "parameters": {
+          "url": "=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {}
+        },
+        "id": "ac4560f6-9e2d-4dce-aa33-29301c41dc97",
+        "name": "GitHub CI Status",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [400, 0],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://discord.com/api/v10/webhooks/1493508595424165979/{{$json.interaction_token}}/messages/@original",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "embeds",
+                "value": "=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "17654e90-c66c-42c3-b193-7beadba567a4",
+        "name": "Post Rich Embed",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [608, 0]
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [[{ "node": "Defer Response", "type": "main", "index": 0 }]]
+      },
+      "Defer Response": { "main": [[{ "node": "GitHub CI Status", "type": "main", "index": 0 }]] },
+      "GitHub CI Status": { "main": [[{ "node": "Post Rich Embed", "type": "main", "index": 0 }]] }
+    },
+    "settings": { "executionOrder": "v1", "binaryMode": "separate" },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "2636605a-d1cc-43c1-9496-4eb5c2c748fd",
+    "activeVersionId": null,
+    "versionCounter": 2,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-16T19:00:58.623Z",
+        "createdAt": "2026-04-16T19:00:58.623Z",
+        "role": "workflow:owner",
+        "workflowId": "fYsSxvKYRUT8quQq",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-16T19:05:13.797Z",
+    "createdAt": "2026-04-16T19:05:13.797Z",
+    "id": "p1YkkIGWEONDRBuK",
+    "name": "Panopticon: Status Command Handler",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "eee94d38-277c-434d-9972-c951343b570e",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [0, 0]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://discord.com/api/v10/interactions/{{$json.interaction_id}}/{{$json.interaction_token}}/callback",
+          "sendBody": true,
+          "bodyParameters": { "parameters": [{ "name": "type", "value": 5 }] },
+          "options": {}
+        },
+        "id": "8182e31a-a95d-4823-aa34-ec10977adf92",
+        "name": "Defer Response",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [208, 0]
+      },
+      {
+        "parameters": {
+          "url": "=https://api.github.com/repos/Techlemariam/{{$json.project}}/actions/runs?branch=main&per_page=1",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {}
+        },
+        "id": "c20d51c4-fae6-446e-b13a-e394a495ca64",
+        "name": "GitHub CI Status",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [400, 0],
+        "credentials": { "httpHeaderAuth": { "id": "6BhE9M39PCG9q2Ob", "name": "GitHub PAT" } }
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://discord.com/api/v10/webhooks/1493508595424165979/{{$json.interaction_token}}/messages/@original",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "embeds",
+                "value": "=[{\"title\": \"Status: {{$json.project}}\", \"description\": \"Latest CI Workflow run: {{$json.workflow_runs[0].conclusion}}\\nCommit: {{$json.workflow_runs[0].head_commit.message}}\", \"color\": 5763719}]"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "3a6f4552-ce65-4614-a87d-959566cae880",
+        "name": "Post Rich Embed",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [608, 0]
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [[{ "node": "Defer Response", "type": "main", "index": 0 }]]
+      },
+      "Defer Response": { "main": [[{ "node": "GitHub CI Status", "type": "main", "index": 0 }]] },
+      "GitHub CI Status": { "main": [[{ "node": "Post Rich Embed", "type": "main", "index": 0 }]] }
+    },
+    "settings": { "executionOrder": "v1", "binaryMode": "separate" },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "bcce5f97-23d9-4e24-914a-0e01f831c3eb",
+    "activeVersionId": "bcce5f97-23d9-4e24-914a-0e01f831c3eb",
+    "versionCounter": 11,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-16T19:05:13.801Z",
+        "createdAt": "2026-04-16T19:05:13.801Z",
+        "role": "workflow:owner",
+        "workflowId": "p1YkkIGWEONDRBuK",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": "Version bcce5f97", "description": "" }
+  },
+  {
+    "updatedAt": "2026-04-18T05:46:42.128Z",
+    "createdAt": "2026-04-18T05:46:42.128Z",
+    "id": "drbu8LTjqeoXFNFB",
+    "name": "My Sub-Workflow 1",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "id": "c055762a-8fe7-4141-a639-df2372f30060",
+        "typeVersion": 1.1,
+        "name": "When Executed by Another Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [260, 340],
+        "parameters": {}
+      },
+      {
+        "id": "b5942df6-0160-4ef7-965d-57583acdc8aa",
+        "name": "Replace me with your logic",
+        "type": "n8n-nodes-base.noOp",
+        "position": [520, 340],
+        "parameters": {}
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [[{ "node": "Replace me with your logic", "type": "main", "index": 0 }]]
+      }
+    },
+    "settings": { "executionOrder": "v1", "availableInMCP": false },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "23b0391b-3c2c-4773-a082-7ea08f11b303",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-18T05:46:42.138Z",
+        "createdAt": "2026-04-18T05:46:42.138Z",
+        "role": "workflow:owner",
+        "workflowId": "drbu8LTjqeoXFNFB",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-04-18T05:47:09.781Z",
+    "createdAt": "2026-04-18T05:47:09.781Z",
+    "id": "PIh4lqbyrJM33dJT",
+    "name": "My Sub-Workflow 1",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "id": "c055762a-8fe7-4141-a639-df2372f30060",
+        "typeVersion": 1.1,
+        "name": "When Executed by Another Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [260, 340],
+        "parameters": {}
+      },
+      {
+        "id": "b5942df6-0160-4ef7-965d-57583acdc8aa",
+        "name": "Replace me with your logic",
+        "type": "n8n-nodes-base.noOp",
+        "position": [520, 340],
+        "parameters": {}
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [[{ "node": "Replace me with your logic", "type": "main", "index": 0 }]]
+      }
+    },
+    "settings": { "executionOrder": "v1", "availableInMCP": false },
+    "staticData": null,
+    "meta": null,
+    "pinData": {},
+    "versionId": "f939ba7b-43df-4c6c-9fe1-f538d161b518",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-04-18T05:47:09.784Z",
+        "createdAt": "2026-04-18T05:47:09.784Z",
+        "role": "workflow:owner",
+        "workflowId": "PIh4lqbyrJM33dJT",
+        "projectId": "xSv7yo2oxCZw4gZE",
+        "project": {
+          "updatedAt": "2026-04-13T12:08:30.435Z",
+          "createdAt": "2026-02-04T22:07:22.992Z",
+          "id": "xSv7yo2oxCZw4gZE",
+          "name": "Alexander Teklemariam <alexander.teklemariam@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "918df8dd-28be-455c-af95-f541e364b1b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  }
+]

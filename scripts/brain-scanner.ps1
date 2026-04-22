@@ -16,14 +16,13 @@ $OutputData = @()
 $Conversations = Get-ChildItem -Path $BrainPath -Directory | Where-Object { $_.Name -match "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" }
 
 foreach ($Conv in $Conversations) {
-    # Check if directory was modified recently
-    if ($Conv.LastWriteTime -lt $CutoffDate) {
-        continue
-    }
-
     $TaskFile = Join-Path $Conv.FullName "task.md"
     
     if (Test-Path $TaskFile) {
+        $FileItem = Get-Item $TaskFile
+        if ($FileItem.LastWriteTime -lt $CutoffDate) {
+            continue
+        }
         $Tasks = @()
         $TaskContent = Get-Content $TaskFile -Encoding UTF8 -ErrorAction SilentlyContinue
         
