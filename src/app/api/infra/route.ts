@@ -2,6 +2,8 @@ import { runEntropyAudit } from '@/lib/audit';
 import { generatePrescriptions } from '@/lib/autonom';
 import { getSnykMetrics } from '@/lib/snyk';
 import { getTokenMetrics } from '@/lib/tokens';
+import { getCoolifyHealth, getCoolifyApplications } from '@/lib/coolify';
+import { getHetznerServers, getHetznerServer, getHetznerMetrics } from '@/lib/hetzner';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -13,11 +15,31 @@ export async function GET() {
       .filter(Boolean) as string[];
     const owner = reposRaw.split(',')[0]?.split('/')[0] || 'Techlemariam';
 
-    // 1. Fetch Parallel Diagnostics across all vectors
-    const [snykMetrics, auditData, tokenMetrics] = await Promise.all([
+    let hetznerId = process.env.HETZNER_SERVER_ID;
+    if (!hetznerId) {
+      const servers = await getHetznerServers();
+      if (servers && servers.length > 0) {
+        hetznerId = servers[0].id.toString();
+      }
+    }
+
+    // 1. Fetch Parallel Diagnostics across all vectors and infra
+    const [
+      snykMetrics, 
+      auditData, 
+      tokenMetrics,
+      coolifyHealth,
+      coolifyApps,
+      hetznerServer,
+      hetznerMetrics
+    ] = await Promise.all([
       getSnykMetrics(),
       runEntropyAudit(owner, repos),
       getTokenMetrics(),
+      getCoolifyHealth(),
+      getCoolifyApplications(),
+      hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
+      hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
     ]);
 
     // 2. Normalize Snyk Score (0-100 to 0-2.0)
@@ -51,6 +73,14 @@ export async function GET() {
       remediations,
       security: snykMetrics, // Extra context for client-side detail
       tokens: tokenMetrics,
+      coolify: {
+        healthy: coolifyHealth,
+        apps: coolifyApps,
+      },
+      hetzner: {
+        server: hetznerServer,
+        metrics: hetznerMetrics,
+      },
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
