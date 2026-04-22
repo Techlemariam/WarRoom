@@ -132,20 +132,21 @@ async function auditRepo(owner: string, repo: string): Promise<RepoAudit> {
     // 6. Task Debt (0-2)
     let openTasks = 0;
     const taskFindings: string[] = [];
-    if (
-      backlogRes &&
-      'data' in backlogRes &&
-      !Array.isArray(backlogRes.data) &&
-      'content' in backlogRes.data &&
-      backlogRes.data.content
-    ) {
-      const backlogText = Buffer.from(backlogRes.data.content, 'base64').toString();
-      const openMatches = backlogText.match(/- \[[ \/]\]/g); // Matches [ ] and [/]
-      if (openMatches) {
-        openTasks = openMatches.length;
-      }
-      if (openTasks > 0) {
-        taskFindings.push(`Found ${openTasks} open/in-progress tasks in BACKLOG.md`);
+    
+    // Safety check for backlogRes and its data structure
+    if (backlogRes && 'data' in backlogRes) {
+      const data = backlogRes.data as any;
+      if (data && typeof data === 'object' && 'content' in data && typeof data.content === 'string') {
+        const backlogText = Buffer.from(data.content, 'base64').toString();
+        const openMatches = backlogText.match(/- \[[ \/]\]/g); // Matches [ ] and [/]
+        if (openMatches) {
+          openTasks = openMatches.length;
+        }
+        if (openTasks > 0) {
+          taskFindings.push(`Found ${openTasks} open/in-progress tasks in BACKLOG.md`);
+        }
+      } else {
+        taskFindings.push('BACKLOG.md exists but could not be parsed as a file');
       }
     } else {
       taskFindings.push('No BACKLOG.md found');

@@ -3,6 +3,7 @@ import { generatePrescriptions } from '@/lib/autonom';
 import { getCoolifyApplications, getCoolifyHealth } from '@/lib/coolify';
 import { getHetznerMetrics, getHetznerServer, getHetznerServers } from '@/lib/hetzner';
 import { getSnykMetrics } from '@/lib/snyk';
+import { getTokenBurnSummary } from '@/lib/token-burn';
 import { getTokenMetrics } from '@/lib/tokens';
 import { NextResponse } from 'next/server';
 
@@ -32,6 +33,7 @@ export async function GET() {
       coolifyApps,
       hetznerServer,
       hetznerMetrics,
+      tokenBurnSummary,
     ] = await Promise.all([
       getSnykMetrics(),
       runEntropyAudit(owner, repos),
@@ -40,12 +42,13 @@ export async function GET() {
       getCoolifyApplications(),
       hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
       hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
+      getTokenBurnSummary(),
     ]);
 
     // 2. Normalize Snyk Score (0-100 to 0-2.0)
     const securityScore = Number((snykMetrics.score / 50).toFixed(1));
 
-    // 3. Inject Security Vector into Entropy Audit results
+    // 3. Inject Security + Token Burn Vectors into Entropy Audit results
     const combinedVectors = [
       ...auditData.vectors,
       {
@@ -56,6 +59,16 @@ export async function GET() {
         findings: [
           `${snykMetrics.critical} Critical, ${snykMetrics.high} High vulnerabilities`,
           `Status: ${snykMetrics.status.toUpperCase()}`,
+        ],
+      },
+      {
+        name: 'Token Burn',
+        score: tokenBurnSummary.burnScore,
+        label: tokenBurnSummary.burnScore.toFixed(1),
+        highlight: tokenBurnSummary.status === 'CRITICAL',
+        findings: [
+          `Today: ~${tokenBurnSummary.todayTotal.toLocaleString()} tokens (${tokenBurnSummary.sessionCount} sessions)`,
+          `Status: ${tokenBurnSummary.status}`,
         ],
       },
     ];
@@ -73,6 +86,7 @@ export async function GET() {
       remediations,
       security: snykMetrics, // Extra context for client-side detail
       tokens: tokenMetrics,
+      tokenBurn: tokenBurnSummary,
       coolify: {
         healthy: coolifyHealth,
         apps: coolifyApps,

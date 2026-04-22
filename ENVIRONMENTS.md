@@ -5,12 +5,12 @@
 
 ## 🏛️ Project Matrix
 
-| Project | Status | Local Development | Staging (Tailscale) | Production (Tailscale) |
+| Project | Status | Local Development | Staging (Tailscale) | Production (DuckDNS) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Panopticon** | 🟢 Active | `http://localhost:3000` | `https://warroom-staging.tailafb692.ts.net` | `https://warroom.tailafb692.ts.net` |
-| **IronForge** | 🟢 Active | `http://localhost:3001` | `https://ironforge-staging.tailafb692.ts.net` | `https://ironforge.tailafb692.ts.net` |
-| **Matlogistik**| 🟢 Active | `http://localhost:3000` | `https://matlogistik-staging.tailafb692.ts.net`| `https://matlogistik.tailafb692.ts.net` |
-| **Enhörningsligan** | 🟢 Active | `http://localhost:5173` | `N/A` | `http://ligan.tailafb692.ts.net` |
+| **Panopticon** | 🟢 Active | `http://localhost:3000` | `https://warroom-staging.tailafb692.ts.net` | `http://panopti.duckdns.org` |
+| **IronForge** | 🟢 Active | `http://localhost:3001` | `https://ironforge-staging.tailafb692.ts.net` | `http://ironforge-rpg.duckdns.org` |
+| **Matlogistik**| 🟢 Active | `http://localhost:3000` | `https://matlogistik-staging.tailafb692.ts.net`| `http://matlogistik.duckdns.org` |
+| **Enhörningsligan** | 🟢 Active | `http://localhost:5173` | `N/A` | `http://ligan.duckdns.org` |
 | **Taktpinne** | 🟡 Rehab | `http://localhost:1420` | `N/A (Tauri Desktop)` | `N/A (GitHub Releases)` |
 
 ---
