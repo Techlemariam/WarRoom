@@ -1,0 +1,65 @@
+name: "🛡️ Governance Guard"
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+  workflow_dispatch:
+
+concurrency:
+  group: governance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-workflows:
+    name: Audit Workflow Standards
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check WarRoom Workflow Standards
+        shell: bash
+        run: |
+          echo "### 🛡️ WarRoom Workflow Governance Audit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          ERRORS=0
+
+          # Workflows exempt from full Node checks
+          EXEMPT="governance-guard.yml coolify-deploy.yml"
+
+          for file in .github/workflows/*.yml; do
+            BASENAME=$(basename "$file")
+
+            # Skip exempt workflows
+            if echo "$EXEMPT" | grep -qw "$BASENAME"; then continue; fi
+
+            echo "Auditing $file..."
+
+            # Rule 1: Must pin node-version to 22
+            if ! grep -qiE "node-version: ['\"]?22['\"]?|NODE_VERSION: ['\"]?22['\"]?" "$file"; then
+              echo "❌ $BASENAME: Missing node-version: 22 definition" >> $GITHUB_STEP_SUMMARY
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Rule 2: Must use actions/checkout@v4 or newer
+            if grep -q "actions/checkout@v" "$file" && ! grep -qE "actions/checkout@v[4-9]" "$file"; then
+              echo "❌ $BASENAME: Uses outdated checkout action (must use @v4+)" >> $GITHUB_STEP_SUMMARY
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Rule 3: Should not use node-version: lts/*
+            if grep -qE "node-version: ['\"]?lts/\*['\"]?" "$file"; then
+              echo "❌ $BASENAME: Uses non-deterministic node-version: lts/* (pin to '22')" >> $GITHUB_STEP_SUMMARY
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ $ERRORS -gt 0 ]; then
+            echo "⚠️ Found **$ERRORS** governance violation(s). Fix them to meet WarRoom standards." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ All workflows meet WarRoom standards." >> $GITHUB_STEP_SUMMARY
+          fi

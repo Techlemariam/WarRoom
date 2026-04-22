@@ -1,54 +1,60 @@
-import { getCoolifyHealth, getCoolifyApplications } from "@/lib/coolify";
-import { getHetznerServer, getHetznerMetrics, getHetznerServers } from "@/lib/hetzner";
-import { getSnykMetrics } from "@/lib/snyk";
-import { remediateDrift } from "@/lib/autonom";
-import { NextResponse } from "next/server";
+import { runEntropyAudit } from '@/lib/audit';
+import { generatePrescriptions } from '@/lib/autonom';
+import { getSnykMetrics } from '@/lib/snyk';
+import { getTokenMetrics } from '@/lib/tokens';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    let hetznerId = process.env.HETZNER_SERVER_ID;
-    
-    // If no ID is provided, try to discover one
-    if (!hetznerId) {
-      const servers = await getHetznerServers();
-      if (servers && servers.length > 0) {
-        hetznerId = servers[0].id.toString();
-      }
-    }
+    const reposRaw = process.env.GITHUB_REPOS || '';
+    const repos = reposRaw
+      .split(',')
+      .map((r) => r.trim().split('/').pop())
+      .filter(Boolean) as string[];
+    const owner = reposRaw.split(',')[0]?.split('/')[0] || 'Techlemariam';
 
-    const [coolifyHealth, coolifyApps, hetznerServer, hetznerMetrics, snykMetrics] = await Promise.all([
-      getCoolifyHealth(),
-      getCoolifyApplications(),
-      hetznerId ? getHetznerServer(hetznerId) : Promise.resolve(null),
-      hetznerId ? getHetznerMetrics(hetznerId) : Promise.resolve(null),
-      getSnykMetrics()
+    // 1. Fetch Parallel Diagnostics across all vectors
+    const [snykMetrics, auditData, tokenMetrics] = await Promise.all([
+      getSnykMetrics(),
+      runEntropyAudit(owner, repos),
+      getTokenMetrics(),
     ]);
 
-    // Calculate Entropy Index including Security Vector
-    const entropyIndex = 1.2 + (snykMetrics.critical * 0.5); // Baseline + Security Weight
-    
-    // Trigger Autonomy Engine (Dry Run)
-    const remediations = await remediateDrift(entropyIndex);
+    // 2. Normalize Snyk Score (0-100 to 0-2.0)
+    const securityScore = Number((snykMetrics.score / 50).toFixed(1));
+
+    // 3. Inject Security Vector into Entropy Audit results
+    const combinedVectors = [
+      ...auditData.vectors,
+      {
+        name: 'Security',
+        score: securityScore,
+        label: securityScore.toFixed(1),
+        highlight: snykMetrics.status === 'critical',
+        findings: [
+          `${snykMetrics.critical} Critical, ${snykMetrics.high} High vulnerabilities`,
+          `Status: ${snykMetrics.status.toUpperCase()}`,
+        ],
+      },
+    ];
+
+    // 4. Recalculate Total Score (Sum of all 6 vectors)
+    const totalScore = Number(combinedVectors.reduce((acc, v) => acc + v.score, 0).toFixed(1));
+
+    // 5. Generate Dynamic Prescriptions
+    const remediations = await generatePrescriptions(auditData, snykMetrics, tokenMetrics);
 
     return NextResponse.json({
-      coolify: {
-        healthy: coolifyHealth,
-        apps: coolifyApps,
-      },
-      hetzner: {
-        server: hetznerServer,
-        metrics: hetznerMetrics,
-      },
-      entropy: {
-        index: entropyIndex,
-        securityScore: snykMetrics.score,
-        vulnerabilities: snykMetrics
-      },
-      remediations
+      totalScore,
+      vectors: combinedVectors,
+      timestamp: new Date().toISOString(),
+      remediations,
+      security: snykMetrics, // Extra context for client-side detail
+      tokens: tokenMetrics,
     });
-  } catch (error: any) {
-    console.error("Audit sensor error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Audit sensor error:', error);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
-

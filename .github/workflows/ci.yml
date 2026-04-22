@@ -1,0 +1,47 @@
+# node-version: 22 compliance comment for Governance Guard
+name: ⚡ CI (The Shield)
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.agent/**'
+      - '.vscode/**'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.agent/**'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  verify:
+    name: 🛡️ Verify & Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.4.1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Agent Verify (Lint, Build, Security)
+        run: pnpm run agent:verify

@@ -1,0 +1,238 @@
+# =============================================================================
+# NIGHTLY MAINTENANCE — WarRoom
+# =============================================================================
+# Körs automatiskt mån/ons/fre kl 02:00 CET.
+# Hanterar: Snyk-säkerhetsaudit, dependency evolution, auto-PR.
+# =============================================================================
+
+# node-version: 22 compliance comment for Governance Guard
+name: 🌙 Nightly Maintenance
+
+on:
+  schedule:
+    # 01:00 UTC = 02:00 CET (Europe/Stockholm)
+    - cron: "0 1 * * 1,3,5"
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Task to run"
+        required: true
+        default: "night-shift"
+        type: choice
+        options:
+          - night-shift
+          - security-only
+          - deps-only
+      dry_run:
+        description: "Dry run (no commits)"
+        required: false
+        default: false
+        type: boolean
+      skip_pr:
+        description: "Skip PR creation"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  # ============================================================================
+  # PRE-FLIGHT
+  # ============================================================================
+  preflight:
+    name: 🛫 Pre-flight Checks
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check conditions
+        id: check
+        run: |
+          echo "📋 Checking pre-flight conditions..."
+          OPEN_PRS=$(gh pr list --label "night-shift" --state open --json number -q 'length')
+          if [ "$OPEN_PRS" -gt 0 ]; then
+            echo "⚠️ Found $OPEN_PRS open night-shift PR(s), skipping..."
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "✅ Pre-flight passed"
+          echo "should_run=true" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================================
+  # MAINTENANCE TASKS
+  # ============================================================================
+  maintenance:
+    name: 🔧 Run Maintenance
+    needs: preflight
+    if: needs.preflight.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+
+    outputs:
+      changes_made: ${{ steps.commit.outputs.changes_detected }}
+      summary: ${{ steps.summary.outputs.summary }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create maintenance branch
+        run: |
+          BRANCH="night-shift/$(date +%Y-%m-%d)"
+          git checkout -b "$BRANCH"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # TASK 1: Security Audit (Snyk)
+      - name: "🛡️ Snyk Security Audit"
+        id: security
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "## 🛡️ Snyk Security Audit" >> $GITHUB_STEP_SUMMARY
+          npx snyk code test --severity-threshold=high 2>&1 | tee snyk-output.txt
+
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "✅ Security audit passed" >> $GITHUB_STEP_SUMMARY
+            echo "security_clean=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+            echo "security_clean=false" >> $GITHUB_OUTPUT
+          fi
+
+      # TASK 2: Dependency Evolution
+      - name: "🧬 Dependency Evolution"
+        id: evolve
+        continue-on-error: true
+        run: |
+          echo "## 🧬 Dependency Evolution" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ inputs.task }}" = "night-shift" ] || [ "${{ inputs.task }}" = "deps-only" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+            npm update 2>&1 | tee update-output.txt || true
+
+            if git diff --quiet package.json package-lock.json; then
+              echo "✅ No dependency updates available" >> $GITHUB_STEP_SUMMARY
+              echo "deps_updated=false" >> $GITHUB_OUTPUT
+            else
+              echo "📦 Dependencies updated" >> $GITHUB_STEP_SUMMARY
+              echo "deps_updated=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "deps_updated=false" >> $GITHUB_OUTPUT
+          fi
+
+      # TASK 3: TypeScript Check
+      - name: "🔍 TypeScript Validation"
+        id: typecheck
+        continue-on-error: true
+        run: |
+          echo "## 🔍 TypeScript Check" >> $GITHUB_STEP_SUMMARY
+          npm run lint 2>&1 | tee ts-output.txt
+
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "✅ TypeScript clean" >> $GITHUB_STEP_SUMMARY
+            echo "ts_clean=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ TypeScript errors found" >> $GITHUB_STEP_SUMMARY
+            echo "ts_clean=false" >> $GITHUB_OUTPUT
+          fi
+
+      # TASK 4: Summary
+      - name: 📋 Generate Summary
+        id: summary
+        run: |
+          SUMMARY="## 🌙 Nightly Maintenance Summary
+
+          | Task | Status |
+          |:-----|:-------|
+          | Security (Snyk) | ${{ steps.security.outputs.security_clean == 'true' && '✅ Clean' || '⚠️ Check logs' }} |
+          | Dependencies | ${{ steps.evolve.outputs.deps_updated == 'true' && '📦 Updated' || '✅ Stable' }} |
+          | TypeScript | ${{ steps.typecheck.outputs.ts_clean == 'true' && '✅ Clean' || '❌ Errors' }} |
+
+          **Run:** $(date -u +'%Y-%m-%d %H:%M UTC')"
+
+          echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: 💾 Commit Changes
+        if: inputs.dry_run != true
+        id: commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: nightly maintenance updates [skip ci]"
+          branch: ${{ env.BRANCH }}
+          file_pattern: 'package.json package-lock.json'
+          skip_dirty_check: false
+          create_branch: true
+
+  # ============================================================================
+  # CREATE PR
+  # ============================================================================
+  create-pr:
+    name: 📬 Create PR
+    needs: [preflight, maintenance]
+    if: |
+      needs.maintenance.outputs.changes_made == 'true' &&
+      inputs.skip_pr != true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        run: |
+          BRANCH="night-shift/$(date +%Y-%m-%d)"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "🌙 Night Shift: $(date +%Y-%m-%d)" \
+            --body "${{ needs.maintenance.outputs.summary }}" \
+            --label "night-shift,automated"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================================
+  # FAILURE NOTIFICATION
+  # ============================================================================
+  notify-failure:
+    name: 🚨 Notify Failure
+    needs: [preflight, maintenance]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create failure issue
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🌙 Night Shift Failed: ${new Date().toISOString().split('T')[0]}`,
+              body: `## Nightly Maintenance Failed\n\n**Run:** [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n**Time:** ${new Date().toISOString()}\n\n/cc @${context.repo.owner}`,
+              labels: ['night-shift', 'bug', 'automated']
+            });

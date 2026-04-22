@@ -1,0 +1,10 @@
+{
+  "title": "Brotherhood Environments & Infrastructure",
+  "summary": "Complete environment matrix for all Brotherhood projects: Local/Staging/Production URLs, Tailscale domains (tailafb692.ts.net), Coolify dashboard, n8n workflows, Doppler secrets, Discord portals, and GitHub repositories. The canonical source is WarRoom/ENVIRONMENTS.md.",
+  "original_conversation_id": "7e1fb717-9252-42ae-a08c-e4bd9078e31f",
+  "created_at": "2026-04-15T19:45:00Z",
+  "references": [
+    "WarRoom/ENVIRONMENTS.md",
+    "brain/7e1fb717-9252-42ae-a08c-e4bd9078e31f/implementation_plan.md"
+  ]
+}

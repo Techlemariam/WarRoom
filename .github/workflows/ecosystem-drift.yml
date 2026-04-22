@@ -1,0 +1,133 @@
+name: "🛰️ Ecosystem Drift Detection"
+
+on:
+  schedule:
+    # Körs 03:00 UTC varje natt (efter Night Shift)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ecosystem-drift
+  cancel-in-progress: true
+
+jobs:
+  analyze-drift:
+    name: "Architectural Drift Analysis"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout WarRoom (Baseline)
+        uses: actions/checkout@v4
+        with:
+          path: warroom
+
+      - name: Checkout IronForge
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: Techlemariam/IronForge
+          token: ${{ secrets.GH_PAT }}
+          path: ironforge
+
+      - name: Checkout Taktpinne
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: Techlemariam/Taktpinne
+          token: ${{ secrets.GH_PAT }}
+          path: taktpinne
+
+      - name: Checkout Matlogistik
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: Techlemariam/Matlogistik
+          token: ${{ secrets.GH_PAT }}
+          path: matlogistik
+
+      - name: Compare Core Tooling Hashes
+        id: drift-check
+        shell: bash
+        run: |
+          echo "### 🛰️ Ecosystem Drift Report" >> $GITHUB_STEP_SUMMARY
+          echo "Comparing core infrastructure files across the Brotherhood." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          DRIFT_FOUND=0
+          REPORT=""
+          BASELINE_DIR="warroom" # Future: rename to panopticon
+
+          # Function to check a file against baseline
+          check_file_drift() {
+            local file_path=$1
+            local repo_name=$2
+            local target_path=$3
+            
+            if [ -f "$BASELINE_DIR/$file_path" ]; then
+              BASELINE_HASH=$(sha256sum "$BASELINE_DIR/$file_path" | awk '{print $1}')
+              
+              if [ -f "$target_path/$file_path" ]; then
+                TARGET_HASH=$(sha256sum "$target_path/$file_path" | awk '{print $1}')
+                if [ "$TARGET_HASH" != "$BASELINE_HASH" ]; then
+                  echo "⚠️ **$repo_name**: \`$file_path\` drifted!" >> $GITHUB_STEP_SUMMARY
+                  REPORT="$REPORT\n- **$repo_name**: \`$file_path\` Drifted"
+                  DRIFT_FOUND=$((DRIFT_FOUND + 1))
+                fi
+              else
+                echo "❌ **$repo_name**: Missing \`$file_path\`" >> $GITHUB_STEP_SUMMARY
+                REPORT="$REPORT\n- **$repo_name**: Missing \`$file_path\`"
+                DRIFT_FOUND=$((DRIFT_FOUND + 1))
+              fi
+            fi
+          }
+
+          # Check IronForge
+          if [ -d "ironforge" ]; then
+            check_file_drift "scripts/ship.ps1" "IronForge" "ironforge"
+            check_file_drift ".antigravityrules" "IronForge" "ironforge"
+            check_file_drift ".agent/workflows/manager.md" "IronForge" "ironforge"
+          fi
+
+          # Check Taktpinne
+          if [ -d "taktpinne" ]; then
+            check_file_drift "scripts/ship.ps1" "Taktpinne" "taktpinne"
+            check_file_drift ".antigravityrules" "Taktpinne" "taktpinne"
+            check_file_drift ".agent/workflows/manager.md" "Taktpinne" "taktpinne"
+          fi
+
+          # Check Matlogistik
+          if [ -d "matlogistik" ]; then
+            check_file_drift "scripts/ship.ps1" "Matlogistik" "matlogistik"
+            check_file_drift ".antigravityrules" "Matlogistik" "matlogistik"
+            check_file_drift ".agent/workflows/manager.md" "Matlogistik" "matlogistik"
+          fi
+
+          # Handle outputs
+          if [ $DRIFT_FOUND -gt 0 ]; then
+            echo "drift_found=true" >> $GITHUB_OUTPUT
+            
+            # Format report for issue body
+            ISSUEREP="## Ecosystem Drift Detected\n\nThe following projects have diverged from the baseline ($BASELINE_DIR):\n$REPORT\n\n_Please synchronize these files to resolve architectural technical debt._"
+            echo "issue_body<<EOF" >> $GITHUB_OUTPUT
+            echo -e "$ISSUEREP" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            exit 1
+          else
+            echo "drift_found=false" >> $GITHUB_OUTPUT
+            echo "🌟 **Ecosystem is 100% harmonized.**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Create Alert Issue
+        if: failure() && steps.drift-check.outputs.drift_found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `${{ steps.drift-check.outputs.issue_body }}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🛰️ ALERT: Architectural Drift Detected`,
+              body: body,
+              labels: ['drift', 'automated', 'architecture']
+            });

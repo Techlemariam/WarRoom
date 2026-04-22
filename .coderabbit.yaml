@@ -1,0 +1,15 @@
+# CodeRabbit Configuration for WarRoom
+# Optimized for Observability & Governance
+
+language: "sv-SE"
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  instructions: |
+    Du granskar WarRoom - ekosystemets kontrollpanel och övervakning.
+    
+    Prioritera:
+    1. **Datavisualisering**: Är grafer och stat-kort optimerade och buggfria (Recharts/Nordic Frost)?
+    2. **Telemetri**: Korrekt hantering av inkommande loggströmmar från Taktpinne/IronForge.
+    3. **Säkerhet**: Granska sårbarhetsdata (Snyk-integrationer).

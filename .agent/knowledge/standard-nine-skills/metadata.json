@@ -1,0 +1,10 @@
+{
+  "title": "Standard Nine Skills & Agent Mapping",
+  "summary": "The 9 baseline skills distributed to all Brotherhood projects (lint-and-validate, security-auditor, deployment-procedures, create-pr, systematic-debugging, test-driven-development, docker-expert, observability-engineer, bdistill-knowledge-extraction). Documents which ~1,390 of 1,401 community skills were explicitly rejected and why. Maps agents to skills and lists conflict rules.",
+  "original_conversation_id": "ab2ab0af-d320-42aa-98cb-97e23410068a",
+  "created_at": "2026-04-15T19:48:00Z",
+  "references": [
+    "brain/ab2ab0af-d320-42aa-98cb-97e23410068a/analysis_results.md",
+    "brain/ab2ab0af-d320-42aa-98cb-97e23410068a/task.md"
+  ]
+}
