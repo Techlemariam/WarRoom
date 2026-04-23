@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          args: --accept-dns=true
+
       - name: Trigger Coolify Deploy API
         env:
           COOLIFY_HOST: ${{ secrets.COOLIFY_HOST || 'http://ironforge-coolify.tailafb692.ts.net:8000' }}
