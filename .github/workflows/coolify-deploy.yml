@@ -3,7 +3,7 @@ name: 🚀 Coolify Deploy
 
 on:
   push:
-    branches: [main, develop] # Main=Production, Develop=Staging
+    branches: [main, master, develop] # Track main/master as production, develop as staging
   workflow_dispatch:
 
 concurrency:
@@ -16,34 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v3
-
-      - name: Fetch Secrets
-        run: |
-          doppler secrets download --no-file --format env-no-quotes --project warroom --config prd > $GITHUB_ENV
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v2
-        with:
-          authkey: ${{ env.TAILSCALE_AUTHKEY }}
-          args: --accept-dns=true
-
       - name: Trigger Coolify Deploy API
         env:
           COOLIFY_HOST: ${{ secrets.COOLIFY_HOST || 'http://ironforge-coolify.tailafb692.ts.net:8000' }}
           # WarRoom Production UUID
-          APP_UUID: "nsgw00s4csww8ocgskoswk4g" 
+          APP_UUID: "nsgw00s4csww8ocgskoswk4g"
         run: |
-          echo "🚀 Triggering deployment targeting Coolify UUID $APP_UUID for ${{ github.ref }}..."
-          
-          # Use API v1 Deploy endpoint
+          echo "🚀 Triggering deployment for WarRoom (UUID: $APP_UUID, ref: ${{ github.ref }})..."
+
           curl --silent --fail --show-error \
             --request GET \
             --url "$COOLIFY_HOST/api/v1/deploy?uuid=$APP_UUID&force=false" \
             --header "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
             --header "Accept: application/json"
-            
+
           echo -e "\n✅ Deployment successfully queued in Coolify!"
