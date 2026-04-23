@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Target, Plus, Trash2, List } from "lucide-react";
+import { List, Plus, Target, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function FocusPanel() {
   const [tasks, setTasks] = useState<string[]>([]);
-  const [input, setInput] = useState("");
-  const [theme, setTheme] = useState("STRATEGIC");
+  const [input, setInput] = useState('');
+  const [theme, setTheme] = useState('STRATEGIC');
 
   useEffect(() => {
-    const saved = localStorage.getItem("war-room-focus");
+    const saved = localStorage.getItem('war-room-focus');
     if (saved) {
       const { tasks, theme } = JSON.parse(saved);
       setTasks(tasks);
@@ -18,13 +18,13 @@ export default function FocusPanel() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("war-room-focus", JSON.stringify({ tasks, theme }));
+    localStorage.setItem('war-room-focus', JSON.stringify({ tasks, theme }));
   }, [tasks, theme]);
 
   const addTask = () => {
     if (input && tasks.length < 3) {
       setTasks([...tasks, input]);
-      setInput("");
+      setInput('');
     }
   };
 
@@ -39,7 +39,7 @@ export default function FocusPanel() {
           <Target size={16} className="text-primary" />
           Focal Objectives
         </h2>
-        <select 
+        <select
           value={theme}
           onChange={(e) => setTheme(e.target.value)}
           className="bg-surface-container-low border border-outline-variant text-[10px] font-bold uppercase px-2 py-1 rounded-sm cursor-pointer hover:bg-surface-container transition-colors"
@@ -53,7 +53,7 @@ export default function FocusPanel() {
 
       <div className="space-y-4">
         <div className="flex gap-2">
-          <input 
+          <input
             type="text"
             className="flex-1 text-xs"
             placeholder="Add new objective..."
@@ -61,7 +61,8 @@ export default function FocusPanel() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
           />
-          <button 
+          <button
+            type="button"
             onClick={addTask}
             disabled={tasks.length >= 3}
             className="btn-standard p-2 bg-primary text-on-primary rounded-sm disabled:opacity-30 disabled:cursor-not-allowed"
@@ -71,14 +72,18 @@ export default function FocusPanel() {
         </div>
 
         <div className="space-y-2">
-          {tasks.map((task, i) => (
-            <div key={i} className="group flex items-center justify-between p-3 bg-surface-container-low border border-outline-variant rounded-sm hover:border-outline transition-all">
+          {tasks.map((task) => (
+            <div
+              key={task}
+              className="group flex items-center justify-between p-3 bg-surface-container-low border border-outline-variant rounded-sm hover:border-outline transition-all"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                 <span className="text-[11px] font-medium text-on-surface">{task}</span>
               </div>
-              <button 
-                onClick={() => removeTask(i)}
+              <button
+                type="button"
+                onClick={() => removeTask(tasks.indexOf(task))}
                 className="opacity-0 group-hover:opacity-100 p-1 text-on-surface-variant/40 hover:text-error transition-all"
               >
                 <Trash2 size={12} />

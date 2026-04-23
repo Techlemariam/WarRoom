@@ -1,0 +1,174 @@
+{
+  "name": "CI Guardian (Active Handover)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ci-triage",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook (GitHub Actions)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.conclusion }}",
+              "value2": "failure"
+            }
+          ]
+        }
+      },
+      "id": "if-node",
+      "name": "Is Failure?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const log = $input.item.json.body.log || '';\nlet failureType = 'UNKNOWN';\nif (log.includes('eslint') || log.includes('prettier') || log.includes('biome') || log.includes('lint')) {\n  failureType = 'LINT';\n} else if (log.includes('vulnerability') || log.includes('npm audit')) {\n  failureType = 'SECURITY';\n} else if (log.includes('tsc') || log.includes('build failed')) {\n  failureType = 'BUILD';\n}\n\nreturn { json: { ...$input.item.json, failureType } };"
+      },
+      "id": "code-classify",
+      "name": "Classify Failure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [600, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.failureType }}",
+              "operation": "in",
+              "value2": "LINT,SECURITY"
+            }
+          ]
+        }
+      },
+      "id": "switch-heal",
+      "name": "Can Auto-Heal?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/IronForge-Ligan/={{ $json.body.repo }}/dispatches",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github.v3+json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "trigger-self-heal"
+            },
+            {
+              "name": "client_payload",
+              "value": "={\n  \"run_id\": \"{{ $json.body.run_id }}\",\n  \"failure_type\": \"{{ $json.failureType }}\",\n  \"source\": \"ci-guardian\"\n}"
+            }
+          ]
+        }
+      },
+      "id": "http-dispatch",
+      "name": "Trigger self-heal.yml",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "🚨 **CI Guardian Escalate:** `{{ $json.body.repo }}` failed build (Type: `{{ $json.failureType }}`). Added to WarRoom BACKLOG.md."
+            }
+          ]
+        }
+      },
+      "id": "discord-escalate",
+      "name": "Discord Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (GitHub Actions)": {
+      "main": [
+        [
+          {
+            "node": "Is Failure?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Failure?": {
+      "main": [
+        [
+          {
+            "node": "Classify Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Failure": {
+      "main": [
+        [
+          {
+            "node": "Can Auto-Heal?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can Auto-Heal?": {
+      "main": [
+        [
+          {
+            "node": "Trigger self-heal.yml",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "f7d3c52e-c3b8-4d32-9c3a-96e0ab54b9d5"
+}

@@ -1,7 +1,7 @@
-# 🏛️ WarRoom Architecture: The Oracle Engine
+# 🏛️ Panopticon Architecture: The Oracle Engine
 
 ## Vision
-WarRoom is a **Predictive Orchestration Engine** designed to monitor, audit, and governor the Gemini Brotherhood ecosystem (IronForge, Taktpinne, etc.). It acts as "The Oracle" — detecting architectural drift and CI/CD entropy before they impact production.
+Panopticon is a **Predictive Orchestration Engine** designed to monitor, audit, and governor the Gemini Brotherhood ecosystem (IronForge, Taktpinne, etc.). It acts as "The Oracle" — detecting architectural drift and CI/CD entropy before they impact production.
 
 ## 🧱 Core Layers
 

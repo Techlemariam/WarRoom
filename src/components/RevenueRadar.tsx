@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { TrendingUp } from "lucide-react";
+import { TrendingUp } from 'lucide-react';
 
 export default function RevenueRadar() {
   const current = 0;
@@ -11,9 +11,12 @@ export default function RevenueRadar() {
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-end">
         <div>
-          <h3 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-wider">Net Revenue (Monthly)</h3>
+          <h3 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-wider">
+            Net Revenue (Monthly)
+          </h3>
           <div className="text-xl font-bold text-on-surface">
-            {current.toLocaleString()} <span className="text-[10px] font-medium opacity-40">SEK</span>
+            {current.toLocaleString()}{' '}
+            <span className="text-[10px] font-medium opacity-40">SEK</span>
           </div>
         </div>
         <div className="text-right text-[10px] font-bold text-primary uppercase">
@@ -22,7 +25,7 @@ export default function RevenueRadar() {
       </div>
 
       <div className="relative h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-        <div 
+        <div
           className="absolute top-0 left-0 h-full bg-primary transition-all duration-1000"
           style={{ width: `${percentage}%` }}
         />

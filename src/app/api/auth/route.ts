@@ -1,5 +1,5 @@
-import { login, logout } from "@/lib/auth";
-import { NextRequest, NextResponse } from "next/server";
+import { login, logout } from '@/lib/auth';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -9,9 +9,9 @@ export async function POST(request: NextRequest) {
 
   if (success) {
     return NextResponse.json({ success: true });
-  } else {
-    return NextResponse.json({ success: false, error: "Invalid password" }, { status: 401 });
   }
+
+  return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 });
 }
 
 export async function DELETE() {

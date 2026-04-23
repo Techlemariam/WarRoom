@@ -10,7 +10,7 @@ export async function getCoolifyHealth() {
     });
     return res.ok;
   } catch (error) {
-    console.error("Coolify health check failed:", error);
+    console.error('Coolify health check failed:', error);
     return false;
   }
 }
@@ -25,7 +25,7 @@ export async function getCoolifyApplications() {
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {
-    console.error("Failed to fetch Coolify applications:", error);
+    console.error('Failed to fetch Coolify applications:', error);
     return [];
   }
 }
@@ -40,7 +40,26 @@ export async function getCoolifyServices() {
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {
-    console.error("Failed to fetch Coolify services:", error);
+    console.error('Failed to fetch Coolify services:', error);
     return [];
+  }
+}
+export async function deployApplication(uuid: string) {
+  try {
+    const res = await fetch(`${COOLIFY_API_URL}/api/v1/applications/${uuid}/deploy`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${COOLIFY_API_TOKEN}`,
+      },
+    });
+    if (!res.ok) {
+      const error = await res.text();
+      console.error(`Coolify deploy failed for ${uuid}:`, error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Failed to trigger Coolify deployment:', error);
+    return false;
   }
 }

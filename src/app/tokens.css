@@ -1,20 +1,20 @@
 /* ── Typography Imports ────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
 
 /* ── Corporate Stealth / Professional Minimalist ────────────────────── */
 @theme {
   /* Typography */
-  --font-display: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-label: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   /* Surface Hierarchy (Slate/Zinc) */
   --sys-color-background: #ffffff;
   --sys-color-surface: #ffffff;
   --sys-color-surface-bright: #ffffff;
   --sys-color-surface-dim: #f1f5f9;
-  
+
   --sys-color-surface-container-lowest: #ffffff;
   --sys-color-surface-container-low: #f8fafc;
   --sys-color-surface-container: #f1f5f9;
@@ -25,7 +25,7 @@
   --sys-color-on-background: #0f172a;
   --sys-color-on-surface: #0f172a;
   --sys-color-on-surface-variant: #475569;
-  
+
   /* Primary Action Colors (Corporate Indigo/Blue) */
   --sys-color-primary: #2563eb;
   --sys-color-primary-container: #dbeafe;
@@ -47,13 +47,28 @@
   /* Outlines (Standard Borders) */
   --sys-color-outline: #94a3b8;
   --sys-color-outline-variant: #e2e8f0;
-  
+
   /* Radii (Standard Professional) */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
   --radius-full: 9999px;
+
+  /* Brotherhood Rarity Protocol */
+  --color-rarity-poor: #94a3b8;
+  --color-rarity-common: #f3f4f6;
+  --color-rarity-uncommon: #10b981;
+  --color-rarity-rare: #2563eb;
+  --color-rarity-epic: #8b5cf6;
+  --color-rarity-legendary: #ef4444;
+  --color-rarity-gold: #f59e0b;
+
+  --color-rarity-uncommon-rgb: 16, 185, 129;
+  --color-rarity-rare-rgb: 37, 99, 235;
+  --color-rarity-epic-rgb: 139, 92, 246;
+  --color-rarity-legendary-rgb: 239, 68, 68;
+  --color-rarity-gold-rgb: 245, 158, 11;
 }
 
 /* ── Dark Mode (Zinc Stealth) ────────────────────────────────── */
@@ -62,7 +77,7 @@
   --sys-color-surface: #09090b;
   --sys-color-surface-bright: #18181b;
   --sys-color-surface-dim: #09090b;
-  
+
   --sys-color-surface-container-lowest: #000000;
   --sys-color-surface-container-low: #18181b;
   --sys-color-surface-container: #27272a;
@@ -73,7 +88,7 @@
   --sys-color-on-background: #fafafa;
   --sys-color-on-surface: #fafafa;
   --sys-color-on-surface-variant: #a1a1aa;
-  
+
   /* Primary Action Colors (Muted Indigo) */
   --sys-color-primary: #6366f1;
   --sys-color-primary-container: #1e1b4b;

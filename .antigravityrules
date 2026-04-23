@@ -1,0 +1,25 @@
+# ♊ THE GEMINI BROTHERHOOD RULES
+
+## 🏭 Factory Lite (Tier 2) & Spec-First
+- **Spec-First:** NO features or code changes without an approved `/spec` (stored in `docs/specs/`).
+- **Claim Task:** Always run `/claim-task` to prevent branch collisions before starting a feature.
+- **Workflow:** Adhere to the `/factory-lite` sequence: Spec -> Build -> Ship.
+
+## 🏁 Quality & Validation (Zero Hell)
+- **DoD:** NO manual validation. Run `pnpm run verify` before completion.
+- **Tooling:** Always use Biome (lint/format) and pnpm.
+- **Standards:** All code must be shipped via the unified `scripts/ship.ps1` (v3) pipeline.
+
+## 🏗️ Architecture & Style
+- **Nordic Frost:** Strictly follow `tokens.css` and glassmorphism standards.
+- **Hygiene:** Maintain domain-based architecture.
+
+
+## 📚 Brotherhood Librarian (Cross-Repo Governance)
+- **Ruleset**: Strictly follow patterns established in sibling repos (IronForge, WarRoom, Taktpinne, Matlogistik).
+- **Drift**: Use `/librarian` to audit architectural entropy.
+- **Artifacts**: Document cross-project learnings in Knowledge Items (KIs) via `bdistill-knowledge-extraction`.
+- **Standards**: NO deviations from the Unified `ship.ps1`, Biome, and pnpm standards.
+
+---
+**Comm Style:** Concise. Logic-first. Evidence-based.

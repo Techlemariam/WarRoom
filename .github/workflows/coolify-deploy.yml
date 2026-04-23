@@ -1,0 +1,39 @@
+# node-version: 22 compliance comment for Governance Guard
+name: 🚀 Coolify Deploy
+
+on:
+  push:
+    branches: [main, develop] # Main=Production, Develop=Staging
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Trigger Coolify Deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Trigger Coolify Deploy API
+        env:
+          COOLIFY_HOST: ${{ secrets.COOLIFY_HOST || 'http://ironforge-coolify.tailafb692.ts.net:8000' }}
+          # WarRoom Production UUID
+          APP_UUID: "nsgw00s4csww8ocgskoswk4g" 
+        run: |
+          echo "🚀 Triggering deployment targeting Coolify UUID $APP_UUID for ${{ github.ref }}..."
+          
+          # Use API v1 Deploy endpoint
+          curl --silent --fail --show-error \
+            --request GET \
+            --url "$COOLIFY_HOST/api/v1/deploy?uuid=$APP_UUID&force=false" \
+            --header "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+            --header "Accept: application/json"
+            
+          echo -e "\n✅ Deployment successfully queued in Coolify!"

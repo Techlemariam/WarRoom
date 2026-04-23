@@ -26,6 +26,20 @@
 - [ ] Real-time Token burn-rate integration (requires Google Keys).
 
 ---
+
+## 🏗️ Phase 6: Task Debt Remediation (Discovered via Brain Audit)
+Dessa uppgifter har extraherats från lokala konversationer för att stänga gapet mellan planering och genomförande.
+
+### Panopticon & n8n Stability
+- [x] Implementera Discord Webhook Verifier (Signatur-validering i n8n).
+- [x] Verifiera `/status` flödet mot den nya Edge Gateway-arkitekturen.
+
+### IronForge Infrastructure
+- [x] Fixa Unhealthy Supabase Storage containers.
+- [x] Implementera Equipment Recall logik i UI.
+
+---
 *Librarian Audit History*
 - 2026-04-09: Initial handshake. System in Equilibrium.
 - 2026-04-09: Librarian Automations deployed.
+- 2026-04-20: Brain Audit executed. Discovered hidden task debt.

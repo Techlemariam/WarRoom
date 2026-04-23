@@ -1,0 +1,12 @@
+{
+  "title": "Ship.ps1 Architecture & Self-Healing Pipeline",
+  "summary": "The unified ship.ps1 v3 architecture: 6→8→9→10 maturity roadmap, self-healing auto-fix loop (lint→security→retry), hybrid runner strategy (Local Desktop primary + Hetzner CX23 fallback), failure classification, n8n Active Handover patterns, agent:verify pipeline, dry-run and force flags. Ship.ps1 handles release, Factory handles the full lifecycle.",
+  "original_conversation_id": "99392d88-f473-4268-b054-e1a16f0aecf9",
+  "created_at": "2026-04-15T19:47:00Z",
+  "references": [
+    "brain/99392d88-f473-4268-b054-e1a16f0aecf9/ship_analysis.md",
+    "brain/ab2ab0af-d320-42aa-98cb-97e23410068a/analysis_results.md",
+    "Taktpinne/scripts/ship.ps1",
+    "IronForge/scripts/ship.ps1"
+  ]
+}
