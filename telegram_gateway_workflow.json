@@ -1,0 +1,185 @@
+[
+  {
+    "name": "Telegram: Interaction Gateway",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": ["message"],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.1,
+        "position": [0, 0],
+        "id": "tg-trigger-001",
+        "name": "Telegram Trigger",
+        "webhookId": "telegram-gw-webhook-001",
+        "credentials": {
+          "telegramApi": {
+            "id": "telegram-cred-001",
+            "name": "Telegram Bot - Panopticon Agent"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Parse incoming Telegram message\nconst body = $input.first().json;\nconst message = body.message || body.edited_message;\n\nif (!message || !message.text) {\n  return [{ json: { skip: true } }];\n}\n\nconst text = message.text.trim();\nconst chatId = message.chat.id;\nconst userId = message.from?.id;\nconst username = message.from?.username || message.from?.first_name || 'Unknown';\n\n// Parse command and args\nconst parts = text.split(' ');\nconst rawCmd = parts[0].toLowerCase();\nconst cmd = rawCmd.startsWith('/') ? rawCmd.slice(1) : rawCmd;\nconst args = parts.slice(1).join(' ');\n\nreturn [{ json: { chatId, userId, username, cmd, args, rawText: text } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [220, 0],
+        "id": "parse-cmd-001",
+        "name": "Parse Command"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.cmd }}",
+                      "rightValue": "status",
+                      "operator": { "type": "string", "operation": "equals" }
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "status"
+              },
+              {
+                "conditions": {
+                  "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.cmd }}",
+                      "rightValue": "health",
+                      "operator": { "type": "string", "operation": "equals" }
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "health"
+              },
+              {
+                "conditions": {
+                  "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.cmd }}",
+                      "rightValue": "help",
+                      "operator": { "type": "string", "operation": "equals" }
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "help"
+              }
+            ]
+          },
+          "fallbackOutput": "extra"
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [440, 0],
+        "id": "cmd-router-001",
+        "name": "Command Router"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Build /status reply – queries Coolify API\nconst chatId = $('Parse Command').first().json.chatId;\nconst args = $('Parse Command').first().json.args || 'all';\n\n// Static response for now (wire to Coolify API in Phase 2)\nconst projects = [\n  { name: 'IronForge', status: '🟢 Running' },\n  { name: 'WarRoom', status: '🟢 Running' },\n  { name: 'Matlogistik', status: '🟢 Running' },\n  { name: 'Enhörningsligan', status: '🟢 Running' },\n  { name: 'Taktpinne', status: '🟡 Rehab' },\n];\n\nconst lines = projects.map(p => `  ${p.status} *${p.name}*`).join('\\n');\nconst text = `🛰️ *Brotherhood Status*\\n\\`\\`\\`\\n${lines}\\n\\`\\`\\`\\n_Updated: ${new Date().toISOString().slice(0,16)} UTC_`;\n\nreturn [{ json: { chatId, text, parseMode: 'Markdown' } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [660, -200],
+        "id": "status-handler-001",
+        "name": "Handle /status"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Build /health reply\nconst chatId = $('Parse Command').first().json.chatId;\n\nconst checks = [\n  { name: 'n8n', status: '🟢 OK' },\n  { name: 'Coolify', status: '🟢 OK' },\n  { name: 'Traefik', status: '🟢 OK' },\n  { name: 'Disk (/)', status: '🟡 97% used' },\n];\n\nconst lines = checks.map(c => `  ${c.status} ${c.name}`).join('\\n');\nconst text = `❤️ *Health Check*\\n\\`\\`\\`\\n${lines}\\n\\`\\`\\`\\n_Tip: disk cleanup needed soon!_`;\n\nreturn [{ json: { chatId, text, parseMode: 'Markdown' } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [660, 0],
+        "id": "health-handler-001",
+        "name": "Handle /health"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Build /help reply\nconst chatId = $('Parse Command').first().json.chatId;\n\nconst text = `🤖 *Panopticon Agent — Commands*\n\n/status — Project deployment status\n/health — Infrastructure health check\n/help — This help message\n\n_Brotherhood WarRoom v2.0_`;\n\nreturn [{ json: { chatId, text, parseMode: 'Markdown' } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [660, 200],
+        "id": "help-handler-001",
+        "name": "Handle /help"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Unknown command handler\nconst chatId = $('Parse Command').first().json.chatId;\nconst cmd = $('Parse Command').first().json.cmd;\n\nconst text = `❓ Unknown command: */${cmd}*\\nTry /help for available commands.`;\n\nreturn [{ json: { chatId, text, parseMode: 'Markdown' } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [660, 380],
+        "id": "unknown-handler-001",
+        "name": "Handle Unknown"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chatId }}",
+          "text": "={{ $json.text }}",
+          "additionalFields": {
+            "parse_mode": "={{ $json.parseMode || 'Markdown' }}"
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [900, 0],
+        "id": "send-reply-001",
+        "name": "Send Reply",
+        "credentials": {
+          "telegramApi": {
+            "id": "telegram-cred-001",
+            "name": "Telegram Bot - Panopticon Agent"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [[{ "node": "Parse Command", "type": "main", "index": 0 }]]
+      },
+      "Parse Command": {
+        "main": [[{ "node": "Command Router", "type": "main", "index": 0 }]]
+      },
+      "Command Router": {
+        "status": [[{ "node": "Handle /status", "type": "main", "index": 0 }]],
+        "health": [[{ "node": "Handle /health", "type": "main", "index": 0 }]],
+        "help": [[{ "node": "Handle /help", "type": "main", "index": 0 }]],
+        "extra": [[{ "node": "Handle Unknown", "type": "main", "index": 0 }]]
+      },
+      "Handle /status": {
+        "main": [[{ "node": "Send Reply", "type": "main", "index": 0 }]]
+      },
+      "Handle /health": {
+        "main": [[{ "node": "Send Reply", "type": "main", "index": 0 }]]
+      },
+      "Handle /help": {
+        "main": [[{ "node": "Send Reply", "type": "main", "index": 0 }]]
+      },
+      "Handle Unknown": {
+        "main": [[{ "node": "Send Reply", "type": "main", "index": 0 }]]
+      }
+    },
+    "active": true,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "tags": []
+  }
+]

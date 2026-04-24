@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🤖 Antigravity: Local Mode",
+            "type": "shell",
+            "command": "pwsh c:/Users/alexa/Workspaces/toggle-llm.ps1 local",
+            "group": "none",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "🧠 Antigravity: Entropy Mode",
+            "type": "shell",
+            "command": "pwsh c:/Users/alexa/Workspaces/toggle-llm.ps1 entropy",
+            "group": "none",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "📊 Antigravity: Calculate Complexity",
+            "type": "shell",
+            "command": "pwsh c:/Users/alexa/Workspaces/calculate-entropy.ps1",
+            "group": "none",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        }
+    ]
+}

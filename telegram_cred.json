@@ -1,0 +1,8 @@
+{
+    "name":  "Telegram Bot - Panopticon Agent",
+    "id":  "telegram-cred-001",
+    "type":  "telegramApi",
+    "data":  {
+                 "accessToken":  "8330488748:AAFFEJg8QlmMeCNpT31m75ROVIrRegC32KY"
+             }
+}
