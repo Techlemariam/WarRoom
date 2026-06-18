@@ -29,7 +29,7 @@ env:
 jobs:
   audit:
     name: 🔍 Run Librarian Audit
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, panopticon, ci, small]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -126,7 +126,7 @@ jobs:
     name: 📬 Create Maintenance PR
     needs: audit
     if: needs.audit.outputs.changes_made == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, panopticon, ci, small]
     steps:
       - uses: actions/checkout@v4
       - name: Create Pull Request
